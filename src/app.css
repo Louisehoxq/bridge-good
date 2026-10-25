@@ -185,7 +185,7 @@
   }
 }
 
-/* Print (the carry-it-forward kit): always the light palette on white paper, whatever the screen theme. */
+/* Print: always the light palette on white paper, whatever the screen theme. */
 @media print {
   :root {
     color-scheme: light;
@@ -330,4 +330,117 @@
       scroll-behavior: auto !important;
     }
   }
+}
+
+/* The chapter map (src/components/chapters/chapter-map.tsx): MapLibre's controls, pins and popups in Bridge Studio
+   tokens. Unlayered, so it wins over maplibre-gl.css, which loads with the map. */
+.bgx-map.maplibregl-map {
+  font: inherit;
+}
+.bgx-map.maplibregl-map .maplibregl-ctrl-group {
+  background: var(--surface);
+  border: 1.5px solid var(--line-strong);
+  border-radius: 0.625rem;
+  box-shadow: none;
+}
+/* 48px targets (DESIGN.md section 8). */
+.bgx-map.maplibregl-map .maplibregl-ctrl-group button {
+  width: 48px;
+  height: 48px;
+}
+.bgx-map.maplibregl-map .maplibregl-ctrl-group button + button {
+  border-top-color: var(--line);
+}
+.bgx-map.maplibregl-map .maplibregl-ctrl button .maplibregl-ctrl-icon {
+  background-color: var(--ink);
+  background-image: none;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: 24px;
+}
+.bgx-map.maplibregl-map .maplibregl-ctrl-zoom-in .maplibregl-ctrl-icon {
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M5 12h14M12 5v14'/%3E%3C/svg%3E");
+}
+.bgx-map.maplibregl-map .maplibregl-ctrl-zoom-out .maplibregl-ctrl-icon {
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M5 12h14'/%3E%3C/svg%3E");
+}
+.bgx-map.maplibregl-map .maplibregl-ctrl button:not([aria-disabled="true"]):hover {
+  background-color: var(--surface-sunken);
+}
+.bgx-map.maplibregl-map .maplibregl-ctrl button[aria-disabled="true"] .maplibregl-ctrl-icon {
+  opacity: 0.4;
+}
+.bgx-map.maplibregl-map .maplibregl-ctrl-attrib {
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.875rem;
+  padding: 2px 8px;
+}
+.bgx-map.maplibregl-map .maplibregl-ctrl-attrib a {
+  color: var(--action);
+  text-decoration: underline;
+}
+.bgx-map.maplibregl-map .maplibregl-cooperative-gesture-screen {
+  font-size: 1.125rem;
+}
+
+/* Pins: a 32px button around a 16px dot. Selected pins grow a gold ring. */
+.bgx-pin {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  cursor: pointer;
+  background: transparent;
+}
+.bgx-pin::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: var(--action);
+  border: 3px solid var(--surface);
+  box-shadow: 0 0 0 1.5px var(--action);
+}
+.bgx-pin:hover::before,
+.bgx-pin[data-selected]::before {
+  width: 24px;
+  height: 24px;
+  box-shadow: 0 0 0 4px var(--gold);
+}
+.bgx-pin[data-selected] {
+  z-index: 1;
+}
+
+.bgx-popup .maplibregl-popup-content {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1.5px solid var(--line-strong);
+  border-radius: 0.875rem;
+  padding: 1rem 3.25rem 1rem 1rem;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.18);
+  font: inherit;
+}
+.bgx-popup .maplibregl-popup-close-button {
+  width: 48px;
+  height: 48px;
+  font-size: 1.5rem;
+  color: var(--ink);
+  border-radius: 0.875rem;
+}
+.bgx-popup .maplibregl-popup-close-button:hover {
+  background: var(--surface-sunken);
+}
+.bgx-popup.maplibregl-popup-anchor-top .maplibregl-popup-tip {
+  border-bottom-color: var(--line-strong);
+}
+.bgx-popup.maplibregl-popup-anchor-bottom .maplibregl-popup-tip {
+  border-top-color: var(--line-strong);
+}
+.bgx-popup.maplibregl-popup-anchor-left .maplibregl-popup-tip {
+  border-right-color: var(--line-strong);
+}
+.bgx-popup.maplibregl-popup-anchor-right .maplibregl-popup-tip {
+  border-left-color: var(--line-strong);
 }

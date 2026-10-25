@@ -10,6 +10,24 @@ Since v3 the site is public, with two demo logins: **company host** and **BRIDGE
 
 ## Unreleased
 
+### v3: chapters and community events, adapted to the new structure
+
+Merged the chapter map and community events from `main` and fitted them into the cycle.
+
+**For everyone (no login)**
+- Community events sit in **Reflect and Share**: the cycle, the Living Playbook ("Learn together at community events" and "What events have taught us"), the Welcome page and the footer link to them. Chapters sit in **Teach and Evolve**, with a section on Teach & Facilitate and in the chapter / partner / educator pathway.
+- Anyone can **RSVP as a guest** (as a student or alum, or a mentor), with no name or email.
+- Event pages link to Practice Library tools and a Decision Lab warm-up instead of the removed library pages, and end with "Afterwards: reflect and share".
+- Chapter pages show what the chapter shared in the Living Playbook instead of field notes.
+
+**Chapter leads, community partners and company hosts**
+- New demo logins for a **chapter lead** and a **community partner**. They have no area of their own; they land on the events calendar. Only these two and company hosts can host events (mentors and stewards can't).
+- **What we learned** is now a Living Playbook contribution (kind "event-learning"), with consent and a credit choice. A steward reviews it before it's published as a practice example.
+
+**Technical**
+- `HOST_ROLES` is chapter lead, company host and community partner. Event `links` are Practice Library slugs plus an optional Lab scenario. The critique circle template is `src/content/critique-circle.ts`. The privacy screen uses `containsContactDetails`. Shared form fields moved to `src/components/form-fields.tsx`.
+- `ROLE_INFO` has `hasArea`, so the login screen and test helpers only guard real areas.
+
 ### v3: rebuilt around the Community Playbook concept
 
 The product now follows the *Welcome Page and Community Playbook* draft: one public site organized around the community experience cycle, **Understand → Practice → Reflect and Share → Teach and Evolve**. The company host is kept as an extra role, and the steward now reviews Playbook contributions. The site uses the BRIDGEGOOD logo navy (#003365) and gold (#CD991D).
@@ -36,6 +54,60 @@ The product now follows the *Welcome Page and Community Playbook* draft: one pub
 - New routes in `src/routes.ts`; content in `src/content/{philosophy,lab,practice-library,playbook,company-host}.ts`; Playbook rules in `src/lib/playbook.ts` with unit tests in `src/lib/test/`.
 - `/api/reflect` is now the Lab's reflection helper (AI SDK `generateText` with structured output). It returns questions only, caps input size, and rejects contact details. `src/lib/evaluator/` and `src/lib/feedback/` were removed; the model choice moved to `src/lib/model.server.ts`.
 - `tests/community-cycle.spec.ts` covers Lab → Library → contribute → steward publishes, and the company host guard. `tests/a11y.spec.ts` covers every new route.
+
+### A real chapter map
+
+Stacked on community events. `/chapters` now has an interactive map of a larger, still synthetic, proposed chapter model, and every chapter has its own page.
+
+**For everyone (no login)**
+- An **interactive map** of 15 synthetic chapters: 10 in US cities, plus Toronto, Mexico City, London, Singapore and Melbourne. Pins are buttons you can reach by keyboard. Each opens a popup with the chapter lead, focus and next event. It opens on the Americas, so pins don't overlap; zoom out or choose a region for the rest.
+- **Filters** for region, focus and "has upcoming events", plus search. They change the map and the list together, and say how many chapters match.
+- The **chapter list** stays the full alternative to the map: every detail, "Show on the map" (moves the map without taking focus), and a link to the chapter page. If the map can't load, the page says so and the list keeps working.
+- A **chapter page** at `/chapters/:id`: region, chapter lead, focus, how often it meets, member count, company hosts, community partners, a shared chapter inbox (never a personal address), upcoming events from the chapter calendar, and the chapter's field notes (local adaptations BRIDGEGOOD recognized). Everything is labelled "Synthetic example" and "Proposed chapter model (concept)". Locations are a city only.
+
+**Chapter leads, company hosts, community partners and mentors**
+- **Host an event here** on a chapter page opens the host form on that chapter's calendar. Logged out, "Log in to host" brings you back to it.
+
+**Technical**
+- MapLibre GL JS 6.12.0 (pinned exactly) with OpenFreeMap's positron and dark styles: no API key, attribution always visible. It's imported in an effect, so it never runs on the server, and switches basemap with the color scheme.
+- The build bundles MapLibre's worker with Vite (`?worker&url`, `worker.format: "es"`). In dev, a small plugin in `vite.config.ts` serves MapLibre's own worker files, because Vite's dev transform adds its client to them, which can't run in a worker.
+- Accessibility: pins are `<button>`s in list order, labelled with the city and upcoming events. Enter opens the popup and moves focus into it; Escape closes it and returns focus to the pin. Zoom buttons are 48px and stay focusable at the zoom limit (`aria-disabled` instead of `disabled`). Scrolling the page never zooms the map (cooperative gestures).
+- `Chapter` now has `lead`, `leadOrg`, a `focus` list from `FOCUS_AREAS`, `members`, `companyHosts`, `communityPartners`, a shared `inbox`, and finer regions. `chapterLabel()` matches field notes.
+- Login follows `next` back to `/chapters` pages and to `/events/host?chapter=…`.
+- Tests: `tests/chapters-map.spec.ts` (keyboard pins, filters, the list without the map, hosting from a chapter page). The axe and layout checks cover every chapter page.
+
+### Community events
+
+Small, Luma-style chapter calendars: each event is a simple page with an RSVP, and access details are required up front. Deliberately not a ticketing platform: no payments, waitlists, reminders, calendar sync, recurring series or check-in. Every event, host and place is synthetic, and places are an area only, never an address.
+
+**For everyone (no login)**
+- **Community events** at `/events` (new "Events" link in the header and footer): upcoming events on every chapter's calendar, filtered by chapter, type and format, with past events folded below. Filters live in the URL, so `/events?chapter=chicago` is a chapter's calendar.
+- An **event page** for each one: what it is, when (in the chapter's own time zone), the area or "Online", the host with their role badge, the plan, who it's for, and links into the library (the carry-it-forward kit, a practice moment, pillars).
+- An **Access** block on every event: step-free access, captions or interpretation, languages, childcare and cost (always free).
+- **Add to my calendar** downloads a plain `.ics` file.
+- Logged out, the event page says how to join instead of offering an RSVP, and points groups outside a chapter to the carry-it-forward kit. Logging in from an event page brings you back to it.
+- Each chapter's entry at `/chapters` shows its next two events and a link to its calendar.
+
+**Apprentices, mentors, chapter leads, company hosts and community partners**
+- **RSVP** with your demo account, and cancel it. A full event says so; there's no waitlist. Online events show a synthetic join link to people who RSVP'd; in-person events say the host shares the exact place.
+- **Your upcoming events** on every role overview: what you're hosting or going to.
+
+**Chapter leads, company hosts, community partners and mentors (including alumni)**
+- **Host an event** at `/events/host`, with a template for each type: critique circle, site visit, portfolio review, listening session, Demo Day and chapter meetup. The critique circle is pre-filled from the carry-it-forward kit, and shows the kit's four commitments to keep. Choosing another type only replaces what you haven't changed.
+- Access details are required, the area is checked for street addresses, and free text is screened for email addresses and phone numbers.
+- The host sees who's coming. After the event, they send **What we learned** to BRIDGEGOOD: what they learned about the approach, what worked for access, what BRIDGEGOOD should change, and roughly how many came (a number, no names). Credit only if they tick the box. In the demo, "pretend this event has happened" opens the form early.
+- Apprentices see that they host with their chapter lead.
+
+**BRIDGEGOOD stewards**
+- A new inbox type, **What we learned (event)**, and a "Community events" tag filter. It follows the same rules: a reason for every decision, credit only with consent, no personal data. The steward's reply shows on the event page.
+- **Featured events** in the inbox sidebar (Demo Day and listening sessions), and "Community events" in the steward sidebar.
+
+**Technical**
+- Model in `src/lib/events/types.ts`; pure rules in `src/lib/events/logic.ts` (time zones without a library, upcoming and past, RSVP counts, the host form's checks, the `.ics` file); demo collections `community-events` and `event-rsvps` in `src/lib/events/store.ts`. Templates and synthetic seeds in `src/content/events.ts`; seed dates are days from today, so there are always upcoming and past events. Chapters now carry an IANA time zone.
+- The root loader returns `now` (`useServerNow()`), so the server and the browser agree on what's upcoming. Times are labelled "Chicago time", not Intl's zone names, which differ between Node and browsers.
+- Feedback types: the `event-learning` kind and an `event` target.
+- Login follows `next` back to `/events` pages as well as the role's own area.
+- Unit tests for the event rules (`src/lib/events/test/`), an end-to-end spec (`tests/community-events.spec.ts`) for the whole loop, and the axe and layout checks now cover every seed event page and the host form (signed in).
 
 ### Practice moments and the carry-it-forward kit
 

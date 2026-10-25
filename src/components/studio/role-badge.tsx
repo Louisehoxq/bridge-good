@@ -5,11 +5,17 @@ import { cn } from "@/lib/utils"
 
 /**
  * Bridge Studio roles (DESIGN.md section 2). Each one always shows icon + label + color together.
+ * Every demo login role is here, plus people who take part without a login (students and alumni, mentors),
+ * for example as an event's audience.
  */
 export const STUDIO_ROLES = {
+  apprentice: { label: "Student or alum", icon: "sprout" },
+  mentor: { label: "Mentor", icon: "message-circle-heart" },
+  "chapter-lead": { label: "Chapter lead", icon: "map-pin" },
   "company-host": { label: "Company host", icon: "building-2" },
+  "community-partner": { label: "Community partner", icon: "heart-handshake" },
   steward: { label: "BRIDGEGOOD steward", icon: "scroll-text" },
-} as const satisfies Record<Role, { label: string; icon: IconName }>
+} as const satisfies Record<Role | "apprentice" | "mentor", { label: string; icon: IconName }>
 
 export type StudioRole = keyof typeof STUDIO_ROLES
 

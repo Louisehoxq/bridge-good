@@ -5,6 +5,8 @@ import { LAB_SCENARIOS } from "../src/content/lab"
 import { AUDIENCES } from "../src/content/philosophy"
 import { SEED_ENTRIES } from "../src/content/playbook"
 import { RESOURCES } from "../src/content/practice-library"
+import { SEED_EVENTS } from "../src/content/events"
+import { CHAPTERS } from "../src/content/chapters"
 import { ROLE_INFO, ROLES, type Role } from "../src/lib/roles"
 
 type RouteEntry = { path?: string; index?: boolean; file: string; children?: RouteEntry[] }
@@ -20,6 +22,9 @@ const PATH_PARAMS: Record<string, readonly string[]> = {
   "playbook/:id": ["core-feedback-responsibility", "pe-phone-booking", "la-interview-guide-dari", "oq-paying-participants"],
   // The seeded contribution waiting for review, and a published one.
   "steward/review/:id": SEED_ENTRIES.filter((e) => e.type !== "core").slice(-2).map((e) => e.id),
+  // Upcoming and past, in person and online.
+  "events/:id": SEED_EVENTS.map((e) => e.id),
+  "chapters/:id": CHAPTERS.map((c) => c.id),
 }
 
 /** Every page route in src/routes.ts. Resource routes and redirects (.ts files) have no page to test. */
@@ -45,14 +50,17 @@ function expand(path: string): string[] {
  */
 const KNOWN: Record<string, string[]> = {}
 
-const roleFor = (path: string) => ROLES.find((role) => path === ROLE_INFO[role].home || path.startsWith(`${ROLE_INFO[role].home}/`))
+/** Public pages that show their full form only to a signed-in role. */
+const LOGIN_FOR: Record<string, Role> = { "/events/host": "chapter-lead" }
+
+const roleFor = (path: string) =>
+  LOGIN_FOR[path] ?? ROLES.find((role) => ROLE_INFO[role].hasArea && (path === ROLE_INFO[role].home || path.startsWith(`${ROLE_INFO[role].home}/`)))
 
 /** Logs in through the demo login screen by submitting the chosen role's form. */
-async function logIn(page: Page, role: Role) {
-  const home = ROLE_INFO[role].home
-  await page.goto(`/login?next=${home}`)
+async function logIn(page: Page, role: Role, next = ROLE_INFO[role].home) {
+  await page.goto(`/login?next=${encodeURIComponent(next)}`)
   await page.locator(`form:has(input[name="role"][value="${role}"]) [type="submit"]`).first().click()
-  await page.waitForURL((url) => url.pathname.startsWith(home))
+  await page.waitForURL((url) => url.pathname.startsWith(next))
 }
 
 const paths = [...new Set(pagePaths(routes as RouteEntry[]))]
@@ -65,7 +73,7 @@ test("finds the routes to test", () => {
 for (const path of paths) {
   test(`${path} has no axe violations`, async ({ page }) => {
     const role = roleFor(path)
-    if (role) await logIn(page, role)
+    if (role) await logIn(page, role, path)
     const response = await page.goto(path)
     expect(response?.status(), `status for ${path}`).toBeLessThan(400)
     expect(new URL(page.url()).pathname, "not redirected to the login screen").toBe(path)
@@ -146,7 +154,7 @@ for (const path of paths) {
   test(`${path} reflows, zooms and takes text spacing (WCAG 1.4.10, 1.4.4, 1.4.12)`, async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== "light", "Layout checks don't depend on the theme")
     const role = roleFor(path)
-    if (role) await logIn(page, role)
+    if (role) await logIn(page, role, path)
 
     // 1.4.10 Reflow: no sideways scrolling at 320 CSS px wide.
     await page.setViewportSize({ width: 320, height: 640 })

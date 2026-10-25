@@ -21,6 +21,7 @@ export const CONTRIBUTION_KINDS = [
   { id: "resource-feedback", label: "Feedback on a resource that was confusing or inaccessible", suggests: "question" },
   { id: "scenario", label: "A proposed scenario for the Design Decision Lab", suggests: "practice" },
   { id: "workplace", label: "A reflection on how the philosophy applies in a workplace or community", suggests: "practice" },
+  { id: "event-learning", label: "What we learned from hosting a community event", suggests: "practice" },
   { id: "withdrawal", label: "A request to correct or withdraw something", suggests: "question" },
 ] as const satisfies readonly { id: string; label: string; suggests: EntryType }[]
 
@@ -80,8 +81,8 @@ export type Entry = {
   version: string
   submittedAt: string
   reviewedAt?: string
-  /** A resource or scenario this entry relates to. */
-  related?: { kind: "resource" | "scenario"; slug: string }
+  /** A resource, scenario or community event this entry relates to. */
+  related?: { kind: "resource" | "scenario" | "event"; slug: string }
   /** Recurring theme tags the steward adds, used to improve resources. */
   themes: string[]
   /** Set on contributions made in this browser, so the demo can show "your contributions". */
@@ -203,6 +204,23 @@ export const SEED_ENTRIES: Entry[] = [
     reviewedAt: "Oct 2026",
     related: { kind: "scenario", slug: "limited-budget-unequal-access" },
     themes: ["access", "workplace"],
+  }),
+  community({
+    id: "pe-event-fresh-food",
+    type: "practice",
+    kind: "event-learning",
+    title: "What we learned: Listening session: finding fresh food",
+    fields: {
+      context: "Listening session on the Oakland calendar, about 18 people came (synthetic example).",
+      learned: "Neighbors trusted the session because a pantry volunteer they knew opened it. Several said they'd never been asked before.",
+      change: "Start earlier in the evening, so parents can come before dinner.",
+      takeaway: "On access: Spanish interpretation worked well. The room was step-free, but the restroom wasn't, and we didn't say so in advance.",
+    },
+    attribution: { mode: "role", as: "Rosa Delgado, Oakland chapter" },
+    submittedAt: "Oct 2026",
+    reviewedAt: "Oct 2026",
+    related: { kind: "event", slug: "ev-oakland-listening-past" },
+    themes: ["events", "access"],
   }),
   {
     id: "sub-critique-norms",

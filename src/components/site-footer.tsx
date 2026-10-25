@@ -26,6 +26,16 @@ export function SiteFooter() {
               </li>
             ))}
             <li>
+              <Link to="/chapters" className="inline-flex min-h-12 items-center underline underline-offset-4">
+                Chapters
+              </Link>
+            </li>
+            <li>
+              <Link to="/events" className="inline-flex min-h-12 items-center underline underline-offset-4">
+                Community events
+              </Link>
+            </li>
+            <li>
               <Link to="/login" className="inline-flex min-h-12 items-center underline underline-offset-4">
                 Log in
               </Link>

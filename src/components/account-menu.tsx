@@ -7,12 +7,15 @@ import { NavLink } from "@/components/nav-link"
 import { PeopleChip } from "@/components/studio/people-chip"
 import { RoleBadge, studioRoleFor } from "@/components/studio/role-badge"
 
+/** Company hosts and stewards have an area; chapter leads and partners land on the events calendar they host for. */
+const areaLabel = (role: keyof typeof ROLE_INFO) => (ROLE_INFO[role].hasArea ? "My area" : "Events")
+
 export function DashboardLink() {
   const session = useSession()
   if (!session) return null
   return (
     <NavLink href={ROLE_INFO[session.role].home} variant="top">
-      My area
+      {areaLabel(session.role)}
     </NavLink>
   )
 }
@@ -70,7 +73,7 @@ export function SheetAccount() {
       <span className="sr-only">Signed in as</span>
       <PeopleChip name={account.name} role={studioRoleFor(session)} detail="demo" />
       <Link to={ROLE_INFO[session.role].home} className={buttonVariants({ size: "sm", className: "w-full bg-archetype text-on-archetype hover:bg-archetype/90" })}>
-        My area
+        {areaLabel(session.role)}
       </Link>
       <div className="flex flex-wrap gap-2">
         <Link to="/login" className={buttonVariants({ variant: "outline", size: "sm" })}>

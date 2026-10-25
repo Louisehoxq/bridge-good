@@ -125,7 +125,10 @@ export const CYCLE: CycleStage[] = [
     question: "What did we learn from the people involved, and what evidence changed our assumptions?",
     icon: "sticky-note",
     href: "/playbook",
-    places: [{ label: "Living Playbook", href: "/playbook" }],
+    places: [
+      { label: "Living Playbook", href: "/playbook" },
+      { label: "Community events", href: "/events" },
+    ],
   },
   {
     id: "teach",
@@ -137,7 +140,10 @@ export const CYCLE: CycleStage[] = [
     question: "How can someone else use what we learned, and what should be improved before it is shared more widely?",
     icon: "users",
     href: "/teach",
-    places: [{ label: "Teach & Facilitate", href: "/teach" }],
+    places: [
+      { label: "Teach & Facilitate", href: "/teach" },
+      { label: "Chapters", href: "/chapters" },
+    ],
   },
 ]
 
@@ -209,8 +215,8 @@ export const PATHWAYS: Pathway[] = [
     steps: {
       understand: { label: "What's foundational and what can adapt", href: "/teach#adapt", why: "Keep the core while making it fit your community." },
       practice: { label: "Community-centered project brief", href: "/library/community-project-brief", why: "Plan a project with the people affected." },
-      reflect: { label: "Local adaptations in the Playbook", href: "/playbook?type=adaptation", why: "See how other communities adapted tools, and what they kept." },
-      teach: { label: "Chapter starter kit", href: "/library/chapter-starter-kit", why: "Everything you need to start practicing together." },
+      reflect: { label: "Host a community event, then share what you learned", href: "/events", why: "Run a critique circle or listening session on your chapter's calendar, and add what it taught you to the Living Playbook." },
+      teach: { label: "Find your chapter, or start one", href: "/chapters", why: "See chapters on the map, their calendars, and the chapter starter kit." },
     },
   },
   {
@@ -223,7 +229,7 @@ export const PATHWAYS: Pathway[] = [
     steps: {
       understand: { label: "Why companies support rather than steer", href: "/host/guide", why: "The host guide, including where the line is." },
       practice: { label: "Workplace scenarios in the Decision Lab", href: "/lab/limited-budget-unequal-access", why: "Budget, timeline and access trade-offs you'll meet at work." },
-      reflect: { label: "Share a workplace reflection", href: "/playbook/contribute?about=workplace", why: "Tell BRIDGEGOOD what changed in your own product work." },
+      reflect: { label: "Host an event, or share a workplace reflection", href: "/events", why: "Host a portfolio review or Demo Day, then tell BRIDGEGOOD what you learned." },
       teach: { label: "Organization toolkit", href: "/host/toolkit", why: "Make the case inside your company, and recruit mentors." },
     },
   },

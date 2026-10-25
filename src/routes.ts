@@ -16,6 +16,12 @@ export default [
   route("playbook/contribute", "routes/playbook/contribute.tsx"),
   route("playbook/:id", "routes/playbook/entry.tsx"),
   route("teach", "routes/teach.tsx"),
+  // Chapters and their community events: calendars, event pages with an RSVP, and a form to host one.
+  route("chapters", "routes/chapters.tsx"),
+  route("chapters/:id", "routes/chapter.tsx"),
+  route("events", "routes/events/index.tsx"),
+  route("events/host", "routes/events/host.tsx"),
+  route("events/:id", "routes/events/event.tsx"),
   route("about", "routes/about.tsx"),
 
   route("login", "routes/login.tsx"),

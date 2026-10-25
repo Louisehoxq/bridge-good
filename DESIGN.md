@@ -245,6 +245,7 @@ These follow BRIDGEGOOD's tone guide (bridgegood.com/design): supportive, direct
 | Signature elements | `src/components/studio/`: `Path`, `TeamPath`, `JourneyStepper`, `PeopleChip`, `RoleBadge`, `Highlight`, `PinnedNote`, `FieldNote`, `DraftFrame`, `DraftTextarea`, `DraftFieldFrame` |
 | The cycle | `src/components/cycle.tsx`: `CycleDiagram` (Welcome), `CycleStageBar` (every public page: its stage, with `aria-current="step"`, and the next step), `PublicPage` |
 | Navigation | Seven top-level items in the concept's order (Welcome, Understand, Decision Lab, Practice Library, Living Playbook, Teach & Facilitate, About), shown in the bar from `xl` up and in the sheet menu below |
+| Chapter map | `src/components/chapters/chapter-map.tsx`, styled in `src/app.css` (`.bgx-map`, `.bgx-pin`, `.bgx-popup`): action-colored pins with a gold ring when selected, 48px zoom controls, popups on `--surface`. Light uses OpenFreeMap's positron basemap, dark its dark basemap. No animation under reduced motion |
 | Live reference | `src/routes/design.tsx` (`/design`, `noindex`) |
 | Static showcase | `docs/design/examples.html`. It copies the tokens by hand, so update it when section 2 changes |
 | Logo | `src/components/wordmark.tsx` is a text placeholder. Use BRIDGEGOOD's official SVGs in `public/brand/`; don't redraw, recolor or add effects |

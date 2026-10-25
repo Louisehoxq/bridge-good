@@ -19,6 +19,7 @@ export default function PlaybookIndex() {
   const type = isType(typeParam) ? typeParam : null
   const published = entries.filter((e) => e.status === "published" && (!type || e.type === type))
   const mine = entries.filter((e) => e.mine)
+  const fromEvents = entries.filter((e) => e.status === "published" && e.related?.kind === "event")
 
   return (
     <AppShell>
@@ -89,6 +90,41 @@ export default function PlaybookIndex() {
                 </li>
               ))}
             </ul>
+          </section>
+
+          <section aria-labelledby="events-title" className="grid gap-6 rounded-2xl border bg-card p-6 lg:grid-cols-[2fr_3fr]">
+            <div className="space-y-3">
+              <h2 id="events-title" className="type-title-2">
+                Learn together at community events
+              </h2>
+              <p>
+                Critique circles, listening sessions, portfolio reviews and Demo Days, hosted by local chapter leads, community
+                partners and company hosts. Afterwards, hosts reflect and share what they learned here.
+              </p>
+              <div className="flex flex-wrap gap-x-6">
+                <Link to="/events" className="inline-flex min-h-12 items-center gap-1 font-semibold text-action underline underline-offset-4">
+                  Find a community event
+                  <Icon name="arrow-right" className="text-base" />
+                </Link>
+                <Link to="/events/host" className="inline-flex min-h-12 items-center underline underline-offset-4">
+                  Host an event
+                </Link>
+              </div>
+            </div>
+            <div>
+              <h3 className="mb-3 type-title-3">What events have taught us</h3>
+              {fromEvents.length === 0 ? (
+                <p className="text-muted-foreground">Nothing from events yet.</p>
+              ) : (
+                <ul className="space-y-3">
+                  {fromEvents.map((e) => (
+                    <li key={e.id}>
+                      <EntryCard entry={e} />
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </section>
 
           {mine.length > 0 && (

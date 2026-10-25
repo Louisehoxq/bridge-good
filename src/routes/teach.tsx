@@ -114,6 +114,46 @@ export default function TeachPage() {
             </ol>
           </section>
 
+          <section id="chapters" aria-labelledby="chapters-title" className="grid scroll-mt-24 gap-6 lg:grid-cols-2">
+            <div className="space-y-3 rounded-2xl border bg-card p-6">
+              <Icon name="map-pin" className="text-2xl text-action" />
+              <h2 id="chapters-title" className="type-title-2">
+                Chapters
+              </h2>
+              <p>
+                Local chapters carry the philosophy into their own communities. Find one on the map, see who leads it, which
+                partners and company hosts it works with, and what it has shared in the Living Playbook.
+              </p>
+              <div className="flex flex-wrap gap-x-6">
+                <Link to="/chapters" className="inline-flex min-h-12 items-center gap-1 font-semibold text-action underline underline-offset-4">
+                  Find a chapter on the map
+                  <Icon name="arrow-right" className="text-base" />
+                </Link>
+                <Link to="/library/chapter-starter-kit" className="inline-flex min-h-12 items-center underline underline-offset-4">
+                  Start a chapter
+                </Link>
+              </div>
+            </div>
+            <div className="space-y-3 rounded-2xl border bg-card p-6">
+              <Icon name="calendar" className="text-2xl text-action" />
+              <h2 className="type-title-2">Community events</h2>
+              <p>
+                Local chapter leads, community partners and company hosts put small, free events on a chapter&apos;s calendar:
+                critique circles, listening sessions, portfolio reviews and Demo Days. Each starts from a template, says how
+                accessible it is, and ends with the host sharing what they learned.
+              </p>
+              <div className="flex flex-wrap gap-x-6">
+                <Link to="/events" className="inline-flex min-h-12 items-center gap-1 font-semibold text-action underline underline-offset-4">
+                  See upcoming events
+                  <Icon name="arrow-right" className="text-base" />
+                </Link>
+                <Link to="/events/host" className="inline-flex min-h-12 items-center underline underline-offset-4">
+                  Host an event
+                </Link>
+              </div>
+            </div>
+          </section>
+
           <section aria-labelledby="ttf-title">
             <h2 id="ttf-title" className="type-title-2">
               Train-the-facilitator

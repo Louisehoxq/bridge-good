@@ -146,6 +146,9 @@ export default function WelcomePage() {
               <Link to="/playbook" className={buttonVariants({ size: "lg", variant: "outline" })}>
                 Read the Living Playbook
               </Link>
+              <Link to="/events" className={buttonVariants({ size: "lg", variant: "ghost" })}>
+                Join a community event
+              </Link>
             </div>
             <p className="pt-4 text-muted-foreground italic">
               Rooted in BRIDGEGOOD&apos;s philosophy. Shaped by lived experience. Carried forward together.

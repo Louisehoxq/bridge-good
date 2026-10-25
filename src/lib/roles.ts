@@ -1,9 +1,10 @@
 /**
- * The public site needs no login. Two demo accounts unlock their own areas:
- * - Company host: a company that hosts mentors and sponsors partner projects, and brings the approach into its own work.
+ * The public site needs no login. Demo accounts add:
+ * - Company host: hosts mentors, sponsors partner projects, brings the approach into its own work, and hosts events.
+ * - Chapter lead and community partner: host community events for their chapter (no area of their own).
  * - BRIDGEGOOD steward: reviews Living Playbook contributions and keeps the core philosophy's wording.
  */
-export const ROLES = ["company-host", "steward"] as const
+export const ROLES = ["company-host", "chapter-lead", "community-partner", "steward"] as const
 
 export type Role = (typeof ROLES)[number]
 
@@ -23,6 +24,8 @@ type RoleInfo = {
   home: string
   /** Synthetic demo account used by the "Log in as…" screen. */
   demoAccount: DemoAccount
+  /** Roles with a guarded area of their own. Chapter leads and partners only host public events. */
+  hasArea: boolean
   sidebar: NavGroup[]
 }
 
@@ -33,6 +36,7 @@ export const ROLE_INFO: Record<Role, RoleInfo> = {
     summary: "Bring your company in: host mentors, sponsor partner projects, and carry the approach into your own product work.",
     home: "/host",
     demoAccount: { name: "Dana Whitfield", detail: "Company host, design manager at a fintech company (synthetic)" },
+    hasArea: true,
     sidebar: [
       { items: [{ label: "Overview", href: "/host" }] },
       {
@@ -49,7 +53,26 @@ export const ROLE_INFO: Record<Role, RoleInfo> = {
           { label: "Organization toolkit", href: "/host/toolkit" },
         ],
       },
+      { label: "Community", items: [{ label: "Community events", href: "/events" }] },
     ],
+  },
+  "chapter-lead": {
+    label: "Chapter lead",
+    plural: "Chapter leads",
+    summary: "Run your local chapter's calendar: host critique circles, listening sessions and meetups, then share what you learned.",
+    home: "/events",
+    demoAccount: { name: "Priya Raman", detail: "Chapter lead, Chicago chapter (synthetic)" },
+    hasArea: false,
+    sidebar: [],
+  },
+  "community-partner": {
+    label: "Community partner",
+    plural: "Community partners",
+    summary: "Host listening sessions and site visits with the people you serve, then share what you learned with BRIDGEGOOD.",
+    home: "/events",
+    demoAccount: { name: "Eastside Tenants Network", detail: "Tenant advocacy nonprofit, Chicago (synthetic)" },
+    hasArea: false,
+    sidebar: [],
   },
   steward: {
     label: "BRIDGEGOOD steward",
@@ -57,6 +80,7 @@ export const ROLE_INFO: Record<Role, RoleInfo> = {
     summary: "Review what the community contributes to the Living Playbook, publish it with the right attribution, and keep the core philosophy's wording.",
     home: "/steward",
     demoAccount: { name: "Morgan Ellis", detail: "Program staff, stewards the Living Playbook (synthetic)" },
+    hasArea: true,
     sidebar: [
       { items: [{ label: "Review queue", href: "/steward" }] },
       {

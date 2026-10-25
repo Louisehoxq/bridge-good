@@ -8,9 +8,9 @@ import { SyntheticBadge } from "@/components/synthetic-badge"
 /** One card per synthetic demo account. */
 const ACCOUNTS: Session[] = ROLES.map((role) => ({ role }))
 
-/** Which role's area a `next` path belongs to, if any. */
+/** Which role's guarded area a `next` path belongs to, if any. Public pages (events, chapters) need no particular role. */
 const roleForPath = (path: string): Role | undefined =>
-  ROLES.find((r) => path === ROLE_INFO[r].home || path.startsWith(`${ROLE_INFO[r].home}/`))
+  ROLES.find((r) => ROLE_INFO[r].hasArea && (path === ROLE_INFO[r].home || path.startsWith(`${ROLE_INFO[r].home}/`)))
 
 /** Lowercase a label for a sentence, but keep a name in capitals: "BRIDGEGOOD steward". */
 const lower = (label: string) => label.replace(/^[A-Z](?=[a-z])/, (c) => c.toLowerCase())

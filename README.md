@@ -29,6 +29,8 @@ People can enter at whichever point makes sense, return when they need support, 
 | Practice Library | `/library`, `/library/:slug` | 24 tools in six task-based categories, filterable by role, goal, format, experience level and time. Every tool says what it helps you do, when, who, how, the questions to consider, accessibility, how to reflect, source/owner/version, and how to suggest an improvement |
 | Living Playbook | `/playbook`, `/playbook/:id`, `/playbook/contribute` | Core philosophy (BRIDGEGOOD-authored), practice examples, local adaptations and open questions, kept clearly apart. Contribute with the seven-part template, including permission and attribution |
 | Teach & Facilitate | `/teach` | Facilitator and mentor guides, chapter starter kit, train-the-facilitator steps, what can adapt and what stays grounded, and how to propose a revision |
+| Community events | `/events`, `/events/:id`, `/events/host` | Chapter calendars (Reflect and Share): critique circles, listening sessions, portfolio reviews, Demo Days. Every event says how accessible it is. Anyone can RSVP, as a guest if not logged in. Afterwards the host shares "what we learned" in the Living Playbook |
+| Chapters | `/chapters`, `/chapters/:id` | An interactive map and list of synthetic, proposed chapters (Teach and Evolve), each with its lead, partners, company hosts, calendar and what it shared in the Living Playbook |
 | About the Philosophy | `/about` | Authorship and stewardship, the six-step review workflow, trust and safety, how to request a correction or withdrawal, design guardrails, and what success could look like |
 
 **Demo login** (`/login`, no password)
@@ -36,6 +38,7 @@ People can enter at whichever point makes sense, return when they need support, 
 | Role | URL | What's there |
 |---|---|---|
 | **Company host** (Dana Whitfield) | `/host` | Overview and host path, host guide (explainer, modules, what BRIDGEGOOD looks for), "Bring it to your workplace" (workplace Lab scenarios, tools, share a workplace reflection), partner projects to sponsor (hosts never choose the problems), organization toolkit |
+| **Chapter lead** (Priya Raman) and **Community partner** (Eastside Tenants Network) | `/events` | No area of their own: they host events on their chapter's calendar and share what they learned |
 | **BRIDGEGOOD steward** (Morgan Ellis) | `/steward` | Review queue, review page (checklist for relevance, consent, privacy, accessibility and alignment; discuss with the contributor; label; publish or decline with a reason; tag themes), maintenance log (source, version, review date, history), recurring themes |
 
 ## Running it
@@ -63,6 +66,7 @@ Open http://localhost:5173.
 3. Open a related Practice Library tool, then choose **Reflect and share what happened** to contribute a lesson to the Living Playbook. It says "Submitted for review" and isn't public yet.
 4. **Log in** as the **BRIDGEGOOD steward**. Open the contribution, tick the review checks, label it, and publish. It now appears in the Living Playbook with the attribution the contributor chose.
 5. **Log in** as the **company host**. See the host path, the projects that need a sponsor, and share a workplace reflection.
+6. **Log in** as the **chapter lead**, open **Host an event**, and put a critique circle on the Chicago calendar. RSVP to it as a guest (logged out), then, as the host, choose "pretend this event has happened" and share what we learned. The steward reviews it like any other contribution.
 
 Demo data lives in this browser's localStorage. **Reset demo data** in the footer starts again.
 

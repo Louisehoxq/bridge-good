@@ -240,7 +240,7 @@ export default function DesignPage() {
               </TeamPath>
               <div data-archetype="apprentice">
                 <JourneyStepper
-                  label="Your apprenticeship path (synthetic example)"
+                  label="A company host path (synthetic example)"
                   steps={[
                     { label: "Bootcamp", status: "done" },
                     { label: "Mini project", status: "done" },
