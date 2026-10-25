@@ -82,7 +82,7 @@ export const SPRINT_MILESTONES = [
   { title: "Week 2: frame and sketch", detail: "The team shares what they heard and who they haven't heard from yet." },
   { title: "Week 3: make and test", detail: "Testing with community members, including disabled people, on their own devices." },
   { title: "Week 4: Demo Day", detail: "The team presents a working prototype and explains its choices." },
-  { title: "Retrospective sent", detail: "The chapter lead sends what changed, and why, to BRIDGEGOOD." },
+  { title: "Retrospective sent", detail: "The chapter lead shares what changed, and why, with the community chapter." },
 ] as const
 
 /** A team formed by a chapter lead: apprentices plus a mentor, on one project. */

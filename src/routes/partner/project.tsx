@@ -108,7 +108,7 @@ export default function PartnerProject() {
       </div>
 
       <FeedbackForm />
-      {/* Milestone 3 hook: the end-of-project retrospective goes to the BRIDGEGOOD steward. */}
+      {/* Milestone 3 hook: the end-of-project retrospective goes to the community chapter and on to the steward. */}
       <PartnerRetrospective projectId={PARTNER_PROBLEM_ID} projectTitle={project.title} />
     </>
   )
@@ -149,8 +149,8 @@ function FeedbackForm() {
             Tell us how it&apos;s going
           </h2>
           <p className="mt-1 text-muted-foreground">
-            Any time, not only at the end. It goes to your chapter lead and to BRIDGEGOOD. BRIDGEGOOD reads every note and
-            decides what changes in the philosophy, and credits where each change came from.
+            Any time, not only at the end. It goes to your chapter lead and your community chapter, who read every note and
+            decide what changes in how the work is done.
           </p>
         </div>
         <ErrorSummary errors={error ? [{ field: "fb-changed", message: error }] : []} summaryRef={errorRef} title="Before sending:" />

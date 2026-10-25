@@ -137,7 +137,7 @@ Load from Google Fonts with `display=swap`.
   No pill-shaped buttons.
 - **Borders:** cards use a 1px `--line` border. Controls use a 1.5px `--line-strong` border.
 - **Depth:** flat. The only shadow is the pinned note's, a single soft 0 2px 0 offset, to read as paper. Use borders and surface tones for hierarchy.
-- **Motion:** short and functional: 150–200ms, `cubic-bezier(0.2, 0, 0, 1)`. No parallax or autoplay, except the home hero's cycling word (`HeroTitle`), which plays once in under 5 seconds and never moves under reduced motion. `prefers-reduced-motion` removes all transitions.
+- **Motion:** short and functional: 150–200ms, `cubic-bezier(0.2, 0, 0, 1)`. No parallax or autoplay, except the home hero's cycling word (`HeroTitle`), which loops with a visible Pause button (WCAG 2.2.2) and never starts under reduced motion. `prefers-reduced-motion` removes all transitions.
 
 ---
 
