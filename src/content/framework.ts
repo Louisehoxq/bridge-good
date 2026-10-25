@@ -15,7 +15,6 @@ export const FRAMEWORK_META = {
   author: "BRIDGEGOOD",
   status: "Draft for BRIDGEGOOD review",
   version: "0.1",
-  updated: "Oct 24, 2026",
   note: "Drafted by the hackathon team from BRIDGEGOOD's challenge brief. BRIDGEGOOD authors and owns the philosophy, and approves any change to this wording.",
 } as const
 

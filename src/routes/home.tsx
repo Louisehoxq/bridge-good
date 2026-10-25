@@ -93,8 +93,7 @@ export default function WelcomePage() {
           </h2>
           <p className="mt-3 mb-8 max-w-[70ch] type-body-lg text-muted-foreground">
             Each pillar has a plain meaning, an example from a project, a learning outcome, and reflection prompts that
-            come up when decisions get made. {FRAMEWORK_META.author} authors and owns the framework. This is version{" "}
-            {FRAMEWORK_META.version}, a {FRAMEWORK_META.status.toLowerCase()}, updated {FRAMEWORK_META.updated}.
+            come up when decisions get made. {FRAMEWORK_META.author} authors and owns the framework.
           </p>
           <ol className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {PILLARS.map((p) => (

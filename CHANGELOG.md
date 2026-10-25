@@ -10,6 +10,10 @@ The roles are: **apprentice** (BRIDGEGOOD's word for a student), **mentor**, **a
 
 ## Unreleased
 
+### Removed the "version 0.1 … updated Oct 24, 2026" line
+
+**For everyone:** the home page and the Learn page no longer show the framework's version, draft status or "updated" date. The note that BRIDGEGOOD owns and approves the wording stays. Technical: `FRAMEWORK_META.updated` is gone; the version history at `/learn/changelog` keeps its dates.
+
 ### Anthropic key testing steps
 
 - `docs/gemma-prototype.md` explains how to test the companion with an Anthropic key, the fallback to Gemma. Docs only.
