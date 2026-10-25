@@ -4,7 +4,7 @@ import { isRouteErrorResponse, Link, Links, Meta, Outlet, Scripts, ScrollRestora
 import type { Route } from "./+types/root"
 import { AppShell } from "@/components/app-shell"
 import { buttonVariants } from "@/components/ui/button"
-import { getSessionRole } from "@/lib/session.server"
+import { getSession } from "@/lib/session.server"
 import { pageMeta } from "@/lib/meta"
 import "./app.css"
 
@@ -31,7 +31,7 @@ export const headers: Route.HeadersFunction = () => ({
 })
 
 export async function loader({ request }: Route.LoaderArgs) {
-  return { role: await getSessionRole(request) }
+  return { session: await getSession(request) }
 }
 
 export function Layout({ children }: { children: ReactNode }) {

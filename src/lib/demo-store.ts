@@ -85,5 +85,5 @@ export function newId() {
 }
 
 export function nowLabel() {
-  return new Date().toLocaleString(undefined, { weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit" })
+  return new Date().toLocaleString("en-US", { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })
 }

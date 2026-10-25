@@ -2,14 +2,14 @@ import { PageHeader } from "@/components/app-shell"
 import { StudentSubmissions } from "@/components/demo/submissions"
 import { pageMeta } from "@/lib/meta"
 
-export const meta = () => pageMeta("Project submissions")
+export const meta = () => pageMeta("Submissions & feedback")
 
 export default function SubmissionsPage() {
   return (
     <>
-      <PageHeader eyebrow="Project submissions" title="Share your work, get feedback">
-        Mentors review every submission against the Design for Social Good principles, so feedback covers community
-        voice and accessibility, not just visuals.
+      <PageHeader eyebrow="Submissions & feedback" title="Share your work, start a growth conversation">
+        Say what you think is working and where you want help. Your mentor reads that first, then writes what&apos;s
+        working and one next step for each pillar they comment on. There are no scores and no pass or fail.
       </PageHeader>
       <StudentSubmissions />
     </>

@@ -1,4 +1,5 @@
 import { index, route, type RouteConfig } from "@react-router/dev/routes"
+import { REDIRECT_PATHS } from "./routes/redirects"
 
 /** Each role area: a guarded layout (RoleShell + sidebar) with its pages nested inside. */
 const area = (role: string, pages: string[]) =>
@@ -12,18 +13,24 @@ export default [
   route("login", "routes/login.tsx"),
   route("logout", "routes/logout.ts"),
   route("chapters", "routes/chapters.tsx"),
-  route("training", "routes/training.tsx"),
-  route("training/:audience", "routes/training.audience.tsx"),
   route("api/scope", "routes/api.scope.ts"),
   route("design", "routes/design.tsx"),
 
-  area("student", ["learn", "activities", "submissions", "reflection", "community", "office-hours", "messages"]),
-  area("mentor", ["training", "submissions", "office-hours", "messages"]),
-  area("ambassador", ["training", "projects", "toolkits"]),
-  area("partner", ["submit", "gallery", "toolkit", "legal"]),
+  // The public library: one stable URL per page. Role areas link in here.
+  route("learn", "routes/learn/layout.tsx", [
+    index("routes/learn/index.tsx"),
+    route("pillars/:pillarId", "routes/learn/pillar.tsx"),
+    route("prompts", "routes/learn/prompts.tsx"),
+    route("tracks/:slug", "routes/learn/track.tsx"),
+    route("guides/:slug", "routes/learn/guide.tsx"),
+    route("self-check", "routes/learn/self-check.tsx"),
+  ]),
 
-  // v1 URLs, from before the site became role-based.
-  ...["students", "ambassadors", "problem-owners"].map((path) =>
-    route(path, "routes/legacy-redirect.ts", { id: `legacy-${path}` })
-  ),
+  area("student", ["path", "activities", "projects", "submissions", "reflection", "mentor", "community"]),
+  area("mentor", ["prepare", "mentee", "submissions"]),
+  area("ambassador", ["playbook", "matching", "projects", "toolkits"]),
+  area("partner", ["submit", "project", "gallery", "toolkit", "legal"]),
+
+  // Old URLs: v1 role pages, /training/*, and role pages merged into others.
+  ...REDIRECT_PATHS.map((path) => route(path, "routes/legacy-redirect.ts", { id: `redirect-${path.replace(/[^a-z]+/g, "-")}` })),
 ] satisfies RouteConfig
