@@ -10,6 +10,11 @@ The roles are: **apprentice** (BRIDGEGOOD's word for a student), **mentor**, **a
 
 ## Unreleased
 
+### Demo video: the seven scenes
+
+- **Everyone:** nothing changes in the app. The 1:55 demo video is recorded as seven re-recordable scenes (`scripts/demo/scenes/`). The two AI scenes (Reflection Companion, partner scoping) use labelled, hand-written synthetic sample responses, because neither live model was available.
+- **Technical:** the recording helper now starts each clip when the first page has loaded and shifts the caption times to match. `scripts/demo/samples/` holds the sample responses, shaped like the real UI-message stream and checked against the review schema. Steps to re-record a scene are in [docs/demo/recording-plan.md](docs/demo/recording-plan.md#re-recording-one-scene).
+
 ### Demo video: recording tooling
 
 - **Everyone:** nothing changes in the app. A 2-minute demo video is planned as seven independent scenes that can each be re-recorded: the script is in [docs/demo/video-script.md](docs/demo/video-script.md) and the plan in [docs/demo/recording-plan.md](docs/demo/recording-plan.md).

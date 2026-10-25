@@ -1,0 +1,35 @@
+{
+  "lens": "student",
+  "rubricVersion": "sample",
+  "summary": "A hand-written synthetic sample, not a model reply. The sign-up screen asks parents for consent with a box that is already ticked. That is worth a second look before anyone decides what it means.",
+  "observations": [
+    {
+      "pillar": "responsible-ai",
+      "promptIds": [5],
+      "kind": "ai-observation",
+      "noticed": "In your screenshot, the consent checkbox near the bottom of the form appears to be ticked already. I may be misreading the image, so please check it yourself.",
+      "evidence": [{ "kind": "visible-in-image", "where": "Consent checkbox above the Sign up button" }],
+      "confidence": "medium",
+      "question": "What would a parent need to do to say no, and would they notice that they could?"
+    },
+    {
+      "pillar": "access-inclusion",
+      "promptIds": [3],
+      "kind": "question-only",
+      "noticed": "Your note says you wanted parents to sign up in one step. Only people who know these families can say who a single step helps and who it leaves out.",
+      "evidence": [{ "kind": "quoted-text", "where": "wanted parents to sign up in one step" }],
+      "confidence": "low",
+      "question": "Who have you asked about how they would like to give or withhold consent?"
+    }
+  ],
+  "strengths": [],
+  "cannotJudge": [
+    "Whether the wording of the consent text is clear to the parents who will read it.",
+    "Whether a pre-ticked box fits the rules where your club works."
+  ],
+  "humanNext": "Your mentor, with the screenshot and one parent's view if you can ask for it.",
+  "personalDataNoticed": false,
+  "reflectionPrompts": [
+    { "promptId": 5, "question": "What choice does this screen give a parent, and who made that choice for them?" }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "_note": "Hand-written SYNTHETIC sample, not a model output. Used only by scripts/demo/scenes/04-scoping.mjs.",
+  "text": "Thanks. That sounds like a real barrier for neighbors who read Spanish more comfortably than English. I've started a draft brief. Two things I'd like you to check: who could the team hear from, with their consent, and which access needs matter most? Everything here is a draft you can edit. A person at BRIDGEGOOD reviews it.",
+  "brief": {
+    "title": "Spanish-first food pantry sign-up",
+    "organization": "neighborhood food pantry (synthetic example)",
+    "problem": "Sign-up is a paper form in English. Neighbors who read Spanish more comfortably may skip it, or fill it in wrongly, and then miss food they are entitled to.",
+    "community": "Neighbors who use the pantry, many of whom read Spanish more comfortably than English, and the volunteers who run sign-up.",
+    "communityShaping": "Suggestion to edit: invite a small group of pantry neighbors, in Spanish and English, to test early drafts of the form, with their consent. Ask volunteers what questions they get at the table. Thank people for their time with a gift card or a meal. The partner decides who to ask.",
+    "accessibilityNeeds": ["Plain Spanish and English side by side", "Large print and a paper option", "Works on a phone with a weak connection"],
+    "goals": "Neighbors can sign up in the language they read best, without help.",
+    "suggestedScope": "Redesign the sign-up form as a bilingual page and a printable version, tested with pantry neighbors before Demo Day.",
+    "openQuestions": ["Which other languages do neighbors use?", "Who keeps the sign-up data, and what do they need from it?"]
+  }
+}
