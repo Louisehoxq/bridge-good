@@ -8,7 +8,18 @@ import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
 
 /** One student ↔ mentor thread. `as` is who's typing. */
-export function Conversation({ thread, as, title }: { thread: string; as: "student" | "mentor"; title: string }) {
+export function Conversation({
+  thread,
+  as,
+  title,
+  headingLevel = 2,
+}: {
+  thread: string
+  as: "student" | "mentor"
+  title: string
+  headingLevel?: 2 | 3
+}) {
+  const H = headingLevel === 2 ? "h2" : "h3"
   const [messages, setMessages] = useCollection<Message>("messages", SEED_MESSAGES)
   const [draft, setDraft] = useState("")
   const items = messages.filter((m) => m.thread === thread)
@@ -26,9 +37,9 @@ export function Conversation({ thread, as, title }: { thread: string; as: "stude
 
   return (
     <section aria-labelledby="conversation-title" className="flex h-full min-h-[28rem] flex-col rounded-xl border bg-card">
-      <h2 id="conversation-title" className="border-b p-4 text-lg font-bold">
+      <H id="conversation-title" className="border-b p-4 text-lg font-bold">
         {title}
-      </h2>
+      </H>
       <ol className="flex-1 space-y-3 overflow-y-auto p-4" role="log" aria-label="Messages">
         {items.length === 0 && <li className="text-muted-foreground">No messages yet. Say hello.</li>}
         {items.map((m) => {
@@ -38,6 +49,7 @@ export function Conversation({ thread, as, title }: { thread: string; as: "stude
               <div className={cn("max-w-[75%] min-w-0 rounded-2xl px-4 py-2 [overflow-wrap:anywhere]", mine ? "bg-archetype text-on-archetype" : "bg-muted")}>
                 <p className="text-xs font-bold opacity-90">
                   {mine ? "You" : m.fromName} · {m.at}
+                  {m.synthetic && " · Synthetic example"}
                 </p>
                 <p className="mt-0.5 whitespace-pre-wrap">{m.body}</p>
               </div>
@@ -65,14 +77,14 @@ export function Conversation({ thread, as, title }: { thread: string; as: "stude
         </Button>
       </form>
       <p className="px-4 pb-3 text-xs text-muted-foreground">
-        Demo messaging, stored in this browser. Real messaging would follow BRIDGEGOOD&apos;s safeguarding policy.
+        Demo messaging, stored in this browser. Real messaging would follow BRIDGEGOOD&apos;s safeguarding policy. Messages marked &ldquo;Synthetic example&rdquo; are made up.
       </p>
     </section>
   )
 }
 
 /** Mentor view: list of student threads beside the open conversation. */
-export function MentorInbox() {
+export function MentorInbox({ headingLevel = 2 }: { headingLevel?: 2 | 3 }) {
   const [messages] = useCollection<Message>("messages", SEED_MESSAGES)
   const threads = Array.from(new Set(messages.map((m) => m.thread)))
   const [open, setOpen] = useState<string | null>(null)
@@ -100,7 +112,7 @@ export function MentorInbox() {
           })}
         </ul>
       </nav>
-      {current && <Conversation key={current} thread={current} as="mentor" title={`Conversation with ${current}`} />}
+      {current && <Conversation key={current} thread={current} as="mentor" title={`Conversation with ${current}`} headingLevel={headingLevel} />}
     </div>
   )
 }

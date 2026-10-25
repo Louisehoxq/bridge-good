@@ -8,8 +8,8 @@ export const meta = () => pageMeta("Toolkit & FAQs")
 export default function PartnerToolkit() {
   return (
     <>
-      <PageHeader eyebrow="Toolkit & FAQs" title="Resources for resource-constrained organisations">
-        Guides and templates for working with a student team. Downloads are placeholders for now.
+      <PageHeader eyebrow="Toolkit & FAQs" title="Resources for organizations with small teams and budgets">
+        Guides and templates for working with an apprentice team. Downloads are placeholders for now.
       </PageHeader>
       <section aria-labelledby="toolkit-title" className="mb-14">
         <h2 id="toolkit-title" className="mb-6 text-2xl font-bold">
@@ -31,7 +31,10 @@ export default function PartnerToolkit() {
                     +
                   </span>
                 </summary>
-                <p className="border-t px-5 py-4">{f.a}</p>
+                <div className="space-y-2 border-t px-5 py-4">
+                  <p>{f.a}</p>
+                  {f.draft && <p className="text-sm font-semibold text-muted-foreground">Draft: BRIDGEGOOD will confirm</p>}
+                </div>
               </details>
             </li>
           ))}

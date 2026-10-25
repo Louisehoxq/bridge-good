@@ -2,6 +2,7 @@ import { useRef, useState, type FormEvent, type RefObject } from "react"
 import { Icon } from "@/components/icon"
 import { newId, useCollection } from "@/lib/demo-store"
 import { DEMO_MENTOR, DEMO_STUDENT, SEED_SLOTS, type Slot } from "@/content/seed"
+import { SyntheticBadge } from "@/components/synthetic-badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -11,7 +12,8 @@ function focusSoon(ref: RefObject<HTMLElement | null>) {
   requestAnimationFrame(() => ref.current?.focus())
 }
 
-export function StudentOfficeHours() {
+export function StudentOfficeHours({ headingLevel = 2 }: { headingLevel?: 2 | 3 }) {
+  const H = headingLevel === 2 ? "h2" : "h3"
   const [slots, setSlots] = useCollection<Slot>("slots", SEED_SLOTS)
   const [notes, setNotes] = useState<Record<string, string>>({})
   const mine = slots.filter((s) => s.bookedBy === DEMO_STUDENT)
@@ -38,9 +40,9 @@ export function StudentOfficeHours() {
         {status}
       </p>
       <section aria-labelledby="open-slots">
-        <h2 id="open-slots" ref={openRef} tabIndex={-1} className="mb-4 text-xl font-bold">
+        <H id="open-slots" ref={openRef} tabIndex={-1} className="mb-4 text-xl font-bold">
           Open slots
-        </h2>
+        </H>
         {open.length === 0 && <p className="text-muted-foreground">No open slots right now. Check back soon.</p>}
         <ul className="grid gap-4 lg:grid-cols-2">
           {open.map((s) => (
@@ -52,6 +54,7 @@ export function StudentOfficeHours() {
               <p>
                 With {s.mentorName} · <span className="text-muted-foreground">{s.focus}</span>
               </p>
+              {s.synthetic && <SyntheticBadge />}
               <div className="space-y-1">
                 <Label htmlFor={`note-${s.id}`}>What would you like to talk about? (optional)</Label>
                 <Input id={`note-${s.id}`} value={notes[s.id] ?? ""} onChange={(e) => setNotes({ ...notes, [s.id]: e.target.value })} />
@@ -64,9 +67,9 @@ export function StudentOfficeHours() {
         </ul>
       </section>
       <section aria-labelledby="my-bookings" className="rounded-2xl bg-archetype-soft p-5">
-        <h2 id="my-bookings" ref={bookingsRef} tabIndex={-1} className="mb-4 text-xl font-bold">
+        <H id="my-bookings" ref={bookingsRef} tabIndex={-1} className="mb-4 text-xl font-bold">
           Your bookings
-        </h2>
+        </H>
         <ul className="space-y-3">
           {mine.length === 0 && <li className="text-muted-foreground">You haven&apos;t booked anything yet.</li>}
           {mine.map((s) => (
@@ -85,7 +88,8 @@ export function StudentOfficeHours() {
   )
 }
 
-export function MentorOfficeHours() {
+export function MentorOfficeHours({ headingLevel = 2 }: { headingLevel?: 2 | 3 }) {
+  const H = headingLevel === 2 ? "h2" : "h3"
   const [slots, setSlots] = useCollection<Slot>("slots", SEED_SLOTS)
   const [when, setWhen] = useState("")
   const [focus, setFocus] = useState("")
@@ -114,9 +118,9 @@ export function MentorOfficeHours() {
         {status}
       </p>
       <section aria-labelledby="your-slots">
-        <h2 id="your-slots" ref={slotsRef} tabIndex={-1} className="mb-4 text-xl font-bold">
+        <H id="your-slots" ref={slotsRef} tabIndex={-1} className="mb-4 text-xl font-bold">
           Your slots
-        </h2>
+        </H>
         <ul className="space-y-3">
           {mine.map((s) => (
             <li key={s.id} className="flex flex-wrap items-center gap-4 rounded-xl border bg-card p-4">
@@ -142,14 +146,14 @@ export function MentorOfficeHours() {
         </ul>
       </section>
       <form onSubmit={add} className="space-y-4 rounded-2xl border bg-card p-5" aria-labelledby="add-slot">
-        <h2 id="add-slot" className="text-xl font-bold">
+        <H id="add-slot" className="text-xl font-bold">
           Offer a slot
-        </h2>
+        </H>
         <div className="space-y-1">
           <Label htmlFor="slot-when" className="font-bold">
             When
           </Label>
-          <Input id="slot-when" value={when} onChange={(e) => setWhen(e.target.value)} placeholder="e.g. Mon 4 Nov, 5:00–5:30 pm PT" />
+          <Input id="slot-when" value={when} onChange={(e) => setWhen(e.target.value)} placeholder="e.g. Mon, Nov 4, 5:00–5:30 PM PT" />
         </div>
         <div className="space-y-1">
           <Label htmlFor="slot-focus" className="font-bold">

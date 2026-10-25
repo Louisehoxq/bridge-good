@@ -3,6 +3,7 @@ import { DefaultChatTransport } from "ai"
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react"
 import { Icon } from "@/components/icon"
 import { BRIEF_FIELDS, type Brief } from "@/lib/brief"
+import { DECISION_MOMENT_INFO, promptsForMoment } from "@/content/framework"
 import { newId, nowLabel, useCollection } from "@/lib/demo-store"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -280,6 +281,7 @@ const REQUIRED: { key: keyof Brief; message: string }[] = [
   { key: "title", message: "Add a project title" },
   { key: "problem", message: "Describe the problem" },
   { key: "community", message: "Describe the community affected" },
+  { key: "communityShaping", message: "Say how the people you serve will shape this" },
 ]
 
 const asText = (value: Brief[keyof Brief]) => (Array.isArray(value) ? value.join("\n") : (value ?? ""))
@@ -329,7 +331,7 @@ function BriefEditor({ aiBrief, onStartOver }: { aiBrief: Brief; onStartOver: ()
           &ldquo;{submitted}&rdquo; is with BRIDGEGOOD. In the real service, a person would review it, follow up with
           questions, and look for an ambassador and student team.
         </p>
-        <p className="mt-2 text-sm text-muted-foreground">Demo: saved in this browser only. It now appears on your overview.</p>
+        <p className="mt-2 text-sm text-muted-foreground">Demo: saved in this browser only. It now appears on your overview and on My project and team.</p>
         <Button
           variant="outline"
           className="mt-4"
@@ -380,7 +382,8 @@ function BriefEditor({ aiBrief, onStartOver }: { aiBrief: Brief; onStartOver: ()
           const fromAi = aiBrief[f.key] !== undefined && edits[f.key] === undefined
           const id = `brief-field-${f.key}`
           const error = errors.find((er) => er.key === f.key)
-          const describedBy = [f.list && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(" ") || undefined
+          const required = REQUIRED.some((r) => r.key === f.key)
+          const describedBy = [(f.list || f.hint) && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(" ") || undefined
           const fieldProps = {
             id,
             value: text(f.key),
@@ -392,11 +395,12 @@ function BriefEditor({ aiBrief, onStartOver }: { aiBrief: Brief; onStartOver: ()
             <div key={f.key} className={cn("space-y-1", (f.long || f.list) && "lg:col-span-2")}>
               <Label htmlFor={id} className="font-bold">
                 {f.label}
+                {required && <span className="ml-1 font-normal text-muted-foreground">(required)</span>}
                 {fromAi && <span className="ml-2 rounded bg-archetype-soft px-1.5 py-0.5 text-xs font-semibold text-archetype">AI draft</span>}
               </Label>
-              {f.list && (
+              {(f.list || f.hint) && (
                 <p id={`${id}-hint`} className="text-xs text-muted-foreground">
-                  One per line
+                  {f.hint ?? "One per line"}
                 </p>
               )}
               {error && (
@@ -408,6 +412,15 @@ function BriefEditor({ aiBrief, onStartOver }: { aiBrief: Brief; onStartOver: ()
             </div>
           )
         })}
+      </div>
+      <div className="rounded-xl bg-muted p-4">
+        <p className="font-bold">{DECISION_MOMENT_INFO.partnerBrief.label}</p>
+        <p className="text-sm">{DECISION_MOMENT_INFO.partnerBrief.intro}</p>
+        <ul className="mt-2 list-disc space-y-1 pl-5">
+          {promptsForMoment("partnerBrief").map((p) => (
+            <li key={p.id}>{p.text}</li>
+          ))}
+        </ul>
       </div>
       <Button type="submit" size="lg" className="bg-archetype text-on-archetype hover:bg-archetype/90">
         Send brief to BRIDGEGOOD

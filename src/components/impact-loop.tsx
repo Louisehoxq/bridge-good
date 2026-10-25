@@ -2,11 +2,11 @@ import { ROLE_INFO, type Role } from "@/lib/roles"
 import { cn } from "@/lib/utils"
 
 const STEPS: { roles: Role[]; title: string; body: string }[] = [
-  { roles: ["partner"], title: "A partner shares a problem", body: ROLE_INFO.partner.loopRole },
+  { roles: ["partner"], title: "A community partner shares a problem", body: ROLE_INFO.partner.loopRole },
   { roles: ["ambassador"], title: "An ambassador gathers support", body: ROLE_INFO.ambassador.loopRole },
   {
     roles: ["student", "mentor"],
-    title: "Students design with the community, mentors guide",
+    title: "Apprentices design with the community, mentors guide",
     body: `${ROLE_INFO.student.loopRole}. Mentors: ${ROLE_INFO.mentor.loopRole.toLowerCase()}.`,
   },
   {
@@ -48,8 +48,8 @@ export function ImpactLoop({ current }: { current?: Role }) {
         })}
       </ol>
       <p className="mt-4 text-sm text-muted-foreground">
-        Step 4 leads back to step 1. Every project leaves the community, the people involved and the philosophy itself a
-        little stronger.
+        Step 4 leads back to step 1. What partners, students and mentors send back goes to BRIDGEGOOD. BRIDGEGOOD decides
+        what changes in the philosophy, and credits where each change came from.
       </p>
     </div>
   )

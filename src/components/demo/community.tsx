@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react"
 import { newId, nowLabel, useCollection } from "@/lib/demo-store"
 import { CIRCLES, DEMO_STUDENT, SEED_POSTS, type Post } from "@/content/seed"
+import { SyntheticBadge } from "@/components/synthetic-badge"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -59,8 +60,9 @@ export function CommunityOfPractice() {
         <ul className="space-y-3">
           {items.map((p) => (
             <li key={p.id} className="rounded-xl border bg-card p-4">
-              <p className="text-sm">
+              <p className="flex flex-wrap items-center gap-2 text-sm">
                 <span className="font-bold">{p.author}</span> <span className="text-muted-foreground">· {p.at}</span>
+                {p.synthetic && <SyntheticBadge />}
               </p>
               <p className="mt-1">{p.body}</p>
             </li>

@@ -111,7 +111,7 @@ export function ChapterFinder() {
                   <h3 id={`${c.id}-title`} className="text-lg font-bold">
                     {c.city}, {c.country}
                   </h3>
-                  <SyntheticBadge />
+                  {c.synthetic && <SyntheticBadge />}
                 </div>
                 <p className="mt-1">
                   Ambassador: <span className="font-bold">{c.ambassador}</span>, {c.organisation}

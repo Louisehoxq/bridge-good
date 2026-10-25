@@ -9,10 +9,10 @@ export function SiteFooter() {
         <div className="space-y-3">
           <p className="max-w-prose">
             The Design for Social Good philosophy is created and stewarded by BRIDGEGOOD. It grows through feedback from
-            the students, mentors, ambassadors, partners and communities who practise it.
+            the students, mentors, ambassadors, partners and communities who practice it.
           </p>
           <p className="text-sm text-muted-foreground">
-            Hackathon prototype. Every person, organisation, chapter and project shown is a synthetic example, not a
+            Hackathon prototype. Every person, organization, chapter and project shown is a synthetic example, not a
             real BRIDGEGOOD participant. Demo data stays in this browser.
           </p>
         </div>

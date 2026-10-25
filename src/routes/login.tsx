@@ -3,7 +3,7 @@ import type { Route } from "./+types/login"
 import { AppShell } from "@/components/app-shell"
 import { LoginChooser } from "@/components/login-chooser"
 import { pageMeta } from "@/lib/meta"
-import { isRole } from "@/lib/roles"
+import { isAmbassadorKind, isRole } from "@/lib/roles"
 import { loginAs } from "@/lib/session.server"
 
 export const meta = () => pageMeta("Log in")
@@ -12,7 +12,8 @@ export async function action({ request }: Route.ActionArgs) {
   const form = await request.formData()
   const role = form.get("role")
   if (!isRole(role)) return data({ error: "Choose one of the demo accounts." }, { status: 400 })
-  return loginAs(role, String(form.get("next") ?? ""))
+  const kind = form.get("ambassadorKind")
+  return loginAs(role, String(form.get("next") ?? ""), isAmbassadorKind(kind) ? kind : undefined)
 }
 
 export default function LoginPage() {

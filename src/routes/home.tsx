@@ -1,6 +1,8 @@
 import { Link } from "react-router"
 import { Icon } from "@/components/icon"
 import { COMPARISON, GLOSSARY } from "@/content/glossary"
+import { FRAMEWORK_META, PILLARS } from "@/content/framework"
+import { PRINCIPLES_INTRO } from "@/content/principles"
 import { AppShell } from "@/components/app-shell"
 import { ImpactLoop } from "@/components/impact-loop"
 import { PrinciplesTable } from "@/components/principles-table"
@@ -10,6 +12,7 @@ import { cn } from "@/lib/utils"
 const TOC = [
   { id: "mission", label: "Mission" },
   { id: "why", label: "Why Design for Social Good" },
+  { id: "framework", label: "The framework" },
   { id: "loop", label: "How it fits together" },
   { id: "principles", label: "Principles by role" },
   { id: "terms", label: "Terms of reference" },
@@ -17,10 +20,10 @@ const TOC = [
 ]
 
 const RESOURCES = [
-  { title: "Design for Social Good principles (one-page summary)", kind: "PDF", status: "Coming soon" },
-  { title: "Inclusive language guide", kind: "Guide", status: "Coming soon" },
-  { title: "Consent & privacy for community research", kind: "Guide", status: "Coming soon" },
-  { title: "Capstone project lifecycle", kind: "Diagram", status: "Coming soon" },
+  { title: "Inclusive language guide", href: "/learn/guides/inclusive-language" },
+  { title: "The 12 reflection prompts", href: "/learn/prompts" },
+  { title: "Adapt, don't copy: running the philosophy locally", href: "/learn/guides/adapt-locally" },
+  { title: "Is this a good fit for you right now?", href: "/learn/self-check" },
 ]
 
 const EXTERNAL = [
@@ -36,26 +39,30 @@ export default function WelcomePage() {
           <div className="space-y-6">
             <p className="text-sm font-bold tracking-wide text-primary uppercase">BRIDGEGOOD · Design for Social Good</p>
             <h1 id="hero-title" className="text-5xl font-bold lg:text-6xl">
-              Design that starts with community, and leaves it stronger.
+              Design for Social Good: how BRIDGEGOOD works, and how you can work this way too
             </h1>
             <p className="max-w-2xl text-xl">
-              A shared home for BRIDGEGOOD&apos;s philosophy: what it means, why it&apos;s different, and how students,
-              mentors, ambassadors and partners put it into practice.
+              In BRIDGEGOOD&apos;s approach, the community a project serves helps define the problem and judge the result.
+              Emerging designers from groups underrepresented in design do the work, with mentors. A project counts only if
+              it works for the community and the designers grow through it.
             </p>
             <div className="flex flex-wrap gap-3">
               <Link to="/login" className={buttonVariants({ size: "lg" })}>
                 Log in to your area
                 <Icon name="arrow_forward" />
               </Link>
+              <Link to="/learn" className={buttonVariants({ size: "lg", variant: "outline" })}>
+                Read the library
+              </Link>
               <Link to="/chapters" className={buttonVariants({ size: "lg", variant: "outline" })}>
-                Find a chapter near you
+                See the proposed chapter model
               </Link>
             </div>
           </div>
           <dl className="grid grid-cols-2 gap-4">
             {[
               ["Since 2009", "connecting design with confidence, access, community and economic mobility"],
-              ["4 roles", "students, mentors, ambassadors and partners, all in one loop"],
+              ["$0 tuition", "for BRIDGEGOOD apprentices, with no income share agreements (public fact; confirm with BRIDGEGOOD)"],
             ].map(([k, v]) => (
               <div key={k} className="rounded-2xl bg-background p-5">
                 <dt className="font-heading text-2xl font-bold">{k}</dt>
@@ -88,9 +95,6 @@ export default function WelcomePage() {
               <h2 id="mission-title" className="text-3xl font-bold lg:text-4xl">
                 Mission & philosophy
               </h2>
-              <blockquote className="border-l-4 border-primary pl-5 text-xl">
-                [BRIDGEGOOD&apos;s official mission statement goes here. Use the Design System&apos;s approved wording.]
-              </blockquote>
               <p className="text-lg">
                 Since 2009, BRIDGEGOOD has helped people see themselves as creators, leaders and problem-solvers. Design
                 for Social Good is the way of working behind that: design that benefits communities, values lived
@@ -101,7 +105,7 @@ export default function WelcomePage() {
               <h3 className="text-lg font-bold">This philosophy belongs to a community</h3>
               <ul className="mt-3 list-disc space-y-2 pl-5">
                 <li>BRIDGEGOOD authors and stewards it.</li>
-                <li>Students, mentors, ambassadors and partners practise it, and improve it through feedback.</li>
+                <li>Students, mentors, ambassadors and partners practice it, and improve it through feedback.</li>
                 <li>Communities can adapt it locally while keeping its core commitments.</li>
                 <li>Technology on this site supports the relationships behind it. It doesn&apos;t replace them.</li>
               </ul>
@@ -113,7 +117,7 @@ export default function WelcomePage() {
               Why Design for Social Good, rather than other philosophies?
             </h2>
             <p className="mt-3 mb-8 max-w-3xl text-lg text-muted-foreground">
-              It builds on human-centred design and design thinking. The difference is in who holds power, who does the
+              It builds on human-centered design and design thinking. The difference is in who holds power, who does the
               work, and who benefits.
             </p>
             <div className="overflow-x-auto rounded-xl border" role="region" aria-label="Comparison of design approaches" tabIndex={0}>
@@ -154,6 +158,32 @@ export default function WelcomePage() {
             </div>
           </section>
 
+          <section id="framework" aria-labelledby="framework-title">
+            <h2 id="framework-title" className="text-3xl font-bold lg:text-4xl">
+              The framework
+            </h2>
+            <p className="mt-3 mb-8 max-w-3xl text-lg text-muted-foreground">
+              Five pillars describe what apprentices learn. Each one has a plain meaning, an example, a learning outcome
+              and reflection prompts. {FRAMEWORK_META.author} authors and owns the framework. This is version{" "}
+              {FRAMEWORK_META.version}, a {FRAMEWORK_META.status.toLowerCase()}, updated {FRAMEWORK_META.updated}.
+            </p>
+            <ol className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {PILLARS.map((p) => (
+                <li key={p.id}>
+                  <Link to={`/learn/pillars/${p.id}`} className="group flex h-full flex-col gap-2 rounded-xl border bg-card p-5 hover:border-primary hover:bg-muted">
+                    <span className="text-sm font-bold text-muted-foreground">Pillar {p.number}</span>
+                    <span className="text-lg font-bold">{p.name}</span>
+                    <span className="text-muted-foreground">{p.learningOutcome}</span>
+                    <span className="mt-auto inline-flex items-center gap-2 pt-2 font-bold text-primary">
+                      Read about {p.name}
+                      <Icon name="arrow_forward" className="text-base transition-transform group-hover:translate-x-1" />
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </section>
+
           <section id="loop" aria-labelledby="loop-title">
             <h2 id="loop-title" className="mb-8 text-3xl font-bold lg:text-4xl">
               How it fits together
@@ -166,8 +196,7 @@ export default function WelcomePage() {
               Principles by role
             </h2>
             <p className="mt-3 mb-8 max-w-3xl text-lg text-muted-foreground">
-              Each principle is something people do, so it means something specific for each role. Draft wording, for
-              BRIDGEGOOD to review.
+              {PRINCIPLES_INTRO} Draft wording, for BRIDGEGOOD to review.
             </p>
             <PrinciplesTable />
           </section>
@@ -201,13 +230,12 @@ export default function WelcomePage() {
             <div className="grid gap-8 xl:grid-cols-[2fr_1fr]">
               <ul className="divide-y rounded-xl border">
                 {RESOURCES.map((r) => (
-                  <li key={r.title} className="flex items-center gap-4 p-4">
-                    <Icon name="description" className="text-xl shrink-0 text-primary" />
-                    <span className="flex-1">
-                      <span className="block font-bold">{r.title}</span>
-                      <span className="text-sm text-muted-foreground">{r.kind}</span>
-                    </span>
-                    <span className="rounded-full bg-muted px-3 py-1 text-sm">{r.status}</span>
+                  <li key={r.href}>
+                    <Link to={r.href} className="flex min-h-12 items-center gap-4 p-4 hover:bg-muted">
+                      <Icon name="description" className="text-xl shrink-0 text-primary" />
+                      <span className="flex-1 font-bold underline-offset-4">{r.title}</span>
+                      <Icon name="arrow_forward" className="text-base text-primary" />
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -224,7 +252,7 @@ export default function WelcomePage() {
                   ))}
                 </ul>
                 <p className="mt-4 text-sm text-muted-foreground">
-                  Full training for each role is in <Link to="/training" className="underline underline-offset-4">Training</Link>.
+                  Guides and tracks for each role are in the <Link to="/learn" className="underline underline-offset-4">Library</Link>.
                 </p>
               </div>
             </div>
