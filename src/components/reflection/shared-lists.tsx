@@ -82,7 +82,7 @@ export function SavedReflections() {
         <h2 id={`${id}-title`} className="type-title-3">
           Your reflections
         </h2>
-        <p className="text-muted-foreground">Only you see these. Demo: saved in this browser.</p>
+        <p className="text-muted-foreground">Only you see these.</p>
       </div>
       {list.length === 0 ? (
         <p>Nothing saved yet.</p>

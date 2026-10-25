@@ -31,8 +31,8 @@ export default function StudentHome() {
         </h2>
         <p className="mb-6 text-muted-foreground">
           {team
-            ? "The people you design with, from the partner who brought the problem to your chapter lead. Everyone shown is a synthetic example."
-            : "You and the people who help you along the way. Everyone shown is a synthetic example."}
+            ? "The people you design with, from the partner who brought the problem to your chapter lead."
+            : "You and the people who help you along the way."}
         </p>
         <TeamView
           label={team ? "Your project team" : "You, your mentor and your chapter lead"}

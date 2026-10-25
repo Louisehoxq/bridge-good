@@ -10,7 +10,7 @@ export default function StudentMentor() {
   return (
     <>
       <PageHeader title={`${DEMO_MENTOR}, your mentor`}>
-        {DEMO_MENTOR} is a product designer and BRIDGEGOOD alum who volunteers as a mentor (synthetic example). Message
+        {DEMO_MENTOR} is a product designer and BRIDGEGOOD alum who volunteers as a mentor. Message
         them any time, or book office hours for a longer conversation.
       </PageHeader>
       <div className="space-y-12">

@@ -18,8 +18,7 @@ export default function ReflectionPage({ loaderData }: Route.ComponentProps) {
   return (
     <>
       <PageHeader title="Reflection companion (AI): questions about your work, not grades">
-        Describe a mini project or capstone sprint. The companion is AI: it asks questions tied to BRIDGEGOOD&apos;s Design for Social Good
-        pillars, and it never scores your work. You decide what to keep and what to share with your mentor.
+        Describe a mini project or capstone sprint. It asks questions tied to BRIDGEGOOD&apos;s Design for Social Good pillars. You decide what to keep and what to share with your mentor.
       </PageHeader>
       <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_22rem]">
         <ReflectionCompanion aiEnabled={loaderData.aiEnabled} modelLabel={loaderData.modelLabel} freeTierNotice={loaderData.freeTierNotice} />
