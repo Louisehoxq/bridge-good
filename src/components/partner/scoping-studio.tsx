@@ -134,7 +134,7 @@ export function ScopingStudio({ aiEnabled }: { aiEnabled: boolean }) {
   }
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[5fr_6fr] 2xl:grid-cols-[1fr_1fr]">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-6 xl:grid-cols-[5fr_6fr] 2xl:grid-cols-[1fr_1fr]">
       <section aria-labelledby="chat-title" className="flex min-h-[32rem] flex-col rounded-2xl border bg-card xl:sticky xl:top-20 xl:h-[calc(100vh-7rem)]">
         <header className="flex items-center gap-3 border-b p-4">
           <span className="flex size-10 items-center justify-center rounded-full bg-archetype text-on-archetype" aria-hidden="true">
@@ -251,7 +251,7 @@ export function ScopingStudio({ aiEnabled }: { aiEnabled: boolean }) {
               placeholder="Describe the problem… (Enter to send, Shift+Enter for a new line)"
               rows={3}
             />
-            <div className="flex items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <label className="inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-full border border-input px-4 text-sm font-medium text-primary hover:bg-muted has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring">
                 <Icon name="add_photo_alternate" className="text-base" />
                 Add screenshot
@@ -422,7 +422,7 @@ function BriefEditor({ aiBrief, onStartOver }: { aiBrief: Brief; onStartOver: ()
           ))}
         </ul>
       </div>
-      <Button type="submit" size="lg" className="bg-archetype text-on-archetype hover:bg-archetype/90">
+      <Button type="submit" size="lg" className="h-auto bg-archetype py-3 whitespace-normal text-on-archetype hover:bg-archetype/90">
         Send brief to BRIDGEGOOD
       </Button>
     </form>
