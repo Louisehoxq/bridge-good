@@ -14,7 +14,7 @@ import { NativeSelect } from "@/components/ui/select"
 const LABELS: Record<string, string> = {
   "retro-worked": "What worked",
   "retro-didnt": "What didn't",
-  "retro-change": "What BRIDGEGOOD should change",
+  "retro-change": "What your community chapter should change",
   "retro-community": "How the community took part",
 }
 
@@ -76,7 +76,7 @@ export function PartnerRetrospective({ projectId, projectTitle }: { projectId: s
     setCommunity(undefined)
     setPillar("")
     setCredit(false)
-    setSent("Sent to the BRIDGEGOOD steward. Their decision and reason will show here.")
+    setSent("Sent to your community chapter. Their decision and reason will show here.")
   }
 
   return (
@@ -87,9 +87,9 @@ export function PartnerRetrospective({ projectId, projectTitle }: { projectId: s
             Project retrospective
           </h2>
           <p className="text-muted-foreground">
-            At the end of the sprint, tell BRIDGEGOOD what the project taught you about the Design for Social Good approach. Talk with
-            your team and community first, then share the patterns. A BRIDGEGOOD steward reads it and replies with a decision and a
-            reason.
+            At the end of the sprint, tell your community chapter what the project taught you about the Design for Social Good approach.
+            Talk with your team and community first, then share the patterns. Your chapter lead reads it and replies with a
+            decision and a reason.
           </p>
         </div>
         <ErrorSummary errors={errors} labels={LABELS} summaryRef={summaryRef} />
@@ -97,7 +97,7 @@ export function PartnerRetrospective({ projectId, projectTitle }: { projectId: s
         <TextField id="retro-didnt" label="What didn't?" error={errors["retro-didnt"]} />
         <TextField
           id="retro-change"
-          label="What should BRIDGEGOOD change in how it works with partners?"
+          label="What should your community chapter change in how it works with partners?"
           hint="Describe what people said as a group. No names, and only what they agreed to share."
           error={errors["retro-change"]}
         />

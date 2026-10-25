@@ -12,7 +12,7 @@ export function SubmittedBriefs() {
         Your submitted briefs
       </h2>
       {briefs.length === 0 ? (
-        <p className="text-muted-foreground">Nothing submitted yet. Briefs you send appear here while BRIDGEGOOD reviews them.</p>
+        <p className="text-muted-foreground">Nothing submitted yet. Briefs you send appear here while your community chapter reviews them.</p>
       ) : (
         <ul className="space-y-3">
           {briefs.toReversed().map((b) => (
@@ -21,7 +21,7 @@ export function SubmittedBriefs() {
                 <p className="font-bold [overflow-wrap:anywhere]">{b.title}</p>
                 <p className="type-small text-muted-foreground">Sent {b.submittedAt}</p>
               </div>
-              <RoleBadge role="steward">With BRIDGEGOOD for review</RoleBadge>
+              <RoleBadge role="steward">With your community chapter for review</RoleBadge>
             </li>
           ))}
         </ul>
