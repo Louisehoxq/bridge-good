@@ -86,7 +86,7 @@ export const GLOSSARY: { term: string; definition: string; inPractice: string; n
   },
   {
     term: "Chapter",
-    definition: "Proposed chapter model (concept): a local group led by an ambassador that runs projects and community events.",
+    definition: "A local group led by an ambassador that runs projects and community events.",
     inPractice: "Adapts the philosophy to local needs while keeping its core commitments.",
   },
   {
