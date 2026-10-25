@@ -138,7 +138,7 @@ export function ScopingStudio({ aiEnabled }: { aiEnabled: boolean }) {
   }
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[5fr_6fr] 2xl:grid-cols-[1fr_1fr]">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-6 xl:grid-cols-[5fr_6fr] 2xl:grid-cols-[1fr_1fr]">
       <section aria-labelledby="chat-title" className="flex min-h-[32rem] flex-col rounded-2xl border bg-card xl:sticky xl:top-20 xl:h-[calc(100vh-7rem)]">
         <header className="flex items-center gap-3 border-b p-4">
           <span className="flex size-10 shrink-0 items-center justify-center rounded-full border-[1.5px] border-dashed border-draft bg-draft-soft text-draft" aria-hidden="true">
@@ -488,7 +488,7 @@ function BriefEditor({ aiBrief, onStartOver }: { aiBrief: Brief; onStartOver: ()
           ))}
         </ul>
       </div>
-      <Button type="submit" size="lg" className="bg-archetype text-on-archetype hover:bg-archetype/90">
+      <Button type="submit" size="lg" className="h-auto bg-archetype py-3 whitespace-normal text-on-archetype hover:bg-archetype/90">
         Send brief to BRIDGEGOOD
       </Button>
     </form>
