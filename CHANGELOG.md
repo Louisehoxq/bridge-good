@@ -10,6 +10,10 @@ The roles are: **apprentice** (BRIDGEGOOD's word for a student), **mentor**, **a
 
 ## Unreleased
 
+### Anthropic key testing steps
+
+- `docs/gemma-prototype.md` explains how to test the companion with an Anthropic key, the fallback to Gemma. Docs only.
+
 ### Reflection Companion: Gemma first, on free and local providers
 
 The companion can now run on Gemma 4, Google's open-weights model, on your own machine or on a free tier, with Claude as the fallback. Nothing has run against a live model yet.
