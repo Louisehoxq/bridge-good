@@ -41,3 +41,9 @@ yarn-error.log*
 
 # claude code worktrees (skills in .claude/skills are committed)
 /.claude/worktrees/
+
+# demo video (generated)
+/docs/demo/state/
+/docs/demo/clips/
+/docs/demo/.tmp/
+/docs/demo/bridgegoodx-demo.*
