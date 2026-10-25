@@ -11,7 +11,7 @@ export function SiteFooter() {
             The Design for Social Good philosophy is created and stewarded by BRIDGEGOOD. It grows through feedback from
             the students, mentors, ambassadors, partners and communities who practice it.
           </p>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground">
             Hackathon prototype. Every person, organization, chapter and project shown is a synthetic example, not a
             real BRIDGEGOOD participant. Demo data stays in this browser.
           </p>

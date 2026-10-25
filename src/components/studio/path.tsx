@@ -29,17 +29,20 @@ export function Path({ nodes, className }: { nodes: number; className?: string }
   )
 }
 
-/** A team joined by the path. Pass one <li> per person, each holding a stacked <PeopleChip>. */
+/**
+ * A team joined by the path. Pass one <li> per person, each holding a stacked <PeopleChip>.
+ * On narrow screens the team stacks as a plain list and the path is hidden, so nothing scrolls sideways.
+ */
 export function TeamPath({ label, children, className }: { label: string; children: ReactNode; className?: string }) {
   const count = Children.count(children)
   return (
     <div className={cn("relative", className)}>
       {/* Centered on the 44px avatars. */}
-      {count > 1 && <Path nodes={count} className="top-0.5" />}
+      {count > 1 && <Path nodes={count} className="top-0.5 hidden sm:block" />}
       <ul
         aria-label={label}
-        className="relative grid gap-4"
-        style={{ gridTemplateColumns: `repeat(${count}, minmax(0, 1fr))` }}
+        className="relative grid gap-4 sm:grid-cols-[repeat(var(--people),minmax(0,1fr))]"
+        style={{ "--people": count } as CSSProperties}
       >
         {children}
       </ul>

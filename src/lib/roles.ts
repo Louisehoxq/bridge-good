@@ -37,12 +37,11 @@ export const ROLE_INFO: Record<Role, RoleInfo> = {
     loopRole: "Design with the community and build a portfolio from real work",
     demoAccount: { name: "Ari Santos", detail: "Apprentice, Chicago chapter (synthetic)" },
     sidebar: [
-      { items: [{ label: "Overview", href: "/student" }] },
       {
         label: "Your path",
         items: [
-          { label: "Your path", href: "/student/path" },
-          { label: "Practice", href: "/student/activities" },
+          { label: "Your path", href: "/student" },
+          { label: "Practice", href: "/student/practice" },
           { label: "Choose a project", href: "/student/projects" },
           { label: "Submissions & feedback", href: "/student/submissions" },
           { label: "Reflection companion", href: "/student/reflection" },
@@ -70,7 +69,7 @@ export const ROLE_INFO: Record<Role, RoleInfo> = {
         label: "Your path",
         items: [
           { label: "Prepare", href: "/mentor/prepare" },
-          { label: "Growth conversations", href: "/mentor/submissions" },
+          { label: "Growth conversations", href: "/mentor/conversations" },
         ],
       },
       { label: "Your people", items: [{ label: "My mentee", href: "/mentor/mentee" }] },
@@ -117,7 +116,6 @@ export const ROLE_INFO: Record<Role, RoleInfo> = {
         items: [
           { label: "Project gallery", href: "/partner/gallery" },
           { label: "Toolkit & FAQs", href: "/partner/toolkit" },
-          { label: "Funding & legal templates", href: "/partner/legal" },
         ],
       },
     ],

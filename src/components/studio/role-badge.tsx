@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 import { Icon, type IconName } from "@/components/icon"
-import type { Role } from "@/lib/roles"
+import type { Role, Session } from "@/lib/roles"
 import { cn } from "@/lib/utils"
 
 /**
@@ -25,6 +25,11 @@ export const STUDIO_ROLE_FOR = {
   ambassador: "chapter-lead",
   partner: "community-partner",
 } as const satisfies Record<Role, StudioRole>
+
+/** The Bridge Studio role for a signed-in demo session: ambassadors show as their own kind. */
+export function studioRoleFor(session: Session): StudioRole {
+  return session.role === "ambassador" ? (session.ambassadorKind ?? "chapter-lead") : STUDIO_ROLE_FOR[session.role]
+}
 
 /** A fully round tag in the role's soft tint, with its icon and a word. `children` replaces the default label. */
 export function RoleBadge({ role, children, className }: { role: StudioRole; children?: ReactNode; className?: string }) {

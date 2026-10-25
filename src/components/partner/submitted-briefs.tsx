@@ -1,4 +1,5 @@
 import { useCollection } from "@/lib/demo-store"
+import { RoleBadge } from "@/components/studio/role-badge"
 import type { SubmittedBrief } from "@/components/partner/scoping-studio"
 
 const NONE: SubmittedBrief[] = []
@@ -6,8 +7,8 @@ const NONE: SubmittedBrief[] = []
 export function SubmittedBriefs() {
   const [briefs] = useCollection<SubmittedBrief>("briefs", NONE)
   return (
-    <section aria-labelledby="briefs-title" className="rounded-2xl border bg-card p-6">
-      <h2 id="briefs-title" className="mb-3 text-xl font-bold">
+    <section aria-labelledby="briefs-title" className="min-w-0 rounded-2xl border bg-card p-6">
+      <h2 id="briefs-title" className="mb-3 type-title-3">
         Your submitted briefs
       </h2>
       {briefs.length === 0 ? (
@@ -16,11 +17,11 @@ export function SubmittedBriefs() {
         <ul className="space-y-3">
           {briefs.toReversed().map((b) => (
             <li key={b.id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl border p-4">
-              <div>
-                <p className="font-bold">{b.title}</p>
-                <p className="text-sm text-muted-foreground">Sent {b.submittedAt}</p>
+              <div className="min-w-0">
+                <p className="font-bold [overflow-wrap:anywhere]">{b.title}</p>
+                <p className="type-small text-muted-foreground">Sent {b.submittedAt}</p>
               </div>
-              <span className="rounded-full bg-archetype-soft px-3 py-1 text-sm font-bold text-archetype">With BRIDGEGOOD for review</span>
+              <RoleBadge role="steward">With BRIDGEGOOD for review</RoleBadge>
             </li>
           ))}
         </ul>

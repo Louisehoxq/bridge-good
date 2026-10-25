@@ -10,13 +10,13 @@ const ORDER: ProblemStatus[] = ["needs-sponsor", "open-for-students", "in-progre
 export default function AmbassadorProjects() {
   return (
     <>
-      <PageHeader eyebrow="Partner pipeline" title="Your project pipeline">
+      <PageHeader title="Your project pipeline">
         Problems submitted by community partners, from first contact to Demo Day. Find sponsors for the ones that need support, and form teams on Matching &amp; milestones.
       </PageHeader>
       <div className="space-y-12">
         {ORDER.map((status) => (
           <section key={status} aria-labelledby={`${status}-title`}>
-            <h2 id={`${status}-title`} className="mb-4 text-xl font-bold">
+            <h2 id={`${status}-title`} className="mb-4 type-title-3">
               {STATUS_LABEL[status]}
             </h2>
             <ProblemBoard status={[status]} />

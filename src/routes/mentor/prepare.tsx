@@ -18,20 +18,22 @@ const READING = [
 export default function MentorPrepare() {
   return (
     <>
-      <PageHeader eyebrow="Prepare" title="Your mentor path">
+      <PageHeader title="Your mentor path">
         Start with the one-page explainer. Use the modules in any order, when you need them. Everything you read lives in
         the public library, so your mentee can read the same pages.
       </PageHeader>
       <div className="grid gap-8 xl:grid-cols-[3fr_2fr]">
         <PathStepper pathKey="mentor" />
-        <aside className="h-fit space-y-4">
-          <h2 className="text-xl font-bold">Read before you start</h2>
+        <aside aria-labelledby="reading-title" className="h-fit space-y-4">
+          <h2 id="reading-title" className="type-title-3">
+            Read before you start
+          </h2>
           <ul className="space-y-3">
             {READING.map((r) => (
               <li key={r.href}>
                 <Link to={r.href} className="block rounded-xl border bg-card p-4 hover:border-archetype hover:bg-archetype-soft">
                   <span className="block font-bold underline-offset-4">{r.title}</span>
-                  <span className="text-sm text-muted-foreground">{r.why}</span>
+                  <span className="text-muted-foreground">{r.why}</span>
                 </Link>
               </li>
             ))}
@@ -39,7 +41,7 @@ export default function MentorPrepare() {
         </aside>
       </div>
       <section aria-labelledby="principles-title" className="mt-14">
-        <h2 id="principles-title" className="mb-6 text-2xl font-bold">
+        <h2 id="principles-title" className="mb-6 type-title-2">
           How BRIDGEGOOD works with mentors
         </h2>
         <PrinciplesInPractice role="mentor" />

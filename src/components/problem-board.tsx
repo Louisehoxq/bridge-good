@@ -1,6 +1,14 @@
-import { Icon } from "@/components/icon"
+import { Icon, type IconName } from "@/components/icon"
 import { OUTCOME_LABEL, PROBLEMS, STATUS_LABEL, type ProblemStatus } from "@/content/problems"
 import { SyntheticBadge } from "@/components/synthetic-badge"
+
+/** Each project status has an icon as well as a word, so it never depends on color. */
+const STATUS_ICON: Record<ProblemStatus, IconName> = {
+  "needs-sponsor": "hourglass",
+  "open-for-students": "clipboard-list",
+  "in-progress": "pencil-ruler",
+  completed: "circle-check",
+}
 
 export function ProblemBoard({ status }: { status?: ProblemStatus[] }) {
   const problems = status ? PROBLEMS.filter((p) => status.includes(p.status)) : PROBLEMS
@@ -11,34 +19,35 @@ export function ProblemBoard({ status }: { status?: ProblemStatus[] }) {
         <li key={p.id}>
           <article aria-labelledby={`${p.id}-title`} className="flex h-full flex-col gap-3 rounded-xl border bg-card p-5">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-full bg-archetype-soft px-2.5 py-0.5 text-xs font-bold text-archetype">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-0.5 type-small font-semibold">
+                <Icon name={STATUS_ICON[p.status]} className="text-base" />
                 {STATUS_LABEL[p.status]}
               </span>
               {p.synthetic && <SyntheticBadge />}
             </div>
-            <h3 id={`${p.id}-title`} className="text-lg font-bold">
+            <h3 id={`${p.id}-title`} className="type-title-3">
               {p.title}
             </h3>
-            <p className="text-sm text-muted-foreground">{p.organisationType}</p>
+            <p className="text-muted-foreground">{p.organisationType}</p>
             <p>{p.summary}</p>
             {p.outcome && (
-              <p className="rounded-lg bg-archetype-soft p-3 text-sm">
+              <p className="rounded-lg bg-archetype-soft p-3">
                 <span className="font-bold">{OUTCOME_LABEL}: </span>
                 {p.outcome}
                 {p.team && <span className="mt-1 block text-muted-foreground">Team: {p.team}</span>}
               </p>
             )}
-            <dl className="mt-auto space-y-1.5 text-sm">
+            <dl className="mt-auto space-y-1.5">
               <div className="flex gap-2">
                 <dt>
-                  <Icon name="location_on" className="text-base translate-y-0.5" />
+                  <Icon name="location_on" className="translate-y-0.5" />
                   <span className="sr-only">Location</span>
                 </dt>
                 <dd>{p.location}</dd>
               </div>
               <div className="flex gap-2">
                 <dt>
-                  <Icon name="group" className="text-base translate-y-0.5" />
+                  <Icon name="group" className="translate-y-0.5" />
                   <span className="sr-only">Community</span>
                 </dt>
                 <dd>{p.community}</dd>
@@ -46,7 +55,7 @@ export function ProblemBoard({ status }: { status?: ProblemStatus[] }) {
               {p.accessibilityFocus && (
                 <div className="flex gap-2">
                   <dt>
-                    <Icon name="accessibility_new" className="text-base translate-y-0.5" />
+                    <Icon name="accessibility_new" className="translate-y-0.5" />
                     <span className="sr-only">Accessibility focus</span>
                   </dt>
                   <dd>{p.accessibilityFocus}</dd>
@@ -55,7 +64,7 @@ export function ProblemBoard({ status }: { status?: ProblemStatus[] }) {
             </dl>
             <ul className="flex flex-wrap gap-1.5" aria-label="Skills involved">
               {p.skills.map((s) => (
-                <li key={s} className="rounded-md bg-muted px-2 py-0.5 text-xs font-semibold">
+                <li key={s} className="rounded-md border px-2 py-0.5 type-small font-semibold">
                   {s}
                 </li>
               ))}

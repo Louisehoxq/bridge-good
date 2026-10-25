@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react"
 import { newId, nowLabel, useCollection } from "@/lib/demo-store"
 import { CIRCLES, DEMO_STUDENT, SEED_POSTS, type Post } from "@/content/seed"
+import { PeopleChip } from "@/components/studio/people-chip"
 import { SyntheticBadge } from "@/components/synthetic-badge"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -34,44 +35,46 @@ export function CommunityOfPractice() {
               <button
                 type="button"
                 aria-current={c.id === circle ? "true" : undefined}
-                onClick={() => setCircle(c.id)}
-                className="w-full rounded-xl border p-3 text-left hover:bg-muted aria-[current=true]:border-archetype aria-[current=true]:bg-archetype-soft"
+                onClick={() => {
+                  setCircle(c.id)
+                  setStatus(`Showing ${c.name}.`)
+                }}
+                className="w-full rounded-xl border bg-card p-3 text-left hover:bg-muted aria-[current=true]:border-2 aria-[current=true]:border-archetype aria-[current=true]:bg-archetype-soft"
               >
                 <span className="block font-bold">{c.name}</span>
-                <span className="text-sm text-muted-foreground">{c.description}</span>
+                <span className="text-muted-foreground">{c.description}</span>
               </button>
             </li>
           ))}
         </ul>
       </nav>
-      <section aria-labelledby="circle-title" className="space-y-4">
-        <h2 id="circle-title" className="text-2xl font-bold">
+      <section aria-labelledby="circle-title" className="min-w-0 space-y-4">
+        <h2 id="circle-title" className="type-title-2">
           {current.name}
         </h2>
         <form onSubmit={post} className="space-y-2 rounded-xl border bg-card p-4">
-          <Label htmlFor="post-body" className="font-bold">
-            Share something with the circle
-          </Label>
-          <Textarea id="post-body" value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="A tip, a question, a win…" />
+          <Label htmlFor="post-body">Share something with the circle</Label>
+          <p id="post-hint" className="text-muted-foreground">
+            Circles are peer spaces. Be kind, credit others&apos; ideas, and don&apos;t share anyone&apos;s personal story
+            without permission.
+          </p>
+          <Textarea id="post-body" value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="A tip, a question, a win…" aria-describedby="post-hint" />
           <Button type="submit" className="bg-archetype text-on-archetype hover:bg-archetype/90">
             Post
           </Button>
         </form>
         <ul className="space-y-3">
           {items.map((p) => (
-            <li key={p.id} className="rounded-xl border bg-card p-4">
-              <p className="flex flex-wrap items-center gap-2 text-sm">
-                <span className="font-bold">{p.author}</span> <span className="text-muted-foreground">· {p.at}</span>
+            <li key={p.id} className="space-y-2 rounded-xl border bg-card p-4">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <PeopleChip name={p.author} role="apprentice" you={p.author === DEMO_STUDENT} />
+                <span className="type-small text-muted-foreground">{p.at}</span>
                 {p.synthetic && <SyntheticBadge />}
-              </p>
-              <p className="mt-1">{p.body}</p>
+              </div>
+              <p className="[overflow-wrap:anywhere]">{p.body}</p>
             </li>
           ))}
         </ul>
-        <p className="text-sm text-muted-foreground">
-          Circles are peer spaces. Be kind, credit others&apos; ideas, and don&apos;t share anyone&apos;s personal story
-          without permission.
-        </p>
       </section>
     </div>
   )

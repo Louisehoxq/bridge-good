@@ -1,119 +1,94 @@
-# Bridge Studio: follow-ups outside the design-system files
+# Bridge Studio: follow-ups on pages
 
-The design-system workstream changed only `src/app.css`, the font links in `src/root.tsx`, `src/components/icon.tsx`, `src/components/ui/*`, `src/components/studio/*`, the `/design` page, `scripts/`, `tests/` and the docs. These changes belong to the files other sessions own (`src/routes/**`, `src/lib/**` and the other components). Each item names the file, the change and the `DESIGN.md` rule behind it.
+This tracks how far the pages follow `DESIGN.md`, and records the accessibility checks. Milestone 2.5 (October 2026) closed the items from the milestone 2 evaluation (`docs/evaluation-milestone-2.md`, sections 2, 2b and 2c). What's still open is at the end.
 
-## Remove all-caps and eyebrow labels (DESIGN.md §1.6, §3)
+## Done in milestone 2.5
 
-- `src/components/app-shell.tsx`: the `RoleShell` sidebar heading (`text-sm font-bold tracking-wide text-archetype uppercase`) and `PageHeader`'s `eyebrow`. Drop `uppercase tracking-wide`. Replace the sidebar heading with a `<RoleBadge role={STUDIO_ROLE_FOR[role]} />` from `src/components/studio/role-badge.tsx`, so the role shows icon + label + color.
-- Search for other `uppercase` and `tracking-wide` classes under `src/routes/**` and `src/components/**` and remove them.
+### Type and labels (DESIGN.md §1.6, §3)
 
-## Sidebar (DESIGN.md §7 "Sidebar")
+- Every page heading uses the scale: `type-title-1` for the page `h1`, `type-title-2` for section `h2`, `type-title-3` for card `h3`, and `type-display` only on the welcome hero at desktop widths. No raw `text-2xl`–`text-6xl` sizes are left in `src/routes` or `src/components` (outside the primitives).
+- The Material 3 compatibility aliases (color names like `surface-container` and `on-surface-variant`, and scale names like `headline-large` and `body-large`) are removed from `src/app.css`.
+- No `uppercase` or `tracking-wide`. Eyebrow labels are gone: `PageHeader` takes only a title, and the role shows as a `RoleBadge` in the sidebar instead.
+- No `text-xs` and no `opacity` on text. Metadata (dates, "Step 2 of 5", counts) uses `type-small` with `text-muted-foreground`. Hints, instructions, errors and notes that used `text-sm` are now 16px.
+- No pill links or pill controls. Top nav links, the "Add screenshot" controls, the attached-file chips, the region filter on `/chapters` and the pillar links are 10px-radius. Tags (status, role, synthetic) stay fully round, and every status tag now has an icon and a word.
 
-- `src/components/app-shell.tsx` `RoleShell`: give the `<aside>` a sunken background (`bg-surface-sunken`), and group items under "Your path" and "Your people" headings (sentence case, `type-small font-semibold text-muted-foreground`, not uppercase).
-- `src/components/nav-link.tsx` `variant="side"`: the active item should be `aria-[current=page]:bg-card` with the 4px `border-archetype` bar and bold text, rather than the soft tint. Use `rounded-md` (10px).
-- `variant="top"` uses `rounded-full` on a link, which reads as a pill. Use `rounded-md`.
-- Add an icon to each sidebar item (for example `route` for Overview and `sticky-note` for Reflection). New icon names go in `src/components/icon.tsx`.
+### Signature components (DESIGN.md §6)
 
-## Headings and type scale (DESIGN.md §3)
+| Component | Where it's used now |
+|---|---|
+| `DraftFrame` / `DraftFieldFrame` | **Every piece of AI output.** Scoping studio: each assistant reply sits in a dashed frame labelled "Assistant (AI)", and each brief field the assistant filled sits in a frame labelled "AI draft · edit or accept it" with an "Accept as written" button. The frame turns solid with "Edited by you" or "Accepted by you". A warning notice counts fields still in draft before sending. Reflection Companion: the whole review sits in a dashed frame ("AI draft · you decide"), and each AI-written question turns solid once the apprentice rewords it ("Edited by you") or ticks keep or share ("Accepted by you"). BRIDGEGOOD's own prompts (the no-AI mode) aren't framed, because they aren't AI. |
+| `PeopleChip` + `Path` (`TeamView`) | Apprentice home (you, your mentor and chapter lead, or your whole project team), My mentee, My project and team (partner), and Matching (once a team is formed). Also: mentor review queue, community posts, conversation lists, interest notes on Matching, and the account menu. |
+| `PinnedNote` | Mentor feedback on Submissions & feedback, the apprentice's self-assessment and reflection on the mentor's review, the mentee's own words on My mentee, and saved reflections in the Reflection Companion. |
+| `Highlight` | The first prompt at each decision point: apprentice submission, mentor review, partner brief, and the latest companion review. One per screen. |
+| `RoleBadge` | Login cards, the account menu and sheet menu, the sidebar (and the tab strip on small screens), the welcome page's "Start where you are", the impact loop, the principles table headers, and "Reviewed by BRIDGEGOOD" (steward). |
+| `JourneyStepper` style | The role path stepper now uses the same marks: a check for done, a filled role color for the current step, outlined for later steps, and a dotted gold line joining the stages. |
 
-- Page `h1`s use mixed sizes (`text-3xl … lg:text-4xl`, `text-4xl … lg:text-5xl`, `headline-large lg:display-small`). Use `type-title-1` for page `h1`, `type-title-2` for section `h2`, `type-title-3` for card `h3`, and `type-display` only for the welcome hero.
-- Remove `font-bold` from headings. Bricolage is specified at 600, which `h1`–`h3` and the `type-*` utilities already set. The font link loads 600–700 so nothing is synthesized in the meantime.
-- Any `text-xs` (12px) or `text-sm` (14px) used for instructions, errors or body copy should be at least `type-body` (16px). Keep `type-small` for metadata only. For example, `src/components/synthetic-badge.tsx` uses `text-xs`. Use `type-small`.
-- Long reading (library, guides, training) should use `type-body-lg` with `max-w-[70ch]`.
+### Content organization (evaluation section 2c)
 
-## Cards in dark mode (DESIGN.md §2 "Dark theme")
+- **Welcome (`/`)** is shorter and organized around the 5 pillars. Order: hero with "Start where you are" (one card per role, linking to that role's library track, plus log in), the five pillars, "How BRIDGEGOOD works with everyone involved" (the 6 principles, with the by-role table behind a disclosure), the impact loop, and who the philosophy belongs to.
+- **Terms** and the comparison with other approaches moved to a new library page, `/learn/terms`. The duplicated resources list is gone; the library already holds those pages.
+- **Apprentice home:** Your path is now the home page at `/student`. Overview and Your path merged, and the sidebar went from 8 items to 7. `/student/path` redirects to `/student`.
+- **Funding & legal templates** is a "coming soon" section on Toolkit & FAQs (`/partner/toolkit#legal`). `/partner/legal` redirects there.
+- **URLs match labels:** `/mentor/submissions` → `/mentor/conversations`, `/student/activities` → `/student/practice`, both with 301 redirects.
+- **Mentor conversation starters** (questions apprentices shared from the companion) now show on Growth conversations, so the apprentice-side promise is true.
+- `docs/page-copy-changes.md` was checked item by item, found fully applied, and deleted.
 
-- Dark cards sit about 1.1:1 from the page, so every `bg-card` panel needs a `border border-border` (the `--line` token). Check `src/routes/**` and `src/components/**` for `bg-card` without a border.
-- Cards use `rounded-xl` (16px) and `p-6`. Several use `rounded-2xl`, which is now also 16px, so no change is needed there.
+### Layout failures (WCAG 1.4.10 reflow, 1.4.12 text spacing)
 
-## Shadows (DESIGN.md §4 "Depth")
+`KNOWN` and `KNOWN_LAYOUT` in `tests/a11y.spec.ts` are both empty.
 
-- `shadow-sm`, `shadow-md` and `shadow-lg` now resolve to nothing. Remove them from the components that still use them, and use borders for hierarchy.
+| Page | Was | Fix |
+|---|---|---|
+| `/chapters` | 320px | Columns and the search field can shrink (`min-w-0`), email addresses wrap, and the region filter wraps. |
+| `/learn/self-check` | 320px | `fieldset` has a `min-content` minimum width by default, so it got `min-w-0`; the "Read the Apprenticeship page" button wraps. |
+| `/student/submissions` | 320px | The form column and fieldsets can shrink, the activity select is the new `NativeSelect`, and the submit button wraps. |
+| `/ambassador/matching` | 320px | "Mark … as reached" wraps; cards and the team list can shrink. |
+| `/learn` | text spacing | Card summaries are no longer clamped. Pillar cards show the short learning outcome in full. |
+| `/mentor/mentee` | text spacing | Conversation previews show the latest message in full, wrapped, instead of `line-clamp-1`. |
+| `/design` | text spacing | Icon names wrap instead of `truncate`. |
 
-## Signature elements on pages (DESIGN.md §6)
+The team path stacks as a plain list below 640px and hides the curve, so it never scrolls sideways.
 
-- **People chip:** use `<PeopleChip>` for team lists, message threads and review queues, for example in `src/components/demo/conversation.tsx`, `src/components/demo/submissions.tsx`, the mentor queue and `src/components/login-chooser.tsx` (the avatar circle there is a hand-built chip).
-- **Path:** use `<TeamPath>` on the student and partner overviews (apprentice, mentor, community partner) and `<JourneyStepper>` for the apprenticeship journey. `src/components/impact-loop.tsx` could join its stages with `<Path>`. Never use it as a divider.
-- **Draft frame:** wrap every AI output in `<DraftFrame>` or `<DraftTextarea>`. That includes the scoping studio brief fields and chat replies in `src/components/partner/scoping-studio.tsx`, and the reflection companion questions in `src/routes/student/reflection.tsx`. Each label should say "AI draft" (or "Assistant (AI)" for chat) and turn into "Edited by you" when a person changes it.
-- **Pinned note:** mentor feedback (`src/components/demo/submissions.tsx`) and the student's own reflections.
-- **Highlighter:** the reflection question in focus on `src/routes/student/reflection.tsx`, at most one per screen.
-- **Field note:** local chapter adaptations in `src/components/principles-in-practice.tsx` or the chapter pages, always beneath BRIDGEGOOD's official wording.
+## Accessibility results (October 2026)
 
-## Roles (DESIGN.md §2 "Roles")
+### Automated
 
-- The app's `student` role shows as "Apprentice" in Bridge Studio, `ambassador` as "Chapter lead", and `partner` as "Community partner" (`STUDIO_ROLE_FOR` in `src/components/studio/role-badge.tsx`). `ROLE_INFO` labels in `src/lib/roles.ts` still say Student, Ambassador and Partner. Decide whether to rename them; the colors already follow `DESIGN.md`.
-- Wherever a role is shown by color alone (for example `src/components/principles-table.tsx` column headers, `src/routes/training.tsx` cards), add the role icon with `<RoleBadge>` or `<Icon name=…>`.
+| Check | Result |
+|---|---|
+| axe-core, WCAG 2.0–2.2 A/AA plus best practices, 45 pages × light and dark | All pass |
+| Reflow at 320px, 200% zoom (640px), text spacing, 45 pages | All pass |
+| `npm run check:contrast` (every token pair, light and dark, AAA body text) | Pass |
 
-## Status and notices (DESIGN.md §7 "Notice", §5)
+### Manual
 
-- Success, error and warning messages need their icon (`circle-check`, `circle-alert`, `triangle-alert`, `info`) as well as a word. Use `bg-success-soft`, `bg-error-soft` or `bg-marker`, with `text-foreground` for the body text. The `/design` page has examples.
-- Field errors: add the `circle-alert` icon before the message, and keep `aria-invalid` and `aria-describedby`.
+**Forced colors** (Chromium `forced-colors: active`, every page in every role):
+- Holds up: borders on cards, fields, buttons and pinned notes stay visible (the transparent borders become real lines), the focus outline shows, the highlighter shows as the system Mark color, and status tags keep their icon and word.
+- **Found and fixed:** every sidebar item showed the 4px "current page" bar, because transparent borders render as lines in forced colors, so the current page couldn't be told apart. Now only the current item draws the bar (also in the small-screen tab strip).
+- Expected and acceptable: avatar circles lose their fill, but the initials and the name next to them stay.
 
-## Accessibility fixes found by `npm run test:a11y`
+**Keyboard only** (Tab, Shift+Tab, Enter and Space; 27 pages across all roles, plus the forms):
+- Every tab stop shows the 3px focus outline, and none sits under the sticky header or off screen. (The skip link is flagged by the script but is fixed above the header.)
+- Forms: apprentice submission, project interest, office-hour booking and cancelling, messages, community posts, mentor reply, offering a slot, matching a team, partner feedback, the scoping studio and the Reflection Companion. Each one submits from the keyboard. On an error the error summary takes focus, and its links move focus to the field, which has `aria-invalid` and its message linked by `aria-describedby`.
+- **Found and fixed:**
+  - Adding an office-hour slot with no time did nothing. It now shows an error and moves focus to the field.
+  - Expressing or withdrawing interest in a project removed the focused control. Focus now moves to the project's heading, and a status message says what happened.
+  - The scoping studio's transcript scrolled but couldn't be reached by keyboard. It's now a focusable, labelled region.
+  - "Enter to send, Shift+Enter for a new line" was only in the placeholder, which disappears. It's now a hint linked to the field.
+  - Field errors in the submission form pointed `aria-describedby` at messages that didn't exist. Each field now has its own message.
+- The scoping studio and companion were walked through with mocked AI replies (no API key): send by Enter, tab to "Accept as written", accept, edit, and submit with a gap.
 
-axe checked all 31 page routes in light and dark (October 2026). It found violations on 3 pages. All 3 come from the same mistake, and none of them depend on the theme.
+**Screen reader:** VoiceOver couldn't be run from this environment. Instead we reviewed what it would read, the accessibility tree of the main flows (welcome, terms, apprentice home, submissions, growth conversations, partner project): one `h1` per page, no skipped heading levels, every control named, and every landmark labelled.
+- **Found and fixed:**
+  - A submission heading included its "Synthetic example" badge in its spoken name.
+  - Success messages were added together with their `role="status"`, which VoiceOver can miss. The status region is now always present, and the message goes inside it.
+  - The AI reply announcement only fired after a streaming phase. It now also fires for replies that arrive in one piece.
+  - Screen readers now hear "Signed in as" before the account name in the header.
 
-| Page | Component | axe rules (impact) | WCAG 2.2 |
-| --- | --- | --- | --- |
-| `/chapters` | `src/components/chapter-finder.tsx` | `listitem` (serious), `aria-allowed-role` (minor) | 1.3.1 Info and Relationships, 4.1.2 Name, Role, Value |
-| `/student/messages` | `src/components/demo/conversation.tsx` | `listitem` (serious), `aria-allowed-role` (minor) | 1.3.1, 4.1.2 |
-| `/mentor/messages` | `src/components/demo/conversation.tsx` (same component) | `listitem` (serious), `aria-allowed-role` (minor) | 1.3.1, 4.1.2 |
+## Still open
 
-**What goes wrong.** A `role` on a `<ul>` or `<ol>` replaces its list role. Screen readers then don't announce it as a list ("list, 5 items"), and the `<li>`s inside are orphaned. A person using a screen reader loses the count and can't jump between items.
-
-**Fixes:**
-
-- `chapter-finder.tsx`: the code is `<ul role="region" aria-label="Chapter list" tabIndex={0}>`. Move `role="region"`, `aria-label` and `tabIndex={0}` onto a wrapping `<div>` that keeps the scroll classes (`max-h-[38rem] overflow-y-auto`), and keep a plain `<ul>` inside it. The region still needs `tabIndex={0}`, so keyboard users can scroll it.
-- `conversation.tsx`: the code is `<ol role="log" aria-label="Messages">`. Wrap the list in `<div role="log" aria-label="Messages">` and move the scroll classes onto the wrapper. Keep the `<ol>` for the messages.
-
-**How to confirm a fix.** These are listed as `KNOWN` in `tests/a11y.spec.ts`. After fixing a page, run `npm run test:a11y`. The test fails until you remove that page from `KNOWN`, so the list can't go out of date.
-
-**Resolved when milestone 2 was combined.** Both list fixes above are done, `KNOWN` is empty, and the messages pages have moved to `/student/mentor` and `/mentor/mentee`. Combining the branches also exposed and fixed:
-- a duplicate unnamed `<aside>` in the role shell (`landmark-unique`)
-- a table region on the inclusive-language guide that shared its section's name
-- a skipped heading level in the reflection companion's question list
-- the test's demo login, which now picks the first of the two ambassador accounts
-
-`npm run test:a11y` passes on all 47 pages, in light and dark.
-
-**Not covered by axe yet.** These manual checks from `DESIGN.md` §8 haven't been done on the pages:
-
-- 200% zoom
-- a 320px viewport
-- the text-spacing bookmarklet
-- forced-colors (Windows high-contrast) emulation
-- keyboard-only walkthroughs of the forms and the scoping studio
-- a screen reader pass (VoiceOver or NVDA)
-
-Also watch for small text that axe may pass but that breaks the type rules. For example, the message metadata in `conversation.tsx` is `text-xs` (12px) with `opacity-90`. Use `type-small` with `text-muted-foreground` instead.
-
-## Other
-
-- `DESIGN.md`: the status line still says "not yet built". Change it to point at `docs/design-system.md` and `/design`.
-
-- `src/root.tsx` skip link: it uses `rounded-md bg-primary`, which already resolves to the right tokens. No change needed.
-- `focus:outline-none` on `<main tabIndex={-1}>` in `app-shell.tsx` is acceptable, because `main` is a programmatic focus target and not a control. Don't copy that pattern onto interactive elements.
-- A text-spacing and 200% zoom screenshot pass (DESIGN.md §8, CI item 3) isn't built yet.
-
-## Layout checks (WCAG 1.4.10 reflow, 1.4.4 resize, 1.4.12 text spacing)
-
-`npm run test:a11y` now also checks every page for:
-- sideways scrolling at 320px (reflow)
-- sideways scrolling at 640px (200% zoom on a 1280px screen)
-- text clipped once WCAG's text-spacing overrides are applied
-
-Fixed already: the logged-out header showed the "Log in" button beside the menu button on small screens, because the button's `inline-flex` overrode `hidden`. It made every public page scroll sideways at 320px.
-
-Still failing, listed as `KNOWN_LAYOUT` in `tests/a11y.spec.ts` (the test fails when one is fixed but still listed):
-
-| Page | Check | Likely cause |
-| --- | --- | --- |
-| `/chapters` | 320px | The map `figure` has a fixed minimum width |
-| `/learn/self-check` | 320px | The question list and status box don't wrap |
-| `/student/submissions` | 320px | The submission form's controls are wider than the column |
-| `/ambassador/matching` | 320px | A button row doesn't wrap |
-| `/learn` | text spacing | `line-clamp-3` summaries hide text. Show the full summary, or link to it. |
-| `/mentor/mentee` | text spacing | `line-clamp-1` message previews hide text |
-| `/design` | text spacing | `truncate` on icon names in the specimen grid |
-
-Still manual: forced colors (Windows high contrast), keyboard-only walkthroughs, and a screen reader pass (VoiceOver or NVDA).
+- **A real VoiceOver (or NVDA) pass** on a device, especially the scoping studio and the companion with a live model. The tree review above isn't a substitute.
+- **Live AI check:** both AI surfaces were checked with mocked replies only. Run them once with an API key.
+- **Pillar links** are 32px tall: they pass WCAG 2.5.8 (24px), but they're below Bridge Studio's 48px target.
+- **Field notes:** `FieldNote` is still only on `/design`. It belongs under official wording once chapters can adapt it, which is the milestone 3 feedback loop.
+- **Reading level:** the grade 8 check from `DESIGN.md` §8 hasn't been run on the content.
+- **Logo:** the wordmark is still a text placeholder until BRIDGEGOOD supplies the SVGs.

@@ -22,8 +22,8 @@ export default function SelfCheckPage() {
     <div data-archetype="student">
       <LibraryPage href="/learn/self-check" intro={<p>{SELF_CHECK.intro}</p>}>
         <div className="grid gap-10 lg:grid-cols-[3fr_2fr]">
-          <div className="space-y-6">
-            <p className="rounded-xl bg-archetype-soft p-4 font-semibold">{SELF_CHECK.privacy}</p>
+          <div className="min-w-0 space-y-6">
+            <p className="rounded-xl border bg-archetype-soft p-4 font-semibold">{SELF_CHECK.privacy}</p>
             <ol className="space-y-6">
               {SELF_CHECK.questions.map((q, i) => {
                 const id = `self-${q.id}`
@@ -32,26 +32,26 @@ export default function SelfCheckPage() {
                   <li key={q.id} className="rounded-2xl border bg-card p-5">
                     {q.answerType === "open" ? (
                       <div className="space-y-2">
-                        <Label htmlFor={id} className="text-lg font-bold">
+                        <Label htmlFor={id} className="type-body-lg font-semibold">
                           <span className="sr-only">Question {i + 1}: </span>
                           {q.question}
                         </Label>
                         {q.hint && (
-                          <p id={hintId} className="text-sm text-muted-foreground">
+                          <p id={hintId} className="text-muted-foreground">
                             {q.hint}
                           </p>
                         )}
                         <Textarea id={id} aria-describedby={hintId} value={answers[q.id] ?? ""} onChange={(e) => set(q.id, e.target.value)} rows={3} />
-                        <p className="text-xs text-muted-foreground">Optional notes for yourself. Not saved.</p>
+                        <p className="text-muted-foreground">Optional notes for yourself. Not saved.</p>
                       </div>
                     ) : (
-                      <fieldset aria-describedby={hintId} className="space-y-2">
-                        <legend className="text-lg font-bold">
+                      <fieldset aria-describedby={hintId} className="min-w-0 space-y-2">
+                        <legend className="type-body-lg font-semibold">
                           <span className="sr-only">Question {i + 1}: </span>
                           {q.question}
                         </legend>
                         {q.hint && (
-                          <p id={hintId} className="text-sm text-muted-foreground">
+                          <p id={hintId} className="text-muted-foreground">
                             {q.hint}
                           </p>
                         )}
@@ -67,7 +67,7 @@ export default function SelfCheckPage() {
                                 value={option}
                                 checked={answers[q.id] === option}
                                 onChange={() => set(q.id, option)}
-                                className="size-4 accent-[var(--archetype)]"
+                                className="size-6 shrink-0 accent-[var(--archetype)]"
                               />
                               {option}
                             </label>
@@ -90,26 +90,26 @@ export default function SelfCheckPage() {
               >
                 Clear my answers
               </Button>
-              <p role="status" className="text-sm text-muted-foreground">
+              <p role="status" className="text-muted-foreground">
                 {status}
               </p>
             </div>
-            <p className="text-lg">{SELF_CHECK.next}</p>
+            <p className="type-body-lg">{SELF_CHECK.next}</p>
           </div>
 
-          <aside className="space-y-6">
+          <aside aria-label="Official criteria and support" className="min-w-0 space-y-6">
             <section aria-labelledby="official-title" className="rounded-2xl border-2 border-archetype p-6">
-              <h2 id="official-title" className="text-xl font-bold">
+              <h2 id="official-title" className="type-title-3">
                 Official criteria
               </h2>
               <p className="mt-2">{SELF_CHECK.officialCriteria.text}</p>
-              <a href={SELF_CHECK.officialCriteria.href} className={buttonVariants({ className: "mt-4" })}>
+              <a href={SELF_CHECK.officialCriteria.href} className={buttonVariants({ className: "mt-4 h-auto max-w-full py-3 whitespace-normal" })}>
                 Read the Apprenticeship page
                 <Icon name="open_in_new" />
               </a>
             </section>
             <section aria-labelledby="provides-title" className="rounded-2xl border bg-card p-6">
-              <h2 id="provides-title" className="text-xl font-bold">
+              <h2 id="provides-title" className="type-title-3">
                 What BRIDGEGOOD provides
               </h2>
               <ul className="mt-3 list-disc space-y-1 pl-5">
@@ -117,7 +117,7 @@ export default function SelfCheckPage() {
                   <li key={item}>{item}</li>
                 ))}
               </ul>
-              <p className="mt-3 text-sm text-muted-foreground">{SELF_CHECK.whatBridgegoodProvides.source}</p>
+              <p className="mt-3 text-muted-foreground">{SELF_CHECK.whatBridgegoodProvides.source}</p>
             </section>
           </aside>
         </div>

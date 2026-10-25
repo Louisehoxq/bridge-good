@@ -6,7 +6,7 @@ export function ResetDemoButton() {
   const [done, setDone] = useState(false)
   return (
     <div className="space-y-2">
-      <p className="text-sm text-muted-foreground">
+      <p className="text-muted-foreground">
         Submissions, messages and bookings you make are saved in this browser only.
       </p>
       <Button
@@ -19,7 +19,7 @@ export function ResetDemoButton() {
       >
         Reset demo data
       </Button>
-      <p role="status" className="text-sm">
+      <p role="status">
         {done ? "Demo data reset to the starting examples." : ""}
       </p>
     </div>

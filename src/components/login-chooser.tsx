@@ -2,6 +2,7 @@ import { Form, useSearchParams } from "react-router"
 import { Icon } from "@/components/icon"
 import { accountFor, AMBASSADOR_KIND_INFO, isRole, ROLE_INFO, type Session } from "@/lib/roles"
 import { useSession } from "@/lib/session"
+import { RoleBadge, studioRoleFor } from "@/components/studio/role-badge"
 import { SyntheticBadge } from "@/components/synthetic-badge"
 
 /** One card per synthetic demo account. Chapter lead and company host both sign in to the ambassador area. */
@@ -24,10 +25,13 @@ export function LoginChooser() {
   return (
     <div className="space-y-6">
       {isRole(wanted) && (
-        <p role="status" className="rounded-xl border-2 border-archetype bg-archetype-soft p-4" data-archetype={wanted}>
-          {current
-            ? `You're signed in as ${accountFor(current).label.toLowerCase()}. That page is for ${ROLE_INFO[wanted].plural.toLowerCase()}. Choose ${withArticle(ROLE_INFO[wanted].label)} account to continue.`
-            : `Log in as ${withArticle(ROLE_INFO[wanted].label)} to open that page.`}
+        <p role="status" className="flex gap-3 rounded-xl border-2 border-archetype bg-archetype-soft p-4" data-archetype={wanted}>
+          <Icon name="info" className="mt-0.5" />
+          <span>
+            {current
+              ? `You're signed in as ${accountFor(current).label.toLowerCase()}. That page is for ${ROLE_INFO[wanted].plural.toLowerCase()}. Choose ${withArticle(ROLE_INFO[wanted].label)} account to continue.`
+              : `Log in as ${withArticle(ROLE_INFO[wanted].label)} to open that page.`}
+          </span>
         </p>
       )}
       <ul className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
@@ -45,24 +49,13 @@ export function LoginChooser() {
                   type="submit"
                   className="group flex h-full w-full flex-col gap-3 rounded-2xl border-2 border-border bg-card p-6 text-left transition-colors hover:border-archetype hover:bg-archetype-soft"
                 >
-                  <span className="flex items-center justify-between gap-2">
-                    <span className="text-sm font-bold text-archetype">
-                      {account.label}
-                      {session.ambassadorKind && <span className="font-normal text-muted-foreground"> · ambassador</span>}
-                    </span>
+                  <span className="flex flex-wrap items-center justify-between gap-2">
+                    <RoleBadge role={studioRoleFor(session)}>{session.ambassadorKind ? `${account.label} · ambassador` : undefined}</RoleBadge>
                     <SyntheticBadge />
                   </span>
-                  <span className="flex items-center gap-3">
-                    <span
-                      className="flex size-12 shrink-0 items-center justify-center rounded-full bg-archetype text-lg font-bold text-on-archetype"
-                      aria-hidden="true"
-                    >
-                      {account.name.charAt(0)}
-                    </span>
-                    <span>
-                      <span className="block text-lg font-bold">{account.name}</span>
-                      <span className="block text-sm text-muted-foreground">{account.detail}</span>
-                    </span>
+                  <span>
+                    <span className="block type-title-3">{account.name}</span>
+                    <span className="block text-muted-foreground">{account.detail}</span>
                   </span>
                   <span className="text-muted-foreground">{summary}</span>
                   <span className="mt-auto inline-flex items-center gap-2 pt-2 font-bold text-archetype">

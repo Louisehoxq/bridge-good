@@ -22,12 +22,14 @@ export function NavLink({
       to={href}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "inline-flex min-h-12 items-center font-medium",
-        variant === "top" && "rounded-full px-3 whitespace-nowrap hover:bg-muted aria-[current=page]:bg-muted aria-[current=page]:font-bold",
+        "inline-flex min-h-12 items-center gap-2.5 font-medium",
+        variant === "top" &&
+          "rounded-md px-3 whitespace-nowrap underline-offset-[6px] hover:bg-muted aria-[current=page]:bg-muted aria-[current=page]:font-bold aria-[current=page]:underline aria-[current=page]:decoration-2",
         variant === "side" &&
-          "w-full rounded-lg border-l-4 border-transparent px-3 hover:bg-muted aria-[current=page]:border-archetype aria-[current=page]:bg-archetype-soft aria-[current=page]:font-bold",
+          // Only the current item draws its bar: a transparent border would show as a line in forced-colors mode.
+          "w-full rounded-md pr-3 pl-4 hover:bg-card aria-[current=page]:border-l-4 aria-[current=page]:border-archetype aria-[current=page]:bg-card aria-[current=page]:pl-3 aria-[current=page]:font-bold [&_.bgx-icon]:text-muted-foreground aria-[current=page]:[&_.bgx-icon]:text-archetype",
         variant === "tab" &&
-          "shrink-0 border-b-4 border-transparent px-3 whitespace-nowrap hover:bg-muted aria-[current=page]:border-archetype aria-[current=page]:font-bold"
+          "shrink-0 px-3 pb-1 whitespace-nowrap hover:bg-muted aria-[current=page]:border-b-4 aria-[current=page]:border-archetype aria-[current=page]:pb-0 aria-[current=page]:font-bold"
       )}
     >
       {children}

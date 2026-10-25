@@ -5,7 +5,11 @@ import { Icon } from "@/components/icon"
 import { BRIEF_FIELDS, type Brief } from "@/lib/brief"
 import { DECISION_MOMENT_INFO, promptsForMoment } from "@/content/framework"
 import { newId, nowLabel, useCollection } from "@/lib/demo-store"
-import { Button } from "@/components/ui/button"
+import { ErrorSummary, FieldMessage, Notice, type FieldError } from "@/components/notice"
+import { DraftFieldFrame, DraftFrame, type DraftStatus } from "@/components/studio/draft-frame"
+import { Highlight } from "@/components/studio/highlight"
+import { RoleBadge } from "@/components/studio/role-badge"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
@@ -64,7 +68,7 @@ export function ScopingStudio({ aiEnabled }: { aiEnabled: boolean }) {
   const [preparing, setPreparing] = useState(false)
   const [announcement, setAnnouncement] = useState("")
   const fileRef = useRef<HTMLInputElement>(null)
-  const listRef = useRef<HTMLOListElement>(null)
+  const listRef = useRef<HTMLDivElement>(null)
   const busy = preparing || status === "submitted" || status === "streaming"
 
   // Merge every updateBrief call, in order, into the AI's current draft.
@@ -89,7 +93,7 @@ export function ScopingStudio({ aiEnabled }: { aiEnabled: boolean }) {
   // Announce each finished reply once, instead of reading streamed text as it arrives.
   const lastStatus = useRef(status)
   useEffect(() => {
-    if (lastStatus.current === "streaming" && status === "ready") {
+    if ((lastStatus.current === "streaming" || lastStatus.current === "submitted") && status === "ready") {
       const last = messages.at(-1)
       const updated = last?.parts.some((p) => p.type === "tool-updateBrief")
       setAnnouncement(updated ? "The assistant replied and updated your brief." : "The assistant replied.")
@@ -137,14 +141,14 @@ export function ScopingStudio({ aiEnabled }: { aiEnabled: boolean }) {
     <div className="grid gap-6 xl:grid-cols-[5fr_6fr] 2xl:grid-cols-[1fr_1fr]">
       <section aria-labelledby="chat-title" className="flex min-h-[32rem] flex-col rounded-2xl border bg-card xl:sticky xl:top-20 xl:h-[calc(100vh-7rem)]">
         <header className="flex items-center gap-3 border-b p-4">
-          <span className="flex size-10 items-center justify-center rounded-full bg-archetype text-on-archetype" aria-hidden="true">
-            <Icon name="smart_toy" className="text-xl" />
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-full border-[1.5px] border-dashed border-draft bg-draft-soft text-draft" aria-hidden="true">
+            <Icon name="sparkles" />
           </span>
-          <div>
-            <h2 id="chat-title" className="font-bold">
-              Scoping assistant <span className="text-sm font-normal text-muted-foreground">· AI</span>
+          <div className="min-w-0">
+            <h2 id="chat-title" className="type-title-3">
+              Scoping assistant (AI)
             </h2>
-            <p className="text-sm text-muted-foreground">Helps draft your brief. A person at BRIDGEGOOD reviews every brief.</p>
+            <p className="text-muted-foreground">Helps draft your brief. You decide what goes in it, and a person at BRIDGEGOOD reviews every brief.</p>
           </div>
         </header>
 
@@ -152,14 +156,16 @@ export function ScopingStudio({ aiEnabled }: { aiEnabled: boolean }) {
           {announcement}
         </p>
 
-        <ol ref={listRef} className="max-h-[70vh] flex-1 space-y-4 overflow-y-auto p-4 xl:max-h-none" aria-busy={busy} aria-label="Conversation">
+        {/* Focusable so keyboard users can scroll the transcript. Replies are announced once, by the status above. */}
+        <div ref={listRef} role="region" aria-label="Conversation" tabIndex={0} className="max-h-[70vh] flex-1 overflow-y-auto p-4 xl:max-h-none">
+        <ol className="space-y-4" aria-busy={busy}>
           {messages.length === 0 && (
             <li className="space-y-3">
               <p>
                 Tell me about the problem you&apos;d like help with, in your own words. You can also add a screenshot of a
                 page or product that isn&apos;t working well.
               </p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground">
                 Please don&apos;t include anyone&apos;s personal details. Describe the people you serve as a group.
               </p>
               {aiEnabled && (
@@ -169,7 +175,7 @@ export function ScopingStudio({ aiEnabled }: { aiEnabled: boolean }) {
                       key={s}
                       type="button"
                       onClick={() => setInput(s)}
-                      className="min-h-12 rounded-lg border border-input px-3 py-2 text-left text-sm hover:bg-muted"
+                      className="min-h-12 rounded-md border-[1.5px] border-input bg-card px-3 py-2 text-left hover:bg-muted"
                     >
                       {s}
                     </button>
@@ -178,61 +184,75 @@ export function ScopingStudio({ aiEnabled }: { aiEnabled: boolean }) {
               )}
             </li>
           )}
-          {messages.map((m) => (
-            <li key={m.id} className={cn("flex", m.role === "user" ? "justify-end" : "justify-start")}>
-              <div
-                className={cn(
-                  "max-w-[85%] min-w-0 space-y-2 rounded-2xl px-4 py-3 [overflow-wrap:anywhere]",
-                  m.role === "user" ? "bg-archetype text-on-archetype" : "bg-muted"
+          {messages.map((m) => {
+            const parts = m.parts.map((part, i) => {
+              if (part.type === "text") return <p key={i} className="whitespace-pre-wrap">{part.text}</p>
+              if (part.type === "file" && part.mediaType?.startsWith("image/"))
+                return <img key={i} src={part.url} alt={`Uploaded screenshot${part.filename ? `: ${part.filename}` : ""}`} className="max-h-48 rounded-lg border" />
+              if (part.type === "tool-updateBrief")
+                return (
+                  <p key={i} className="flex items-center gap-1.5 text-muted-foreground">
+                    <Icon name="pencil" />
+                    {part.state === "input-streaming" ? "Drafting brief fields…" : "Drafted brief fields for you to check."}
+                  </p>
+                )
+              return null
+            })
+            return (
+              <li key={m.id} className={cn("flex", m.role === "user" ? "justify-end" : "justify-start")}>
+                {m.role === "user" ? (
+                  <div className="max-w-[85%] min-w-0 space-y-2 rounded-xl border border-archetype bg-archetype-soft px-4 py-3 [overflow-wrap:anywhere]">
+                    <p className="type-small font-semibold text-muted-foreground">You</p>
+                    {parts}
+                  </div>
+                ) : (
+                  // Every assistant reply sits in the AI draft frame, so nothing it writes looks final.
+                  <DraftFrame label="Assistant (AI)" className="max-w-[92%] min-w-0 space-y-2 [overflow-wrap:anywhere]">
+                    <div className="space-y-2">{parts}</div>
+                  </DraftFrame>
                 )}
-              >
-                <p className="text-xs font-bold opacity-90">{m.role === "user" ? "You" : "Assistant (AI)"}</p>
-                {m.parts.map((part, i) => {
-                  if (part.type === "text") return <p key={i} className="whitespace-pre-wrap">{part.text}</p>
-                  if (part.type === "file" && part.mediaType?.startsWith("image/"))
-                    return <img key={i} src={part.url} alt={`Uploaded screenshot${part.filename ? `: ${part.filename}` : ""}`} className="max-h-48 rounded-lg border" />
-                  if (part.type === "tool-updateBrief")
-                    return (
-                      <p key={i} className="text-sm italic opacity-80">
-                        {part.state === "input-streaming" ? "Updating your brief…" : "Updated your brief."}
-                      </p>
-                    )
-                  return null
-                })}
-              </div>
-            </li>
-          ))}
-          {(preparing || status === "submitted") && <li className="text-sm text-muted-foreground">Thinking…</li>}
+              </li>
+            )
+          })}
+          {(preparing || status === "submitted") && <li className="text-muted-foreground">Thinking…</li>}
         </ol>
+        </div>
 
         {!aiEnabled ? (
-          <p role="status" className="m-4 rounded-lg border-2 border-dashed border-input p-4 text-sm">
-            The AI assistant isn&apos;t switched on for this demo (no API key configured). You can still fill in the brief
-            yourself.
-          </p>
+          <Notice className="m-4">
+            <p>
+              The AI assistant isn&apos;t switched on for this demo (no API key configured). You can still fill in the brief
+              yourself.
+            </p>
+          </Notice>
         ) : (
           <form onSubmit={onSubmit} className="space-y-2 border-t p-4">
             {error && (
-              <p role="alert" className="rounded-lg border-2 border-destructive p-3 text-sm">
-                {errorMessage(error)}
-              </p>
+              <div role="alert" className="flex gap-3 rounded-lg border-2 border-destructive bg-error-soft p-3">
+                <Icon name="circle-alert" className="mt-0.5 text-destructive" />
+                <p>{errorMessage(error)}</p>
+              </div>
             )}
             {(files.length > 0 || fileError) && (
               <ul className="flex flex-wrap gap-2" aria-label="Attached screenshots">
                 {files.map((f, i) => (
-                  <li key={`${i}-${f.name}`} className="flex max-w-full items-center gap-1 rounded-full bg-muted py-1 pr-1 pl-3 text-sm">
-                    <span className="truncate">{f.name}</span>
+                  <li key={`${i}-${f.name}`} className="flex max-w-full min-w-0 items-center gap-1 rounded-md border bg-muted py-1 pr-1 pl-3">
+                    <span className="min-w-0 [overflow-wrap:anywhere]">{f.name}</span>
                     <button
                       type="button"
                       aria-label={`Remove ${f.name}`}
                       onClick={() => setFiles(files.filter((x) => x !== f))}
-                      className="flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-background"
+                      className="flex size-10 shrink-0 items-center justify-center rounded-md hover:bg-background"
                     >
                       <Icon name="close" className="text-base" />
                     </button>
                   </li>
                 ))}
-                {fileError && <li className="text-sm font-semibold text-destructive">{fileError}</li>}
+                {fileError && (
+                  <li>
+                    <FieldMessage id="scope-file-error">{fileError}</FieldMessage>
+                  </li>
+                )}
               </ul>
             )}
             <Label htmlFor="scope-input" className="sr-only">
@@ -248,14 +268,31 @@ export function ScopingStudio({ aiEnabled }: { aiEnabled: boolean }) {
                   void send(input)
                 }
               }}
-              placeholder="Describe the problem… (Enter to send, Shift+Enter for a new line)"
+              placeholder="Describe the problem…"
+              aria-describedby="scope-input-hint"
               rows={3}
             />
-            <div className="flex items-center justify-between gap-2">
-              <label className="inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-full border border-input px-4 text-sm font-medium text-primary hover:bg-muted has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring">
-                <Icon name="add_photo_alternate" className="text-base" />
+            <p id="scope-input-hint" className="type-small text-muted-foreground">
+              Press Enter to send, or Shift+Enter for a new line.
+            </p>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <label
+                className={buttonVariants({
+                  variant: "outline",
+                  className: "has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring",
+                })}
+              >
+                <Icon name="add_photo_alternate" />
                 Add screenshot
-                <input ref={fileRef} type="file" accept={IMAGE_TYPES.join(",")} multiple className="sr-only" onChange={(e) => onPickFiles(e.target.files)} />
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept={IMAGE_TYPES.join(",")}
+                  multiple
+                  className="sr-only"
+                  aria-describedby={fileError ? "scope-file-error" : undefined}
+                  onChange={(e) => onPickFiles(e.target.files)}
+                />
               </label>
               {busy ? (
                 <Button type="button" variant="outline" onClick={() => stop()}>
@@ -290,13 +327,20 @@ const asList = (text: string) => text.split("\n").map((s) => s.trim()).filter(Bo
 function BriefEditor({ aiBrief, onStartOver }: { aiBrief: Brief; onStartOver: () => void }) {
   // The person's edits, kept as the raw text they typed. Lists are split into items only when sending.
   const [edits, setEdits] = useState<Partial<Record<keyof Brief, string>>>({})
+  // Fields where the person kept the AI's text as it is. Accepting turns the draft frame solid.
+  const [accepted, setAccepted] = useState<Partial<Record<keyof Brief, true>>>({})
   const [, setBriefs] = useCollection<SubmittedBrief>("briefs", [])
-  const [errors, setErrors] = useState<typeof REQUIRED>([])
+  const [errors, setErrors] = useState<FieldError[]>([])
   const [submitted, setSubmitted] = useState<string | null>(null)
+  const [status, setStatus] = useState("")
   const summaryRef = useRef<HTMLDivElement>(null)
   const doneRef = useRef<HTMLHeadingElement>(null)
 
   const text = (key: keyof Brief) => edits[key] ?? asText(aiBrief[key])
+  const draftStatus = (key: keyof Brief): DraftStatus | undefined => {
+    if (edits[key] !== undefined) return edits[key] === asText(aiBrief[key]) && accepted[key] ? "accepted" : aiBrief[key] !== undefined ? "edited" : undefined
+    return aiBrief[key] !== undefined ? "ai" : undefined
+  }
 
   useEffect(() => {
     if (errors.length) summaryRef.current?.focus()
@@ -308,7 +352,7 @@ function BriefEditor({ aiBrief, onStartOver }: { aiBrief: Brief; onStartOver: ()
 
   function submit(e: FormEvent) {
     e.preventDefault()
-    const missing = REQUIRED.filter((r) => !text(r.key).trim())
+    const missing = REQUIRED.filter((r) => !text(r.key).trim()).map((r) => ({ field: `brief-field-${r.key}`, message: r.message }))
     setErrors(missing)
     if (missing.length) return
     const brief: Brief = {}
@@ -321,23 +365,33 @@ function BriefEditor({ aiBrief, onStartOver }: { aiBrief: Brief; onStartOver: ()
     setSubmitted(brief.title ?? "Your brief")
   }
 
+  function accept(key: keyof Brief, label: string) {
+    setEdits((prev) => ({ ...prev, [key]: asText(aiBrief[key]) }))
+    setAccepted((prev) => ({ ...prev, [key]: true }))
+    setStatus(`${label}: accepted as written.`)
+  }
+
+  const aiFields = BRIEF_FIELDS.filter((f) => draftStatus(f.key) === "ai")
+
   if (submitted) {
     return (
       <div className="h-fit rounded-2xl border-2 border-archetype bg-archetype-soft p-6">
-        <h2 ref={doneRef} tabIndex={-1} className="text-xl font-bold">
+        <h2 ref={doneRef} tabIndex={-1} className="flex items-center gap-2 type-title-3">
+          <Icon name="circle-check" />
           Brief sent for review
         </h2>
         <p className="mt-2">
           &ldquo;{submitted}&rdquo; is with BRIDGEGOOD. In the real service, a person would review it, follow up with
-          questions, and look for an ambassador and student team.
+          questions, and look for an ambassador and apprentice team.
         </p>
-        <p className="mt-2 text-sm text-muted-foreground">Demo: saved in this browser only. It now appears on your overview and on My project and team.</p>
+        <p className="mt-2 text-muted-foreground">Demo: saved in this browser only. It now appears on your overview and on My project and team.</p>
         <Button
           variant="outline"
           className="mt-4"
           onClick={() => {
             setSubmitted(null)
             setEdits({})
+            setAccepted({})
             setErrors([])
             onStartOver()
           }}
@@ -349,76 +403,88 @@ function BriefEditor({ aiBrief, onStartOver }: { aiBrief: Brief; onStartOver: ()
   }
 
   return (
-    <form onSubmit={submit} noValidate aria-labelledby="brief-heading" className="space-y-5 rounded-2xl border bg-card p-6">
-      <div className="flex flex-wrap items-start justify-between gap-2">
-        <div>
-          <h2 id="brief-heading" className="text-xl font-bold">
-            Project brief (draft)
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Fills in as you chat. Edit anything: your changes take priority over the assistant&apos;s.
-          </p>
-        </div>
-        <span className="rounded-full bg-muted px-3 py-1 text-xs font-bold">Reviewed by BRIDGEGOOD before matching</span>
+    <form onSubmit={submit} noValidate aria-labelledby="brief-heading" className="min-w-0 space-y-5 rounded-2xl border bg-card p-4 sm:p-6">
+      <p role="status" className="sr-only">
+        {status}
+      </p>
+      <div className="space-y-2">
+        <h2 id="brief-heading" className="type-title-3">
+          Project brief (draft)
+        </h2>
+        <p className="text-muted-foreground">
+          Fills in as you chat. Anything the assistant writes sits in a dashed frame marked &ldquo;AI draft&rdquo;. Edit it, or
+          accept it as written, and it becomes yours. Your changes always take priority.
+        </p>
+        <RoleBadge role="steward">Reviewed by BRIDGEGOOD before matching</RoleBadge>
       </div>
-      {errors.length > 0 && (
-        <div ref={summaryRef} tabIndex={-1} role="alert" aria-labelledby="brief-errors-title" className="rounded-lg border-2 border-destructive p-3">
-          <p id="brief-errors-title" className="font-bold">
-            Before sending:
-          </p>
-          <ul className="list-disc pl-5">
-            {errors.map((er) => (
-              <li key={er.key}>
-                <a href={`#brief-field-${er.key}`} className="font-medium text-destructive underline underline-offset-4">
-                  {er.message}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <ErrorSummary errors={errors} summaryRef={summaryRef} title="Before sending:" />
       <div className="grid gap-4 lg:grid-cols-2">
         {BRIEF_FIELDS.map((f) => {
-          const fromAi = aiBrief[f.key] !== undefined && edits[f.key] === undefined
           const id = `brief-field-${f.key}`
-          const error = errors.find((er) => er.key === f.key)
+          const error = errors.find((er) => er.field === id)
           const required = REQUIRED.some((r) => r.key === f.key)
-          const describedBy = [(f.list || f.hint) && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(" ") || undefined
+          const draft = draftStatus(f.key)
+          const describedBy = [(f.list || f.hint) && `${id}-hint`, draft && `${id}-draft`, error && `${id}-error`].filter(Boolean).join(" ") || undefined
           const fieldProps = {
             id,
             value: text(f.key),
             "aria-invalid": error ? true : undefined,
             "aria-describedby": describedBy,
-            onChange: (e: { target: { value: string } }) => setEdits((prev) => ({ ...prev, [f.key]: e.target.value })),
+            onChange: (e: { target: { value: string } }) => {
+              setEdits((prev) => ({ ...prev, [f.key]: e.target.value }))
+              setAccepted((prev) => ({ ...prev, [f.key]: undefined }))
+            },
           }
+          const field = f.long || f.list ? <Textarea rows={f.list ? 3 : 2} {...fieldProps} /> : <Input {...fieldProps} />
           return (
-            <div key={f.key} className={cn("space-y-1", (f.long || f.list) && "lg:col-span-2")}>
-              <Label htmlFor={id} className="font-bold">
+            <div key={f.key} className={cn("min-w-0 space-y-1", (f.long || f.list) && "lg:col-span-2")}>
+              <Label htmlFor={id}>
                 {f.label}
                 {required && <span className="ml-1 font-normal text-muted-foreground">(required)</span>}
-                {fromAi && <span className="ml-2 rounded bg-archetype-soft px-1.5 py-0.5 text-xs font-semibold text-archetype">AI draft</span>}
               </Label>
               {(f.list || f.hint) && (
-                <p id={`${id}-hint`} className="text-xs text-muted-foreground">
+                <p id={`${id}-hint`} className="text-muted-foreground">
                   {f.hint ?? "One per line"}
                 </p>
               )}
-              {error && (
-                <p id={`${id}-error`} className="text-sm font-semibold text-destructive">
-                  {error.message}
-                </p>
+              {draft ? (
+                <DraftFieldFrame status={draft} statusId={`${id}-draft`}>
+                  {field}
+                </DraftFieldFrame>
+              ) : (
+                field
               )}
-              {f.long || f.list ? <Textarea rows={f.list ? 3 : 2} {...fieldProps} /> : <Input {...fieldProps} />}
+              {draft === "ai" && (
+                <div>
+                  <Button type="button" variant="ghost" size="sm" className="-ml-3" onClick={() => accept(f.key, f.label)}>
+                    <Icon name="check" />
+                    Accept as written
+                    <span className="sr-only">: {f.label}</span>
+                  </Button>
+                </div>
+              )}
+              {error && <FieldMessage id={`${id}-error`}>{error.message}</FieldMessage>}
             </div>
           )
         })}
       </div>
-      <div className="rounded-xl bg-muted p-4">
+      {aiFields.length > 0 && (
+        <Notice tone="warning">
+          <p className="font-bold">
+            {aiFields.length === 1 ? "1 field is" : `${aiFields.length} fields are`} still an AI draft.
+          </p>
+          <p>
+            Read {aiFields.length === 1 ? "it" : "them"} before you send, then edit or accept. You can still send it: a person at
+            BRIDGEGOOD goes through every brief with you before anything happens.
+          </p>
+        </Notice>
+      )}
+      <div className="rounded-xl border bg-muted p-4">
         <p className="font-bold">{DECISION_MOMENT_INFO.partnerBrief.label}</p>
-        <p className="text-sm">{DECISION_MOMENT_INFO.partnerBrief.intro}</p>
+        <p>{DECISION_MOMENT_INFO.partnerBrief.intro}</p>
         <ul className="mt-2 list-disc space-y-1 pl-5">
-          {promptsForMoment("partnerBrief").map((p) => (
-            <li key={p.id}>{p.text}</li>
+          {promptsForMoment("partnerBrief").map((p, i) => (
+            <li key={p.id}>{i === 0 ? <Highlight>{p.text}</Highlight> : p.text}</li>
           ))}
         </ul>
       </div>

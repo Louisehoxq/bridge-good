@@ -50,24 +50,6 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  /* Material 3 names from the previous system, kept so older markup still renders. Prefer the tokens above. */
-  --color-on-surface: var(--ink);
-  --color-on-surface-variant: var(--ink-muted);
-  --color-surface-container-lowest: var(--surface);
-  --color-surface-container-low: var(--surface-sunken);
-  --color-surface-container: var(--surface-sunken);
-  --color-surface-container-high: var(--surface-sunken);
-  --color-surface-container-highest: var(--surface-sunken);
-  --color-primary-container: var(--apprentice-soft);
-  --color-on-primary-container: var(--ink);
-  --color-secondary-container: var(--surface-sunken);
-  --color-on-secondary-container: var(--ink);
-  --color-error-container: var(--error-soft);
-  --color-on-error-container: var(--error);
-  --color-outline: var(--line-strong);
-  --color-outline-variant: var(--line);
-  --color-brand-gold: var(--gold);
-
   /* Role accents. Each role always shows icon + label + color (src/components/studio/role-badge.tsx). */
   --color-apprentice: var(--apprentice);
   --color-apprentice-soft: var(--apprentice-soft);
@@ -276,52 +258,6 @@
 @utility type-small {
   font-size: 0.875rem;
   line-height: 1.375rem;
-}
-
-/* The previous Material 3 scale names, remapped onto Bridge Studio so existing pages pick it up. */
-@utility display-medium {
-  font-family: var(--font-heading);
-  font-size: 3rem;
-  line-height: 3.5rem;
-}
-@utility display-small {
-  font-family: var(--font-heading);
-  font-size: 2.25rem;
-  line-height: 2.75rem;
-}
-@utility headline-large {
-  font-family: var(--font-heading);
-  font-size: 2.25rem;
-  line-height: 2.75rem;
-}
-@utility headline-medium {
-  font-family: var(--font-heading);
-  font-size: 1.75rem;
-  line-height: 2.25rem;
-}
-@utility headline-small {
-  font-family: var(--font-heading);
-  font-size: 1.375rem;
-  line-height: 1.875rem;
-}
-@utility title-large {
-  font-family: var(--font-heading);
-  font-size: 1.375rem;
-  line-height: 1.875rem;
-}
-@utility title-medium {
-  font-size: 1rem;
-  line-height: 1.5rem;
-  font-weight: 600;
-}
-@utility body-large {
-  font-size: 1.125rem;
-  line-height: 1.875rem;
-}
-@utility label-large {
-  font-size: 1rem;
-  line-height: 1.5rem;
-  font-weight: 600;
 }
 
 @layer base {

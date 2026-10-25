@@ -7,7 +7,7 @@ export const meta = () => pageMeta("Community of practice")
 export default function CommunityPage() {
   return (
     <>
-      <PageHeader eyebrow="Communities of practice" title="Learn alongside other apprentices">
+      <PageHeader title="Learn alongside other apprentices">
         Peer circles where apprentices swap tips, ask questions and support each other.
       </PageHeader>
       <CommunityOfPractice />

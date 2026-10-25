@@ -1,3 +1,4 @@
+import { Icon } from "@/components/icon"
 import { PRINCIPLES } from "@/content/principles"
 import type { Role } from "@/lib/roles"
 
@@ -10,18 +11,13 @@ export function PrinciplesInPractice({ role }: { role: Role }) {
           <details className="group">
             <summary className="flex min-h-12 cursor-pointer list-none items-start justify-between gap-4 rounded-xl p-5 [&::-webkit-details-marker]:hidden">
               <span>
-                <span className="block text-lg font-bold">{p.name}</span>
+                <span className="block type-label">{p.name}</span>
                 <span className="mt-1 block text-muted-foreground">{p.meaning}</span>
               </span>
-              <span
-                className="mt-1 shrink-0 text-2xl leading-none text-archetype transition-transform group-open:rotate-45"
-                aria-hidden="true"
-              >
-                +
-              </span>
+              <Icon name="chevron-down" className="mt-1 text-archetype transition-transform group-open:rotate-180" />
             </summary>
             <div className="border-t px-5 py-4">
-              <p className="text-sm font-bold text-archetype">What this looks like for you</p>
+              <p className="font-bold text-archetype">What this looks like for you</p>
               <p className="mt-1">{p.inPractice[role]}</p>
             </div>
           </details>

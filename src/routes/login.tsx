@@ -21,8 +21,8 @@ export default function LoginPage() {
     <AppShell>
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
         <div className="mb-10 max-w-2xl space-y-3">
-          <h1 className="headline-large font-bold lg:display-small">Log in</h1>
-          <p className="body-large text-muted-foreground">
+          <h1 className="type-title-1">Log in</h1>
+          <p className="type-body-lg text-muted-foreground">
             This prototype uses demo accounts, so there&apos;s no password. Choose a role to see what BridgeGoodx looks like
             for that person. You can switch at any time.
           </p>

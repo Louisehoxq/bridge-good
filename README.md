@@ -18,10 +18,11 @@ A **desktop-first web app**, following the team's wireframe. One public library 
 
 | Page | URL | What's there |
 |---|---|---|
-| Welcome | `/` | Mission, why Design for Social Good, the framework (5 pillars), the impact loop, principles by role, terms, resources |
+| Welcome | `/` | "Start where you are" routing by role, the 5 pillars (the spine), how BRIDGEGOOD works (the 6 principles, with a by-role table behind a disclosure), the impact loop, and who the philosophy belongs to |
 | Library | `/learn` | Index of everything below, with the framework's version and BRIDGEGOOD authorship note |
 | Pillars | `/learn/pillars/:pillarId` | Meaning, a synthetic example, the learning outcome, the pillar's reflection prompts, where it's taught |
 | Reflection prompts | `/learn/prompts` | The 12 prompts, their pillars, and where they come up in the app |
+| Terms of reference | `/learn/terms` | How Design for Social Good differs from other approaches, and what each term means, isn't, and looks like when it's missing (moved here from the welcome page) |
 | Role tracks | `/learn/tracks/apprentices`, `mentors`, `ambassadors`, `company-hosts` | Modules (any order, with pillar chips), a one-page explainer, example case studies, related guides |
 | Guides | `/learn/guides/:slug` | Mock case, real case, teaching AI and social good, mentor commitment, ambassador vetting, adapt don't copy, inclusive language |
 | Self-check | `/learn/self-check` | "Is this a good fit for you right now?" No form, nothing stored, links to the official criteria |
@@ -35,13 +36,15 @@ Every library page has a stable URL, breadcrumbs and previous/next links. Signed
 
 | Role | Demo account (synthetic) | Pages |
 |---|---|---|
-| **Apprentice** `/student` | Ari Santos | Overview · Your path (bootcamp → mini project → choose a project → capstone → alumni) · Practice · Choose a project · Submissions & feedback · Reflection companion · My mentor (messages + office hours) · Community of practice |
-| **Mentor** `/mentor` | Jordan Lee, a BRIDGEGOOD alum | Overview · Prepare · Growth conversations · My mentee (profile, path, messages, office hours) |
+| **Apprentice** `/student` | Ari Santos | Your path, the home page (your people or team, bootcamp → mini project → choose a project → capstone → alumni) · Practice `/student/practice` · Choose a project · Submissions & feedback · Reflection companion · My mentor (messages + office hours) · Community of practice |
+| **Mentor** `/mentor` | Jordan Lee, a BRIDGEGOOD alum | Overview · Prepare · Growth conversations `/mentor/conversations` (with the questions apprentices shared) · My mentee (team, profile, path, messages, office hours) |
 | **Ambassador: chapter lead** `/ambassador` | Priya Raman | Overview · Playbook · Matching & milestones · Partner pipeline · Outreach & partner toolkits |
 | **Ambassador: company host** `/ambassador` | Dana Whitfield | Same area, with its own overview and playbook |
-| **Community partner** `/partner` | Eastside Tenants Network | Overview · Submit a problem (AI scoping studio) · My project and team · Project gallery · Toolkit & FAQs · Funding & legal templates (coming soon) |
+| **Community partner** `/partner` | Eastside Tenants Network | Overview · Submit a problem (AI scoping studio) · My project and team · Project gallery · Toolkit & FAQs (including funding and legal templates, coming soon) |
 
 Chapter lead and company host share one `ambassador` role key; the session stores which kind.
+
+Old URLs redirect (301): `/student/path` → `/student`, `/student/activities` → `/student/practice`, `/mentor/submissions` → `/mentor/conversations`, `/partner/legal` → `/partner/toolkit#legal`, and `/training/*` → the library.
 
 Everything connects through one loop: **a community partner shares a problem → an ambassador gathers support → apprentices design with the community while mentors guide → feedback goes back to BRIDGEGOOD, which decides what changes in the philosophy.**
 
@@ -66,7 +69,7 @@ Open http://localhost:5173, choose **Log in**, and pick a demo account.
 - Without an API key, the AI features say they're off: partners fill in the brief by hand, and apprentices reflect with BRIDGEGOOD's questions without AI.
 
 ### Demo walkthrough (cross-role)
-1. Log in as **Apprentice** (Ari). Open **Your path**: you're on step 2, the mini project. Submit a mock case with your self-assessment. Then go to **Choose a project** and tell your chapter lead why you'd like the tenant-rights brief.
+1. Log in as **Apprentice** (Ari). You land on **Your path**: your people, and step 2, the mini project. Submit a mock case with your self-assessment. Then go to **Choose a project** and tell your chapter lead why you'd like the tenant-rights brief.
 2. Switch to **Mentor** (Jordan). In **Growth conversations**, read Ari's self-assessment first, then write "What's working" and "One next step" for one or more pillars. No scores.
 3. Switch to **Chapter lead** (Priya). On **Matching & milestones**, read the apprentices' notes and form a team with Jordan as mentor. Mark a milestone reached.
 4. Log in as **Community partner**. **My project and team** now shows the team and the sprint. Send feedback. Or open **Submit a problem** and build a brief: "How will the people you serve shape this?" is required.
@@ -100,21 +103,22 @@ src/
   app.css                Bridge Studio tokens (light and dark), type scale, base styles
   routes/
     home.tsx             Welcome
-    learn/               public library: index, pillars, prompts, role tracks, guides, self-check
+    learn/               public library: index, pillars, prompts, terms, role tracks, guides, self-check
     login.tsx logout.ts chapters.tsx
     legacy-redirect.ts redirects.ts   old URLs (/training/*, merged role pages)
     student/ mentor/ ambassador/ partner/   role areas (layout.tsx guards the role and renders RoleShell)
     api.scope.ts         AI scoping assistant (resource route)
     api.reflect.ts       Reflection Companion (resource route)
     design.tsx           design system page
-  components/            shell, nav, impact loop, principles, problem board, training, toolkits
+  components/            shell, nav, notices and form errors, impact loop, principles, problem board, training, toolkits
   components/demo/       messages, office hours, submissions & growth conversations, matching data, milestones, community, snapshots
   components/library/    library page frame, breadcrumbs, prompt list, pillar chip
   components/path/       role path stepper and the "your path" strip on library pages
   components/partner/    scoping studio, submitted briefs
   components/reflection/ Reflection Companion UI
   components/studio/     Bridge Studio signature components
-  components/ui/         Bridge Studio primitives (button, fields, sheet)
+  components/team/       team views: people chips joined by the gold path
+  components/ui/         Bridge Studio primitives (button, fields, select, sheet)
   content/               framework, guides, eligibility, training, principles, glossary, problems, chapters, toolkits, journey and seed data
   lib/                   roles, session (cookie + guard), library index, role paths, demo store, brief schema, AI config
   lib/evaluator/         evaluator schema, prompts, checks, providers, tests
@@ -134,7 +138,7 @@ src/
 See [docs/evaluation-milestone-2.md](docs/evaluation-milestone-2.md) for the full review.
 
 - **Done:** the React Router migration, Bridge Studio tokens and components, the public library with role paths, the new roles, growth conversations, and Reflection Companion phase 1.
-- **Next (milestone 2.5):** apply Bridge Studio across pages (`docs/design-followups.md`): the type scale, no all caps, the draft frame on AI output, people and paths on team views. Then the manual accessibility checks, and a content-organization pass.
+- **Done in milestone 2.5:** Bridge Studio on every page (type scale, no all caps, no pill links, the AI draft frame on both AI surfaces, people and paths on team views, pinned notes, the highlighted prompt, role badges), all known layout failures fixed, a manual accessibility pass, and the content reorganization above. Results are in `docs/design-followups.md`.
 - **Milestone 3:** the feedback loop. A BRIDGEGOOD steward inbox, local adaptations, "this didn't fit" flags, mentor–AI disagreement records, and a versioned framework with a public changelog.
 - **Needs an API key:** a live check of the scoping assistant, the Reflection Companion and the Gemma comparison.
 - **Needs BRIDGEGOOD:**

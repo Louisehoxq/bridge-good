@@ -1,7 +1,9 @@
 import type { ReactNode } from "react"
-import { accountFor, ROLE_INFO, type Role } from "@/lib/roles"
+import { ROLE_INFO, type Role } from "@/lib/roles"
 import { useSession } from "@/lib/session"
+import { Icon, type IconName } from "@/components/icon"
 import { NavLink } from "@/components/nav-link"
+import { RoleBadge, STUDIO_ROLE_FOR, STUDIO_ROLES, studioRoleFor } from "@/components/studio/role-badge"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
 
@@ -18,26 +20,52 @@ export function AppShell({ children }: { children: ReactNode }) {
   )
 }
 
+/** Sidebar icons by link, so each item reads at a glance. The same icon always means the same thing. */
+const SIDEBAR_ICONS: Record<string, IconName> = {
+  "/student": "route",
+  "/student/practice": "pencil-ruler",
+  "/student/projects": "clipboard-list",
+  "/student/submissions": "messages-square",
+  "/student/reflection": "sticky-note",
+  "/student/mentor": "message-circle-heart",
+  "/student/community": "group",
+  "/mentor": "house",
+  "/mentor/prepare": "book-open",
+  "/mentor/conversations": "messages-square",
+  "/mentor/mentee": "sprout",
+  "/ambassador": "house",
+  "/ambassador/playbook": "book-open",
+  "/ambassador/matching": "flag",
+  "/ambassador/projects": "heart-handshake",
+  "/ambassador/toolkits": "folder-open",
+  "/partner": "house",
+  "/partner/submit": "file-plus",
+  "/partner/project": "group",
+  "/partner/gallery": "layout-grid",
+  "/partner/toolkit": "folder-open",
+}
+
 /**
- * Role areas: desktop layout with a sticky left sidebar beside a wide content column.
- * Below lg the sidebar becomes a scrollable tab strip.
+ * Role areas: desktop layout with a sticky, sunken left sidebar beside a wide content column.
+ * Below lg the sidebar becomes a scrollable tab strip under the role badge.
  */
 export function RoleShell({ role, children }: { role: Role; children: ReactNode }) {
   const info = ROLE_INFO[role]
   const session = useSession()
   // Chapter leads and company hosts share the ambassador area; label it with their own kind.
-  const label = session?.role === role ? accountFor(session).label : info.label
+  const studioRole = session?.role === role ? studioRoleFor(session) : STUDIO_ROLE_FOR[role]
+  const badge = <RoleBadge role={studioRole}>{STUDIO_ROLES[studioRole].label} area</RoleBadge>
   return (
     <div data-archetype={role} className="flex min-h-full flex-col">
       <SiteHeader role={role} />
       <div className="mx-auto w-full max-w-7xl flex-1 lg:grid lg:grid-cols-[16rem_1fr] lg:gap-10 lg:px-8">
         <div className="hidden lg:block">
-          <nav aria-label={`${info.label} area`} className="sticky top-16 space-y-6 py-8">
-            <p className="px-3 text-sm font-bold tracking-wide text-archetype uppercase">{label} area</p>
+          <nav aria-label={`${info.label} area`} className="sticky top-20 my-8 space-y-5 rounded-xl border bg-surface-sunken p-3">
+            <p className="px-2 pt-1">{badge}</p>
             {info.sidebar.map((group, i) => (
               <div key={group.label ?? i}>
                 {group.label && (
-                  <p id={`side-${i}`} className="mb-1 px-3 text-sm font-bold text-muted-foreground">
+                  <p id={`side-${i}`} className="mb-1 px-3 type-small font-semibold text-muted-foreground">
                     {group.label}
                   </p>
                 )}
@@ -45,6 +73,7 @@ export function RoleShell({ role, children }: { role: Role; children: ReactNode 
                   {group.items.map((item) => (
                     <li key={item.href}>
                       <NavLink href={item.href} exact={item.href === info.home} variant="side">
+                        {SIDEBAR_ICONS[item.href] && <Icon name={SIDEBAR_ICONS[item.href]} />}
                         {item.label}
                       </NavLink>
                     </li>
@@ -55,17 +84,20 @@ export function RoleShell({ role, children }: { role: Role; children: ReactNode 
           </nav>
         </div>
 
-        <nav aria-label={`${info.label} area`} className="border-b px-4 sm:px-6 lg:hidden">
-          <ul className="-mb-px flex overflow-x-auto">
-            {info.sidebar.flatMap((group) => group.items).map((item) => (
-              <li key={item.href}>
-                <NavLink href={item.href} exact={item.href === info.home} variant="tab">
-                  {item.label}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <div className="border-b px-4 pt-4 sm:px-6 lg:hidden">
+          {badge}
+          <nav aria-label={`${info.label} area`} className="mt-2">
+            <ul className="-mb-px flex overflow-x-auto">
+              {info.sidebar.flatMap((group) => group.items).map((item) => (
+                <li key={item.href}>
+                  <NavLink href={item.href} exact={item.href === info.home} variant="tab">
+                    {item.label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
 
         <main id="main" tabIndex={-1} className="min-w-0 px-4 py-8 focus:outline-none sm:px-6 lg:px-0 lg:py-10">
           {children}
@@ -76,12 +108,12 @@ export function RoleShell({ role, children }: { role: Role; children: ReactNode 
   )
 }
 
-export function PageHeader({ eyebrow, title, children }: { eyebrow?: string; title: string; children?: ReactNode }) {
+/** A page's h1 and lede. In role areas the role badge sits in the sidebar, so there's no eyebrow label. */
+export function PageHeader({ title, children }: { title: string; children?: ReactNode }) {
   return (
     <div className="mb-8 max-w-3xl space-y-2">
-      {eyebrow && <p className="text-sm font-bold tracking-wide text-archetype uppercase">{eyebrow}</p>}
-      <h1 className="text-3xl font-bold lg:text-4xl">{title}</h1>
-      {children && <div className="text-lg text-muted-foreground">{children}</div>}
+      <h1 className="type-title-1">{title}</h1>
+      {children && <div className="type-body-lg text-muted-foreground">{children}</div>}
     </div>
   )
 }

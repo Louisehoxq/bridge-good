@@ -2,6 +2,7 @@ import { ThumbsDown, ThumbsUp } from "lucide-react"
 import { useId, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
+import { NativeSelect } from "@/components/ui/select"
 import type { PillarId } from "@/content/framework"
 import { newId, nowLabel } from "@/lib/demo-store"
 import { RUBRIC_VERSION } from "@/lib/evaluator/rubric"
@@ -39,7 +40,7 @@ export function FeedbackControls({ pillar, kind }: { pillar: PillarId; kind: "ai
   return (
     <div className="space-y-2">
       <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Was this useful?">
-        <Button type="button" variant="outline" size="sm" aria-pressed={verdict === "useful"} onClick={() => record("useful")} className="min-h-11 aria-pressed:bg-secondary-container">
+        <Button type="button" variant="outline" size="sm" aria-pressed={verdict === "useful"} onClick={() => record("useful")} className="aria-pressed:border-primary aria-pressed:bg-muted">
           <ThumbsUp aria-hidden="true" className="size-4" />
           Useful
         </Button>
@@ -49,32 +50,31 @@ export function FeedbackControls({ pillar, kind }: { pillar: PillarId; kind: "ai
           size="sm"
           aria-pressed={verdict === "not-right"}
           onClick={() => record("not-right", reason)}
-          className="min-h-11 aria-pressed:bg-secondary-container"
+          className="aria-pressed:border-primary aria-pressed:bg-muted"
         >
           <ThumbsDown aria-hidden="true" className="size-4" />
           Not right
         </Button>
-        {verdict && <span className="text-sm text-muted-foreground">Thanks. This helps BRIDGEGOOD improve the rubric.</span>}
+        {verdict && <span className="text-muted-foreground">Thanks. This helps BRIDGEGOOD improve the rubric.</span>}
       </div>
       {verdict === "not-right" && (
         <div className="max-w-sm space-y-1">
-          <Label htmlFor={`${id}-reason`} className="font-bold">
-            What&apos;s not right? (optional)
+          <Label htmlFor={`${id}-reason`}>
+            What&apos;s not right? <span className="font-normal text-muted-foreground">(optional)</span>
           </Label>
-          <select
+          <NativeSelect
             id={`${id}-reason`}
             value={reason}
             onChange={(e) => {
               setReason(e.target.value)
               record("not-right", e.target.value)
             }}
-            className="min-h-12 w-full rounded-xs border border-input bg-transparent px-4"
           >
             <option value="">Choose a reason</option>
             {REASONS.map((r) => (
               <option key={r}>{r}</option>
             ))}
-          </select>
+          </NativeSelect>
         </div>
       )}
     </div>

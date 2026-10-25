@@ -1,263 +1,180 @@
 import { Link } from "react-router"
 import { Icon } from "@/components/icon"
-import { COMPARISON, GLOSSARY } from "@/content/glossary"
 import { FRAMEWORK_META, PILLARS } from "@/content/framework"
-import { PRINCIPLES_INTRO } from "@/content/principles"
+import { PRINCIPLES } from "@/content/principles"
 import { AppShell } from "@/components/app-shell"
 import { ImpactLoop } from "@/components/impact-loop"
 import { PrinciplesTable } from "@/components/principles-table"
+import { RoleBadge, type StudioRole } from "@/components/studio/role-badge"
 import { buttonVariants } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
 
-const TOC = [
-  { id: "mission", label: "Mission" },
-  { id: "why", label: "Why Design for Social Good" },
-  { id: "framework", label: "The framework" },
-  { id: "loop", label: "How it fits together" },
-  { id: "principles", label: "Principles by role" },
-  { id: "terms", label: "Terms of reference" },
-  { id: "resources", label: "Resources" },
-]
-
-const RESOURCES = [
-  { title: "Inclusive language guide", href: "/learn/guides/inclusive-language" },
-  { title: "The 12 reflection prompts", href: "/learn/prompts" },
-  { title: "Adapt, don't copy: running the philosophy locally", href: "/learn/guides/adapt-locally" },
-  { title: "Is this a good fit for you right now?", href: "/learn/self-check" },
-]
-
-const EXTERNAL = [
-  { title: "WCAG 2.2 quick reference (W3C)", href: "https://www.w3.org/WAI/WCAG22/quickref/" },
-  { title: "Introduction to web accessibility (W3C WAI)", href: "https://www.w3.org/WAI/fundamentals/accessibility-intro/" },
+/** "Start where you are": each role goes to the library page written for them, no login needed. */
+const ROUTES: { role: StudioRole; who: string; href: string; cta: string }[] = [
+  { role: "apprentice", who: "You're in the apprenticeship, or thinking about applying", href: "/learn/tracks/apprentices", cta: "The apprentice track" },
+  { role: "mentor", who: "You guide apprentices, or would like to", href: "/learn/tracks/mentors", cta: "The mentor track" },
+  { role: "chapter-lead", who: "You'd like to run a chapter in your city", href: "/learn/tracks/ambassadors", cta: "The chapter lead track" },
+  { role: "company-host", who: "Your company could host mentors or sponsor a project", href: "/learn/tracks/company-hosts", cta: "The company host track" },
+  { role: "community-partner", who: "Your organization has a problem a team could work on", href: "/learn/guides/real-case", cta: "How a partner project runs" },
 ]
 
 export default function WelcomePage() {
   return (
     <AppShell>
-      <section aria-labelledby="hero-title" className="bg-surface-container">
-        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[3fr_2fr] lg:items-end lg:px-8 lg:py-24">
-          <div className="space-y-6">
-            <p className="text-sm font-bold tracking-wide text-primary uppercase">BRIDGEGOOD · Design for Social Good</p>
-            <h1 id="hero-title" className="text-5xl font-bold lg:text-6xl">
+      <section aria-labelledby="hero-title" className="border-b bg-surface-sunken">
+        <div className="mx-auto max-w-7xl space-y-10 px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+          <div className="max-w-4xl space-y-6">
+            <h1 id="hero-title" className="type-title-1 lg:type-display">
               Design for Social Good: how BRIDGEGOOD works, and how you can work this way too
             </h1>
-            <p className="max-w-2xl text-xl">
+            <p className="max-w-[70ch] type-body-lg">
               In BRIDGEGOOD&apos;s approach, the community a project serves helps define the problem and judge the result.
               Emerging designers from groups underrepresented in design do the work, with mentors. A project counts only if
               it works for the community and the designers grow through it.
             </p>
-            <div className="flex flex-wrap gap-3">
-              <Link to="/login" className={buttonVariants({ size: "lg" })}>
-                Log in to your area
-                <Icon name="arrow_forward" />
-              </Link>
-              <Link to="/learn" className={buttonVariants({ size: "lg", variant: "outline" })}>
-                Read the library
-              </Link>
-              <Link to="/chapters" className={buttonVariants({ size: "lg", variant: "outline" })}>
-                See the proposed chapter model
-              </Link>
-            </div>
           </div>
-          <dl className="grid grid-cols-2 gap-4">
-            {[
-              ["Since 2009", "connecting design with confidence, access, community and economic mobility"],
-              ["$0 tuition", "for BRIDGEGOOD apprentices, with no income share agreements (public fact; confirm with BRIDGEGOOD)"],
-            ].map(([k, v]) => (
-              <div key={k} className="rounded-2xl bg-background p-5">
-                <dt className="font-heading text-2xl font-bold">{k}</dt>
-                <dd className="mt-1 text-muted-foreground">{v}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </section>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:grid lg:grid-cols-[14rem_1fr] lg:gap-12 lg:px-8">
-        <nav aria-label="On this page" className="hidden lg:block">
-          <div className="sticky top-16 py-12">
-            <p className="mb-3 text-sm font-bold tracking-wide text-muted-foreground uppercase">On this page</p>
-            <ul className="space-y-1 border-l">
-              {TOC.map((t) => (
-                <li key={t.id}>
-                  <a href={`#${t.id}`} className="-ml-px flex min-h-12 items-center border-l-2 border-transparent pl-4 hover:border-primary">
-                    {t.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </nav>
-
-        <div className="min-w-0 space-y-20 py-12 lg:py-16">
-          <section id="mission" aria-labelledby="mission-title" className="grid gap-8 xl:grid-cols-2">
-            <div className="space-y-4">
-              <h2 id="mission-title" className="text-3xl font-bold lg:text-4xl">
-                Mission & philosophy
-              </h2>
-              <p className="text-lg">
-                Since 2009, BRIDGEGOOD has helped people see themselves as creators, leaders and problem-solvers. Design
-                for Social Good is the way of working behind that: design that benefits communities, values lived
-                experience, and grows confidence, access and economic mobility for the people doing it.
-              </p>
-            </div>
-            <div className="rounded-2xl border bg-card p-6">
-              <h3 className="text-lg font-bold">This philosophy belongs to a community</h3>
-              <ul className="mt-3 list-disc space-y-2 pl-5">
-                <li>BRIDGEGOOD authors and stewards it.</li>
-                <li>Students, mentors, ambassadors and partners practice it, and improve it through feedback.</li>
-                <li>Communities can adapt it locally while keeping its core commitments.</li>
-                <li>Technology on this site supports the relationships behind it. It doesn&apos;t replace them.</li>
-              </ul>
-            </div>
-          </section>
-
-          <section id="why" aria-labelledby="why-title">
-            <h2 id="why-title" className="text-3xl font-bold lg:text-4xl">
-              Why Design for Social Good, rather than other philosophies?
+          <nav aria-labelledby="start-title">
+            <h2 id="start-title" className="mb-4 type-title-3">
+              Start where you are
             </h2>
-            <p className="mt-3 mb-8 max-w-3xl text-lg text-muted-foreground">
-              It builds on human-centered design and design thinking. The difference is in who holds power, who does the
-              work, and who benefits.
-            </p>
-            <div className="overflow-x-auto rounded-xl border" role="region" aria-label="Comparison of design approaches" tabIndex={0}>
-              <table className="w-full min-w-[56rem] border-collapse text-left">
-                <caption className="sr-only">How Design for Social Good compares with other approaches</caption>
-                <thead className="bg-muted">
-                  <tr>
-                    <td className="p-4" />
-                    {COMPARISON.approaches.map((a, i) => (
-                      <th
-                        key={a}
-                        scope="col"
-                        className={cn("p-4 font-bold", i === COMPARISON.approaches.length - 1 && "bg-primary text-primary-foreground")}
-                      >
-                        {a}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {COMPARISON.rows.map((row) => (
-                    <tr key={row.question} className="border-t align-top">
-                      <th scope="row" className="p-4 font-bold">
-                        {row.question}
-                      </th>
-                      {row.answers.map((ans, i) => (
-                        <td
-                          key={i}
-                          className={cn("p-4", i === row.answers.length - 1 ? "bg-accent font-semibold text-accent-foreground" : "text-muted-foreground")}
-                        >
-                          {ans}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          <section id="framework" aria-labelledby="framework-title">
-            <h2 id="framework-title" className="text-3xl font-bold lg:text-4xl">
-              The framework
-            </h2>
-            <p className="mt-3 mb-8 max-w-3xl text-lg text-muted-foreground">
-              Five pillars describe what apprentices learn. Each one has a plain meaning, an example, a learning outcome
-              and reflection prompts. {FRAMEWORK_META.author} authors and owns the framework. This is version{" "}
-              {FRAMEWORK_META.version}, a {FRAMEWORK_META.status.toLowerCase()}, updated {FRAMEWORK_META.updated}.
-            </p>
-            <ol className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {PILLARS.map((p) => (
-                <li key={p.id}>
-                  <Link to={`/learn/pillars/${p.id}`} className="group flex h-full flex-col gap-2 rounded-xl border bg-card p-5 hover:border-primary hover:bg-muted">
-                    <span className="text-sm font-bold text-muted-foreground">Pillar {p.number}</span>
-                    <span className="text-lg font-bold">{p.name}</span>
-                    <span className="text-muted-foreground">{p.learningOutcome}</span>
-                    <span className="mt-auto inline-flex items-center gap-2 pt-2 font-bold text-primary">
-                      Read about {p.name}
+            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+              {ROUTES.map((r) => (
+                <li key={r.role}>
+                  <Link
+                    to={r.href}
+                    data-archetype={r.role}
+                    className="group flex h-full flex-col gap-3 rounded-xl border bg-card p-4 hover:border-archetype hover:bg-archetype-soft"
+                  >
+                    <RoleBadge role={r.role} className="self-start" />
+                    <span>{r.who}</span>
+                    <span className="mt-auto inline-flex items-center gap-2 font-bold text-primary">
+                      {r.cta}
                       <Icon name="arrow_forward" className="text-base transition-transform group-hover:translate-x-1" />
                     </span>
                   </Link>
                 </li>
               ))}
-            </ol>
-          </section>
-
-          <section id="loop" aria-labelledby="loop-title">
-            <h2 id="loop-title" className="mb-8 text-3xl font-bold lg:text-4xl">
-              How it fits together
-            </h2>
-            <ImpactLoop />
-          </section>
-
-          <section id="principles" aria-labelledby="principles-title">
-            <h2 id="principles-title" className="text-3xl font-bold lg:text-4xl">
-              Principles by role
-            </h2>
-            <p className="mt-3 mb-8 max-w-3xl text-lg text-muted-foreground">
-              {PRINCIPLES_INTRO} Draft wording, for BRIDGEGOOD to review.
+            </ul>
+            <p className="mt-4">
+              Already taking part?{" "}
+              <Link to="/login" className="font-semibold text-primary underline underline-offset-4">
+                Log in to your area
+              </Link>{" "}
+              (demo accounts, no password).
             </p>
-            <PrinciplesTable />
-          </section>
-
-          <section id="terms" aria-labelledby="terms-title">
-            <h2 id="terms-title" className="text-3xl font-bold lg:text-4xl">
-              Terms of reference
-            </h2>
-            <p className="mt-3 mb-8 max-w-3xl text-lg text-muted-foreground">
-              Words like &ldquo;inclusion&rdquo; and &ldquo;social good&rdquo; can become empty. Here&apos;s what we mean
-              by them, and what each looks like in practice.
-            </p>
-            <dl className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {GLOSSARY.map((g) => (
-                <div key={g.term} className="rounded-xl border bg-card p-5">
-                  <dt className="text-lg font-bold">{g.term}</dt>
-                  <dd className="mt-1">{g.definition}</dd>
-                  <dd className="mt-3 border-t pt-3 text-sm text-muted-foreground">
-                    <span className="font-bold text-foreground">In practice: </span>
-                    {g.inPractice}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </section>
-
-          <section id="resources" aria-labelledby="resources-title">
-            <h2 id="resources-title" className="mb-8 text-3xl font-bold lg:text-4xl">
-              Resources
-            </h2>
-            <div className="grid gap-8 xl:grid-cols-[2fr_1fr]">
-              <ul className="divide-y rounded-xl border">
-                {RESOURCES.map((r) => (
-                  <li key={r.href}>
-                    <Link to={r.href} className="flex min-h-12 items-center gap-4 p-4 hover:bg-muted">
-                      <Icon name="description" className="text-xl shrink-0 text-primary" />
-                      <span className="flex-1 font-bold underline-offset-4">{r.title}</span>
-                      <Icon name="arrow_forward" className="text-base text-primary" />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              <div>
-                <h3 className="mb-3 font-bold">External references</h3>
-                <ul className="space-y-1">
-                  {EXTERNAL.map((e) => (
-                    <li key={e.href}>
-                      <a href={e.href} className="inline-flex min-h-12 items-center gap-2 underline underline-offset-4">
-                        {e.title}
-                        <Icon name="open_in_new" className="text-base" />
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-                <p className="mt-4 text-sm text-muted-foreground">
-                  Guides and tracks for each role are in the <Link to="/learn" className="underline underline-offset-4">Library</Link>.
-                </p>
-              </div>
-            </div>
-          </section>
+          </nav>
         </div>
+      </section>
+
+      <div className="mx-auto max-w-7xl space-y-20 px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
+        <section id="pillars" aria-labelledby="pillars-title" className="scroll-mt-24">
+          <h2 id="pillars-title" className="type-title-2">
+            Five pillars: what the work asks of you
+          </h2>
+          <p className="mt-3 mb-8 max-w-[70ch] type-body-lg text-muted-foreground">
+            Each pillar has a plain meaning, an example from a project, a learning outcome, and reflection prompts that
+            come up when decisions get made. {FRAMEWORK_META.author} authors and owns the framework. This is version{" "}
+            {FRAMEWORK_META.version}, a {FRAMEWORK_META.status.toLowerCase()}, updated {FRAMEWORK_META.updated}.
+          </p>
+          <ol className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {PILLARS.map((p) => (
+              <li key={p.id}>
+                <Link
+                  to={`/learn/pillars/${p.id}`}
+                  className="group flex h-full flex-col gap-2 rounded-xl border bg-card p-5 hover:border-primary hover:bg-muted"
+                >
+                  <span className="type-small font-semibold text-muted-foreground">Pillar {p.number}</span>
+                  <span className="type-title-3 font-heading">{p.name}</span>
+                  <span>{p.meaning}</span>
+                  <span className="text-muted-foreground">
+                    <span className="font-semibold text-foreground">You&apos;ll be able to: </span>
+                    {p.learningOutcome}
+                  </span>
+                  <span className="mt-auto inline-flex items-center gap-2 pt-2 font-bold text-primary">
+                    Read about {p.name}, with {p.promptIds.length} reflection {p.promptIds.length === 1 ? "prompt" : "prompts"}
+                    <Icon name="arrow_forward" className="text-base transition-transform group-hover:translate-x-1" />
+                  </span>
+                </Link>
+              </li>
+            ))}
+            <li>
+              <Link to="/learn/terms" className="group flex h-full flex-col gap-2 rounded-xl border border-dashed border-input p-5 hover:bg-muted">
+                <span className="type-title-3 font-heading">What the words mean</span>
+                <span>
+                  What BRIDGEGOOD means by inclusion, access and social good, and how this approach differs from
+                  human-centered design and pro bono work.
+                </span>
+                <span className="mt-auto inline-flex items-center gap-2 pt-2 font-bold text-primary">
+                  Terms of reference
+                  <Icon name="arrow_forward" className="text-base transition-transform group-hover:translate-x-1" />
+                </span>
+              </Link>
+            </li>
+          </ol>
+        </section>
+
+        <section id="how" aria-labelledby="how-title" className="scroll-mt-24">
+          <h2 id="how-title" className="type-title-2">
+            How BRIDGEGOOD works with everyone involved
+          </h2>
+          <p className="mt-3 mb-8 max-w-[70ch] type-body-lg text-muted-foreground">
+            The pillars describe what apprentices learn. These six ways of working describe how BRIDGEGOOD, mentors,
+            ambassadors and partners work together so the pillars can happen. Draft wording, for BRIDGEGOOD to review.
+          </p>
+          <ul className="grid gap-x-8 gap-y-6 md:grid-cols-2 xl:grid-cols-3">
+            {PRINCIPLES.map((p) => (
+              <li key={p.id} className="border-t-2 border-gold pt-3">
+                <h3 className="type-title-3">{p.name}</h3>
+                <p className="mt-1 text-muted-foreground">{p.meaning}</p>
+              </li>
+            ))}
+          </ul>
+          <details className="group mt-8 rounded-xl border bg-card">
+            <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 p-4 font-bold [&::-webkit-details-marker]:hidden">
+              What each way of working asks of each role
+              <Icon name="chevron-down" className="text-primary transition-transform group-open:rotate-180" />
+            </summary>
+            <div className="border-t p-4">
+              <PrinciplesTable />
+            </div>
+          </details>
+        </section>
+
+        <section id="loop" aria-labelledby="loop-title" className="scroll-mt-24">
+          <h2 id="loop-title" className="mb-2 type-title-2">
+            How it fits together
+          </h2>
+          <p className="mb-8 max-w-[70ch] text-muted-foreground">
+            Every project runs the same loop. What people learn along the way goes back to BRIDGEGOOD.
+          </p>
+          <ImpactLoop />
+        </section>
+
+        <section id="ownership" aria-labelledby="ownership-title" className="grid scroll-mt-24 gap-8 xl:grid-cols-2">
+          <div className="space-y-4">
+            <h2 id="ownership-title" className="type-title-2">
+              Who this philosophy belongs to
+            </h2>
+            <p className="max-w-[70ch] type-body-lg">
+              Since 2009, BRIDGEGOOD has helped people see themselves as creators, leaders and problem-solvers. Design for
+              Social Good is the way of working behind that: design that benefits communities, values lived experience, and
+              grows confidence, access and economic mobility for the people doing it. Apprentices pay no tuition, with no
+              income share agreements (public fact; confirm with BRIDGEGOOD).
+            </p>
+          </div>
+          <div className="rounded-2xl border bg-card p-6">
+            <h3 className="type-title-3">BRIDGEGOOD authors it. A community practices it.</h3>
+            <ul className="mt-3 list-disc space-y-2 pl-5">
+              <li>BRIDGEGOOD authors and stewards it, and approves every change to its wording.</li>
+              <li>Apprentices, mentors, ambassadors and partners practice it, and improve it through feedback.</li>
+              <li>Communities can adapt it locally while keeping its core commitments.</li>
+              <li>Technology on this site supports the relationships behind it. It doesn&apos;t replace them.</li>
+            </ul>
+            <Link to="/learn/guides/adapt-locally" className={buttonVariants({ variant: "outline", className: "mt-4" })}>
+              How local adaptation works
+            </Link>
+          </div>
+        </section>
       </div>
     </AppShell>
   )

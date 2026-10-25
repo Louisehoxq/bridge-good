@@ -12,7 +12,7 @@ export const meta = () => pageMeta("Community partner overview")
 export default function PartnerHome() {
   return (
     <>
-      <PageHeader eyebrow="Community partner area" title={`Welcome, ${ROLE_INFO.partner.demoAccount.name}`}>
+      <PageHeader title={`Welcome, ${ROLE_INFO.partner.demoAccount.name}`}>
         You know your community best. Share a problem, and we&apos;ll help shape it into a four-week partner project. An
         apprentice team takes it on with mentor support, and it ends at Demo Day.
       </PageHeader>
@@ -20,8 +20,8 @@ export default function PartnerHome() {
         <PathStepper pathKey="partner" variant="compact" />
       </div>
       <div className="grid gap-6 xl:grid-cols-[2fr_3fr]">
-        <div className="space-y-3 rounded-2xl bg-archetype-soft p-6">
-          <h2 className="text-xl font-bold">Have a new problem?</h2>
+        <div className="space-y-3 rounded-2xl border bg-archetype-soft p-6">
+          <h2 className="type-title-3">Have a new problem?</h2>
           <p>Chat with the scoping assistant, add screenshots, and build a project brief. A person at BRIDGEGOOD reviews it before anything happens.</p>
           <Link to="/partner/submit" className={buttonVariants({ size: "lg", className: "bg-archetype text-on-archetype hover:bg-archetype/90" })}>
             Submit a problem
@@ -30,7 +30,7 @@ export default function PartnerHome() {
         <SubmittedBriefs />
       </div>
       <section aria-labelledby="loop-title" className="mt-12">
-        <h2 id="loop-title" className="mb-6 text-2xl font-bold">
+        <h2 id="loop-title" className="mb-6 type-title-2">
           Where you fit
         </h2>
         <ImpactLoop current="partner" />

@@ -1,14 +1,20 @@
-import { useRef, useState, type FormEvent, type RefObject } from "react"
+import { useRef, useState, type FormEvent } from "react"
 import { newId, nowLabel } from "@/lib/demo-store"
 import { DEMO_MENTOR, DEMO_STUDENT, RUBRIC, type Submission } from "@/content/seed"
 import { DECISION_MOMENT_INFO, getPrompt, PILLARS, promptsForMoment, type PillarId, type ReflectionPromptId } from "@/content/framework"
 import type { GrowthFeedback, GrowthNote } from "@/content/journey"
 import { CAPSTONE_ACTIVITY, useGrowthFeedback, useSubmissions } from "@/components/demo/journey-data"
+import { Icon } from "@/components/icon"
 import { PillarChip } from "@/components/library/library-page"
+import { ErrorSummary, FieldMessage, Notice, type FieldError } from "@/components/notice"
+import { Highlight } from "@/components/studio/highlight"
+import { PeopleChip } from "@/components/studio/people-chip"
+import { PinnedNote } from "@/components/studio/pinned-note"
 import { SyntheticBadge } from "@/components/synthetic-badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { NativeSelect } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
 
@@ -30,36 +36,27 @@ function useSubmissionData() {
   return { submissions, setSubmissions, setFeedback, feedbackFor }
 }
 
-type FieldError = { field: string; message: string }
-
-function ErrorSummary({ errors, summaryRef, title }: { errors: FieldError[]; summaryRef: RefObject<HTMLDivElement | null>; title: string }) {
-  if (errors.length === 0) return null
+/** A status tag: icon and word, never color alone. */
+function ReplyTag({ replied, children }: { replied: boolean; children: string }) {
   return (
-    <div ref={summaryRef} tabIndex={-1} role="alert" className="rounded-lg border-2 border-destructive p-3">
-      <p className="font-bold">{title}</p>
-      <ul className="list-disc pl-5">
-        {errors.map((er) => (
-          <li key={er.field}>
-            <a href={`#${er.field}`} className="font-medium text-destructive underline underline-offset-4">
-              {er.message}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <span
+      className={cn(
+        "inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 type-small font-semibold",
+        replied ? "bg-success-soft text-foreground" : "bg-muted text-foreground"
+      )}
+    >
+      <Icon name={replied ? "circle-check" : "hourglass"} className={cn("text-base", replied && "text-success")} />
+      {children}
+    </span>
   )
 }
 
-/** The mentor's words, per pillar, as the apprentice sees them. */
+/** The mentor's words, per pillar, as the apprentice sees them: a pinned note from their mentor. */
 export function GrowthView({ feedback, submission }: { feedback: GrowthFeedback; submission?: Submission }) {
   return (
     <div className="space-y-4">
-      <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-        From {feedback.mentorName} · {feedback.at}
-        {feedback.synthetic && <SyntheticBadge />}
-      </p>
       {submission?.selfAssessment && (
-        <div className="rounded-lg bg-muted p-3 text-sm">
+        <div className="rounded-lg bg-muted p-3">
           <p className="font-bold">You said</p>
           <p>
             <span className="font-semibold">Working: </span>
@@ -71,29 +68,40 @@ export function GrowthView({ feedback, submission }: { feedback: GrowthFeedback;
           </p>
         </div>
       )}
-      <ul className="space-y-3">
-        {feedback.notes.map((n) => (
-          <li key={n.pillarId} className="rounded-lg border p-3">
-            <PillarChip id={n.pillarId} />
-            <div className="mt-2 grid gap-3 lg:grid-cols-2">
-              <p>
-                <span className="block font-bold">What&apos;s working</span>
-                {n.working}
-              </p>
-              <p>
-                <span className="block font-bold">One next step</span>
-                {n.nextStep}
-              </p>
-            </div>
-          </li>
-        ))}
-      </ul>
-      {feedback.question && (
-        <p className="rounded-lg bg-archetype-soft p-3">
-          <span className="block font-bold">A question from {feedback.mentorName.split(" ")[0]}</span>
-          {feedback.question}
-        </p>
-      )}
+      <PinnedNote
+        icon="message-circle-heart"
+        title={
+          <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            From {feedback.mentorName}, your mentor
+            <span className="type-small font-normal">· {feedback.at}</span>
+            {feedback.synthetic && <SyntheticBadge />}
+          </span>
+        }
+      >
+        <ul className="space-y-3">
+          {feedback.notes.map((n) => (
+            <li key={n.pillarId} className="border-t border-[color-mix(in_srgb,var(--ink),transparent_80%)] pt-3 first:border-t-0 first:pt-0">
+              <PillarChip id={n.pillarId} />
+              <div className="mt-2 grid gap-3 lg:grid-cols-2">
+                <p>
+                  <span className="block font-bold">What&apos;s working</span>
+                  {n.working}
+                </p>
+                <p>
+                  <span className="block font-bold">One next step</span>
+                  {n.nextStep}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
+        {feedback.question && (
+          <p className="border-t border-[color-mix(in_srgb,var(--ink),transparent_80%)] pt-3">
+            <span className="block font-bold">A question from {feedback.mentorName.split(" ")[0]}</span>
+            {feedback.question}
+          </p>
+        )}
+      </PinnedNote>
     </div>
   )
 }
@@ -103,7 +111,7 @@ export function StudentSubmissions() {
   const [errors, setErrors] = useState<FieldError[]>([])
   const [justSubmitted, setJustSubmitted] = useState(false)
   const summaryRef = useRef<HTMLDivElement>(null)
-  const has = (field: string) => errors.some((er) => er.field === field)
+  const errorFor = (field: string) => errors.find((er) => er.field === field)
   const mine = submissions.filter((s) => s.studentName === DEMO_STUDENT).toReversed()
   const prompts = promptsForMoment("studentSubmit")
   const moment = DECISION_MOMENT_INFO.studentSubmit
@@ -149,98 +157,109 @@ export function StudentSubmissions() {
     setJustSubmitted(true)
   }
 
-  const describedBy = (field: string, hint?: string) => [hint, has(field) && `${field}-error`].filter(Boolean).join(" ") || undefined
+  /** Hint and error ids for a field, and its error message below it. */
+  const field = (id: string, hint?: string) => {
+    const error = errorFor(id)
+    return {
+      props: {
+        id,
+        "aria-invalid": error ? true : undefined,
+        "aria-describedby": [hint, error && `${id}-error`].filter(Boolean).join(" ") || undefined,
+      },
+      message: error && <FieldMessage id={`${id}-error`}>{error.message}</FieldMessage>,
+    }
+  }
+  const title = field("sub-title")
+  const link = field("sub-link")
+  const summary = field("sub-summary")
+  const working = field("sub-working", "self-hint")
+  const help = field("sub-help", "self-hint")
+  const reflection = field("sub-reflection")
 
   return (
     <div className="grid gap-8 xl:grid-cols-[2fr_3fr]">
-      <form onSubmit={submit} noValidate className="h-fit space-y-4 rounded-2xl border bg-card p-6" aria-labelledby="new-sub">
-        <h2 id="new-sub" className="text-xl font-bold">
+      <form onSubmit={submit} noValidate className="h-fit min-w-0 space-y-4 rounded-2xl border bg-card p-4 sm:p-6" aria-labelledby="new-sub">
+        <h2 id="new-sub" className="type-title-3">
           Submit your work
         </h2>
         <ErrorSummary errors={errors} summaryRef={summaryRef} title="Please fix the following:" />
-        {justSubmitted && errors.length === 0 && (
-          <p role="status" className="rounded-lg bg-archetype-soft p-3">
-            Submitted. Your mentor reads your self-assessment first, then replies here.
-          </p>
-        )}
-        <div className="space-y-1">
-          <Label htmlFor="sub-title" className="font-bold">
-            Title
-          </Label>
-          <Input id="sub-title" name="title" aria-invalid={has("sub-title") || undefined} />
+        <div role="status">
+          {justSubmitted && errors.length === 0 && (
+            <Notice tone="success">
+              <p>Submitted. Your mentor reads your self-assessment first, then replies here.</p>
+            </Notice>
+          )}
         </div>
         <div className="space-y-1">
-          <Label htmlFor="sub-activity" className="font-bold">
-            Activity type
-          </Label>
-          <select id="sub-activity" name="activity" className="min-h-12 w-full rounded-xs border border-input bg-transparent px-4">
+          <Label htmlFor="sub-title">Title</Label>
+          <Input name="title" {...title.props} />
+          {title.message}
+        </div>
+        <div className="space-y-1">
+          <Label htmlFor="sub-activity">Activity type</Label>
+          <NativeSelect id="sub-activity" name="activity">
             {ACTIVITY_TYPES.map((a) => (
               <option key={a}>{a}</option>
             ))}
-          </select>
+          </NativeSelect>
         </div>
         <div className="space-y-1">
-          <Label htmlFor="sub-link" className="font-bold">
+          <Label htmlFor="sub-link">
             Link to your work <span className="font-normal text-muted-foreground">(optional)</span>
           </Label>
-          <Input id="sub-link" name="link" type="url" placeholder="https://" aria-invalid={has("sub-link") || undefined} />
+          <Input name="link" type="url" placeholder="https://" {...link.props} />
+          {link.message}
         </div>
         <div className="space-y-1">
-          <Label htmlFor="sub-summary" className="font-bold">
-            What did you do, and for whom?
-          </Label>
-          <Textarea id="sub-summary" name="summary" aria-invalid={has("sub-summary") || undefined} />
+          <Label htmlFor="sub-summary">What did you do, and for whom?</Label>
+          <Textarea name="summary" {...summary.props} />
+          {summary.message}
         </div>
 
-        <fieldset className="space-y-3 rounded-xl border p-4">
+        <fieldset className="min-w-0 space-y-3 rounded-xl border p-4">
           <legend className="px-1 font-bold">Your self-assessment</legend>
-          <p id="self-hint" className="text-sm text-muted-foreground">
+          <p id="self-hint" className="text-muted-foreground">
             Your mentor reads this before anything else, and starts the conversation from it.
           </p>
           <div className="space-y-1">
-            <Label htmlFor="sub-working" className="font-bold">
-              What do you think is working?
-            </Label>
-            <Textarea id="sub-working" name="working" aria-describedby="self-hint" aria-invalid={has("sub-working") || undefined} />
+            <Label htmlFor="sub-working">What do you think is working?</Label>
+            <Textarea name="working" {...working.props} />
+            {working.message}
           </div>
           <div className="space-y-1">
-            <Label htmlFor="sub-help" className="font-bold">
-              Where do you want help next?
-            </Label>
-            <Textarea id="sub-help" name="help" aria-invalid={has("sub-help") || undefined} />
+            <Label htmlFor="sub-help">Where do you want help next?</Label>
+            <Textarea name="help" {...help.props} />
+            {help.message}
           </div>
         </fieldset>
 
-        <fieldset className="space-y-3 rounded-xl bg-archetype-soft p-4">
+        <fieldset className="min-w-0 space-y-3 rounded-xl border bg-archetype-soft p-4">
           <legend className="px-1 font-bold">{moment.label}</legend>
-          <p id="prompts-hint" className="text-sm">
-            {moment.intro} These are optional.
-          </p>
-          {prompts.map((p) => (
+          <p id="prompts-hint">{moment.intro} These are optional.</p>
+          {prompts.map((p, i) => (
             <div key={p.id} className="space-y-1">
-              <Label htmlFor={`sub-prompt-${p.id}`}>{p.text}</Label>
+              <Label htmlFor={`sub-prompt-${p.id}`}>{i === 0 ? <Highlight>{p.text}</Highlight> : p.text}</Label>
               <Textarea id={`sub-prompt-${p.id}`} name={`prompt-${p.id}`} rows={2} aria-describedby="prompts-hint" />
             </div>
           ))}
           <label className="flex min-h-12 cursor-pointer items-center gap-3">
-            <input type="checkbox" name="share-answers" className="size-5 accent-[var(--archetype)]" />
+            <input type="checkbox" name="share-answers" className="size-6 shrink-0 accent-[var(--archetype)]" />
             Share my answers to these questions with my mentor
           </label>
         </fieldset>
 
         <div className="space-y-1">
-          <Label htmlFor="sub-reflection" className="font-bold">
-            Reflection: what did you learn, and who did it help?
-          </Label>
-          <Textarea id="sub-reflection" name="reflection" aria-describedby={describedBy("sub-reflection")} aria-invalid={has("sub-reflection") || undefined} />
+          <Label htmlFor="sub-reflection">Reflection: what did you learn, and who did it help?</Label>
+          <Textarea name="reflection" {...reflection.props} />
+          {reflection.message}
         </div>
-        <Button type="submit" size="lg" className="bg-archetype text-on-archetype hover:bg-archetype/90">
+        <Button type="submit" size="lg" className="h-auto w-full bg-archetype py-3 whitespace-normal text-on-archetype hover:bg-archetype/90 sm:w-auto">
           Submit for a growth conversation
         </Button>
       </form>
 
-      <section aria-labelledby="my-subs">
-        <h2 id="my-subs" className="mb-4 text-xl font-bold">
+      <section aria-labelledby="my-subs" className="min-w-0">
+        <h2 id="my-subs" className="mb-4 type-title-3">
           Your submissions
         </h2>
         <ul className="space-y-4">
@@ -249,18 +268,16 @@ export function StudentSubmissions() {
             return (
               <li key={s.id} className="rounded-xl border bg-card p-5">
                 <div className="flex flex-wrap items-start justify-between gap-2">
-                  <div>
-                    <p className="flex flex-wrap items-center gap-2 text-lg font-bold">
-                      {s.title}
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h3 className="font-sans type-label">{s.title}</h3>
                       {s.synthetic && <SyntheticBadge />}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
+                    </div>
+                    <p className="type-small text-muted-foreground">
                       {s.activity} · submitted {s.submittedAt}
                     </p>
                   </div>
-                  <span className={cn("rounded-full px-3 py-1 text-sm font-bold", fb ? "bg-archetype text-on-archetype" : "bg-muted text-foreground")}>
-                    {fb ? "Mentor replied" : "Waiting for your mentor"}
-                  </span>
+                  <ReplyTag replied={!!fb}>{fb ? "Mentor replied" : "Waiting for your mentor"}</ReplyTag>
                 </div>
                 {fb && (
                   <div className="mt-4 border-t pt-4">
@@ -286,7 +303,7 @@ export function MentorReview() {
   return (
     <div className="grid gap-6 xl:grid-cols-[22rem_1fr]">
       <nav aria-label="Submissions waiting for a growth conversation">
-        <p className="mb-3 text-sm text-muted-foreground">{waiting} waiting for you</p>
+        <p className="mb-3 text-muted-foreground">{waiting} waiting for you</p>
         <ul className="space-y-2">
           {ordered.map((s) => {
             const done = !!feedbackFor(s.id)
@@ -296,15 +313,15 @@ export function MentorReview() {
                   type="button"
                   onClick={() => setSelectedId(s.id)}
                   aria-current={selected?.id === s.id ? "true" : undefined}
-                  className="w-full rounded-xl border p-3 text-left hover:bg-muted aria-[current=true]:border-archetype aria-[current=true]:bg-archetype-soft"
+                  className="w-full space-y-2 rounded-xl border bg-card p-3 text-left hover:bg-muted aria-[current=true]:border-2 aria-[current=true]:border-archetype aria-[current=true]:bg-archetype-soft"
                 >
-                  <span className="flex items-center justify-between gap-2">
-                    <span className="font-bold">{s.studentName}</span>
-                    <span className={cn("text-xs font-bold", done ? "text-muted-foreground" : "text-archetype")}>{done ? "Replied" : "To reply"}</span>
+                  <span className="flex flex-wrap items-center justify-between gap-2">
+                    <PeopleChip name={s.studentName} role="apprentice" />
+                    <ReplyTag replied={done}>{done ? "Replied" : "To reply"}</ReplyTag>
                   </span>
-                  <span className="mt-0.5 block text-sm">{s.title}</span>
+                  <span className="block">{s.title}</span>
                   {s.synthetic && (
-                    <span className="mt-1 block">
+                    <span className="block">
                       <SyntheticBadge />
                     </span>
                   )}
@@ -381,27 +398,24 @@ function ReviewPanel({ submission, existing, onSave }: { submission: Submission;
     setSaved(true)
   }
 
-  const has = (field: string) => errors.some((er) => er.field === field)
+  const errorFor = (field: string) => errors.find((er) => er.field === field)
 
   return (
-    <article aria-labelledby="review-title" className="space-y-6 rounded-2xl border bg-card p-6">
+    <article aria-labelledby="review-title" className="min-w-0 space-y-6 rounded-2xl border bg-card p-4 sm:p-6">
       <header>
-        <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+        <p className="flex flex-wrap items-center gap-2 type-small text-muted-foreground">
           {submission.activity} · {submission.submittedAt}
           {submission.synthetic && <SyntheticBadge />}
         </p>
-        <h2 id="review-title" className="text-2xl font-bold">
+        <h2 id="review-title" className="type-title-2">
           {submission.title}
         </h2>
         <p className="font-semibold">by {submission.studentName}</p>
       </header>
 
-      <section aria-labelledby="self-title" className="rounded-xl border-2 border-archetype bg-archetype-soft p-5">
-        <h3 id="self-title" className="text-lg font-bold">
-          Start here: {first}&apos;s self-assessment
-        </h3>
+      <PinnedNote title={<span id="self-title">Start here: {first}&apos;s self-assessment</span>} icon="sprout">
         {submission.selfAssessment ? (
-          <dl className="mt-2 grid gap-4 lg:grid-cols-2">
+          <dl className="grid gap-4 lg:grid-cols-2">
             <div>
               <dt className="font-bold">What they think is working</dt>
               <dd>{submission.selfAssessment.working}</dd>
@@ -412,36 +426,34 @@ function ReviewPanel({ submission, existing, onSave }: { submission: Submission;
             </div>
           </dl>
         ) : (
-          <p className="mt-2">
-            {first} didn&apos;t add a self-assessment. Ask them what they think is working before you write anything.
-          </p>
+          <p>{first} didn&apos;t add a self-assessment. Ask them what they think is working before you write anything.</p>
         )}
+        <div>
+          <p className="font-bold">Their reflection</p>
+          <p>{submission.reflection}</p>
+        </div>
         {submission.promptAnswers && submission.promptAnswers.length > 0 && (
-          <div className="mt-4 border-t pt-3">
+          <div className="border-t border-[color-mix(in_srgb,var(--ink),transparent_80%)] pt-3">
             <p className="font-bold">Answers {first} chose to share</p>
             <dl className="mt-1 space-y-2">
               {submission.promptAnswers.map((a) => (
                 <div key={a.promptId}>
-                  <dt className="text-sm font-semibold">{getPrompt(a.promptId as ReflectionPromptId).text}</dt>
+                  <dt className="font-semibold">{getPrompt(a.promptId as ReflectionPromptId).text}</dt>
                   <dd>{a.answer}</dd>
                 </div>
               ))}
             </dl>
           </div>
         )}
-      </section>
+      </PinnedNote>
 
       <dl className="grid gap-4 lg:grid-cols-2">
-        <div>
-          <dt className="font-bold">Their reflection</dt>
-          <dd>{submission.reflection}</dd>
-        </div>
         <div>
           <dt className="font-bold">What they did</dt>
           <dd>{submission.summary}</dd>
         </div>
         {submission.link && (
-          <div>
+          <div className="min-w-0">
             <dt className="font-bold">Link</dt>
             <dd>
               {isWebLink(submission.link) ? (
@@ -459,18 +471,18 @@ function ReviewPanel({ submission, existing, onSave }: { submission: Submission;
 
       <form onSubmit={save} noValidate className="space-y-5 border-t pt-5">
         <div>
-          <h3 className="text-xl font-bold">Your reply, pillar by pillar</h3>
+          <h3 className="type-title-3">Your reply, pillar by pillar</h3>
           <p className="mt-1 text-muted-foreground">
             Write about the pillars that matter most for this piece. One is enough. For each, say what&apos;s working and
             one next step. There are no scores and no pass or fail. {first} sees exactly what you write.
           </p>
         </div>
-        <div className="rounded-xl bg-muted p-4">
+        <div className="rounded-xl border bg-muted p-4">
           <p className="font-bold">{DECISION_MOMENT_INFO.mentorReview.label}</p>
-          <p className="text-sm">{DECISION_MOMENT_INFO.mentorReview.intro}</p>
+          <p>{DECISION_MOMENT_INFO.mentorReview.intro}</p>
           <ul className="mt-2 list-disc space-y-1 pl-5">
-            {prompts.map((p) => (
-              <li key={p.id}>{p.text}</li>
+            {prompts.map((p, i) => (
+              <li key={p.id}>{i === 0 ? <Highlight>{p.text}</Highlight> : p.text}</li>
             ))}
           </ul>
         </div>
@@ -482,47 +494,46 @@ function ReviewPanel({ submission, existing, onSave }: { submission: Submission;
             const workingId = `${submission.id}-${p.id}-working`
             const nextId = `${submission.id}-${p.id}-next`
             const hintId = `${submission.id}-${p.id}-hint`
+            const workingError = errorFor(workingId)
+            const nextError = errorFor(nextId)
             return (
               <details key={p.id} open={started || errors.some((er) => er.field.startsWith(`${submission.id}-${p.id}`)) || undefined} className="group rounded-xl border">
                 <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 p-4 font-bold [&::-webkit-details-marker]:hidden">
                   <span>
                     {p.number}. {p.name}
-                    {started && <span className="ml-2 text-sm font-normal text-muted-foreground">(started)</span>}
+                    {started && <span className="ml-2 font-normal text-muted-foreground">(started)</span>}
                   </span>
-                  <span className="text-2xl leading-none text-archetype transition-transform group-open:rotate-45" aria-hidden="true">
-                    +
-                  </span>
+                  <Icon name="chevron-down" className="text-archetype transition-transform group-open:rotate-180" />
                 </summary>
-                <fieldset className="space-y-3 border-t p-4">
+                <fieldset className="min-w-0 space-y-3 border-t p-4">
                   <legend className="sr-only">{p.name}</legend>
                   {rows.length > 0 && (
-                    <p id={hintId} className="text-sm text-muted-foreground">
+                    <p id={hintId} className="text-muted-foreground">
                       To think about: {rows.map((r) => r.question).join(" ")}
                     </p>
                   )}
                   <div className="grid gap-4 lg:grid-cols-2">
                     <div className="space-y-1">
-                      <Label htmlFor={workingId} className="font-bold">
-                        What&apos;s working
-                      </Label>
+                      <Label htmlFor={workingId}>What&apos;s working</Label>
                       <Textarea
                         id={workingId}
                         value={draft[p.id].working}
                         onChange={(e) => update(p.id, "working", e.target.value)}
-                        aria-describedby={rows.length ? hintId : undefined}
-                        aria-invalid={has(workingId) || undefined}
+                        aria-describedby={[rows.length && hintId, workingError && `${workingId}-error`].filter(Boolean).join(" ") || undefined}
+                        aria-invalid={workingError ? true : undefined}
                       />
+                      {workingError && <FieldMessage id={`${workingId}-error`}>{workingError.message}</FieldMessage>}
                     </div>
                     <div className="space-y-1">
-                      <Label htmlFor={nextId} className="font-bold">
-                        One next step
-                      </Label>
+                      <Label htmlFor={nextId}>One next step</Label>
                       <Textarea
                         id={nextId}
                         value={draft[p.id].nextStep}
                         onChange={(e) => update(p.id, "nextStep", e.target.value)}
-                        aria-invalid={has(nextId) || undefined}
+                        aria-describedby={nextError ? `${nextId}-error` : undefined}
+                        aria-invalid={nextError ? true : undefined}
                       />
+                      {nextError && <FieldMessage id={`${nextId}-error`}>{nextError.message}</FieldMessage>}
                     </div>
                   </div>
                 </fieldset>
@@ -531,16 +542,18 @@ function ReviewPanel({ submission, existing, onSave }: { submission: Submission;
           })}
         </div>
         <div className="space-y-1">
-          <Label htmlFor={`${submission.id}-question`} className="font-bold">
+          <Label htmlFor={`${submission.id}-question`}>
             A question for {first} <span className="font-normal text-muted-foreground">(optional)</span>
           </Label>
           <Textarea id={`${submission.id}-question`} value={question} onChange={(e) => setQuestion(e.target.value)} rows={2} />
         </div>
-        {saved && errors.length === 0 && (
-          <p role="status" className="rounded-lg bg-archetype-soft p-3">
-            Sent. {submission.studentName} sees your words on their submissions page.
-          </p>
-        )}
+        <div role="status">
+          {saved && errors.length === 0 && (
+            <Notice tone="success">
+              <p>Sent. {submission.studentName} sees your words on their submissions page.</p>
+            </Notice>
+          )}
+        </div>
         <Button type="submit" size="lg" className="bg-archetype text-on-archetype hover:bg-archetype/90">
           {existing ? "Update your reply" : "Send your reply"}
         </Button>

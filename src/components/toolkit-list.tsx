@@ -6,8 +6,8 @@ export function ToolkitList({ sections }: { sections: ToolkitSection[] }) {
     <div className="grid gap-6 xl:grid-cols-3">
       {sections.map((s, i) => (
         <section key={s.title} aria-label={s.title} className="rounded-2xl border bg-card p-5">
-          <h3 className="mb-3 flex items-center gap-2 text-lg font-bold">
-            <span className="flex size-7 items-center justify-center rounded-full bg-archetype text-sm text-on-archetype" aria-hidden="true">
+          <h3 className="mb-3 flex items-center gap-2 type-title-3">
+            <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-archetype font-sans type-small font-bold text-on-archetype" aria-hidden="true">
               {i + 1}
             </span>
             {s.title}
@@ -18,9 +18,9 @@ export function ToolkitList({ sections }: { sections: ToolkitSection[] }) {
                 <Icon name="description" className="mt-1 text-base shrink-0 text-archetype" />
                 <div>
                   <p className="font-semibold">
-                    {item.name} <span className="text-sm font-normal text-muted-foreground">· {item.format}</span>
+                    {item.name} <span className="type-small font-normal text-muted-foreground">· {item.format}</span>
                   </p>
-                  <p className="text-sm text-muted-foreground">{item.description}</p>
+                  <p className="text-muted-foreground">{item.description}</p>
                 </div>
               </li>
             ))}

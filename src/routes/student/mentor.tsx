@@ -9,7 +9,7 @@ export const meta = () => pageMeta("My mentor")
 export default function StudentMentor() {
   return (
     <>
-      <PageHeader eyebrow="My mentor" title={`${DEMO_MENTOR}, your mentor`}>
+      <PageHeader title={`${DEMO_MENTOR}, your mentor`}>
         {DEMO_MENTOR} is a product designer and BRIDGEGOOD alum who volunteers as a mentor (synthetic example). Message
         them any time, or book office hours for a longer conversation.
       </PageHeader>
@@ -18,7 +18,7 @@ export default function StudentMentor() {
           <Conversation thread={DEMO_STUDENT} as="student" title={`Messages with ${DEMO_MENTOR}`} />
         </div>
         <section aria-labelledby="hours-title">
-          <h2 id="hours-title" className="mb-1 text-2xl font-bold">
+          <h2 id="hours-title" className="mb-1 type-title-2">
             Office hours
           </h2>
           <p className="mb-4 text-muted-foreground">

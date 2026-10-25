@@ -8,13 +8,17 @@ export const REDIRECTS: Record<string, string> = {
   "/training/mentor": "/learn/tracks/mentors",
   "/training/ambassador": "/learn/tracks/ambassadors",
   "/training/company": "/learn/tracks/company-hosts",
-  "/student/learn": "/student/path",
+  "/student/learn": "/student",
+  "/student/path": "/student",
+  "/student/activities": "/student/practice",
   "/student/messages": "/student/mentor",
   "/student/office-hours": "/student/mentor",
   "/mentor/training": "/mentor/prepare",
   "/mentor/messages": "/mentor/mentee",
+  "/mentor/submissions": "/mentor/conversations",
   "/mentor/office-hours": "/mentor/mentee",
   "/ambassador/training": "/ambassador/playbook",
+  "/partner/legal": "/partner/toolkit#legal",
 }
 
 export const REDIRECT_PATHS = [

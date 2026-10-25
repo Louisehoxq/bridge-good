@@ -1,8 +1,10 @@
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport, type UIMessage } from "ai"
-import { ImagePlus, Send, Sparkles, X } from "lucide-react"
+import { CircleAlert, ImagePlus, Send, Sparkles, X } from "lucide-react"
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react"
-import { Button } from "@/components/ui/button"
+import { ErrorSummary, FieldMessage, Notice, type FieldError } from "@/components/notice"
+import { Button, buttonVariants } from "@/components/ui/button"
+import { NativeSelect } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -17,7 +19,6 @@ import { ReviewPanel } from "./review-panel"
 const MAX_SOURCE_BYTES = 15 * 1024 * 1024
 
 type Attachment = { file: File; description: string }
-type FieldError = { field: string; message: string }
 
 /** The route answers errors as { error: "…" }; show that sentence when we have it. */
 function errorMessage(error: Error) {
@@ -60,6 +61,7 @@ export function ReflectionCompanion({ aiEnabled, modelLabel }: { aiEnabled: bool
   const imagesSent = messages.reduce((n, m) => n + m.parts.filter((p) => p.type === "file").length, 0)
   const imagesLeft = L.images - imagesSent
   const turnsLeft = L.messages - messages.length
+  const noteErrors = errors.filter((er) => er.field === "reflect-note")
 
   useEffect(() => {
     if (errors.length) summaryRef.current?.focus()
@@ -68,7 +70,7 @@ export function ReflectionCompanion({ aiEnabled, modelLabel }: { aiEnabled: bool
   // Announce each finished reply once, instead of reading streamed text as it arrives.
   const lastStatus = useRef(status)
   useEffect(() => {
-    if (lastStatus.current === "streaming" && status === "ready") {
+    if ((lastStatus.current === "streaming" || lastStatus.current === "submitted") && status === "ready") {
       const last = messages.at(-1)
       const review = last?.role === "assistant" ? readReview(textOf(last)) : null
       const count = review ? review.observations.length + review.reflectionPrompts.length : 0
@@ -155,6 +157,7 @@ export function ReflectionCompanion({ aiEnabled, modelLabel }: { aiEnabled: bool
                 <AssistantTurn
                   message={m}
                   streaming={status === "streaming" && i === messages.length - 1}
+                  latest={i === messages.length - 1}
                   stage={stageLabel(stage)}
                   modelLabel={modelLabel}
                 />
@@ -166,8 +169,11 @@ export function ReflectionCompanion({ aiEnabled, modelLabel }: { aiEnabled: bool
       )}
 
       {error && (
-        <div role="alert" className="flex flex-wrap items-center justify-between gap-3 rounded-lg border-2 border-destructive p-3">
-          <p>{errorMessage(error)}</p>
+        <div role="alert" className="flex flex-wrap items-center justify-between gap-3 rounded-lg border-2 border-destructive bg-error-soft p-3">
+          <p className="flex gap-2">
+            <CircleAlert aria-hidden="true" className="mt-1 size-5 shrink-0 text-destructive" />
+            {errorMessage(error)}
+          </p>
           {messages.at(-1)?.role === "user" && (
             <Button type="button" variant="outline" onClick={() => void regenerate()}>
               Try again
@@ -177,71 +183,51 @@ export function ReflectionCompanion({ aiEnabled, modelLabel }: { aiEnabled: bool
       )}
 
       {turnsLeft < 2 ? (
-        <div className="rounded-2xl border p-5">
+        <div className="rounded-2xl border bg-card p-5">
           <p>This reflection is as long as it can get. Save the questions you want to keep, then start a new one.</p>
           <Button type="button" variant="outline" className="mt-3" onClick={startOver}>
             Start a new reflection
           </Button>
         </div>
       ) : (
-        <form onSubmit={onSubmit} noValidate aria-labelledby="reflect-form-title" className="space-y-5 rounded-2xl border bg-card p-5 lg:p-6">
+        <form onSubmit={onSubmit} noValidate aria-labelledby="reflect-form-title" className="min-w-0 space-y-5 rounded-2xl border bg-card p-4 sm:p-5 lg:p-6">
           <div>
-            <h2 id="reflect-form-title" className="text-xl font-bold">
+            <h2 id="reflect-form-title" className="type-title-3">
               {started ? "Add more and ask again" : "Tell the companion about your work"}
             </h2>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground">
               {started
                 ? "Say what changed, or what you'd like to look at next. The companion keeps the earlier context."
                 : "A few sentences is enough. Please don't include anyone's personal details."}
             </p>
           </div>
 
-          {errors.length > 0 && (
-            <div ref={summaryRef} tabIndex={-1} role="alert" aria-labelledby="reflect-errors-title" className="rounded-lg border-2 border-destructive p-3">
-              <p id="reflect-errors-title" className="font-bold">
-                Before sending:
-              </p>
-              <ul className="list-disc pl-5">
-                {errors.map((er) => (
-                  <li key={er.message}>
-                    <a href={`#${er.field}`} className="font-medium text-destructive underline underline-offset-4">
-                      {er.message}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <ErrorSummary errors={errors} summaryRef={summaryRef} title="Before sending:" />
 
           {!started && (
             <div className="grid gap-5 lg:grid-cols-[16rem_1fr]">
               <div className="space-y-1">
-                <Label htmlFor="reflect-stage" className="font-bold">
-                  Stage
-                </Label>
-                <select
-                  id="reflect-stage"
-                  value={stage}
-                  onChange={(e) => setStage(e.target.value as StageId)}
-                  className="min-h-12 w-full rounded-xs border border-input bg-transparent px-4"
-                >
+                <Label htmlFor="reflect-stage">Stage</Label>
+                <NativeSelect id="reflect-stage" value={stage} onChange={(e) => setStage(e.target.value as StageId)}>
                   {STAGES.map((s) => (
                     <option key={s.id} value={s.id}>
                       {s.label}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
               </div>
-              <fieldset className="space-y-1">
-                <legend className="text-sm font-bold">Pillars to focus on (optional)</legend>
+              <fieldset className="min-w-0 space-y-1">
+                <legend className="type-label">
+                  Pillars to focus on <span className="font-normal text-muted-foreground">(optional)</span>
+                </legend>
                 <div className="flex flex-wrap gap-x-5 gap-y-1">
                   {PILLARS.map((p) => (
-                    <label key={p.id} className="inline-flex min-h-11 cursor-pointer items-center gap-2">
+                    <label key={p.id} className="inline-flex min-h-12 cursor-pointer items-center gap-2">
                       <input
                         type="checkbox"
                         checked={focus.includes(p.id)}
                         onChange={(e) => setFocus((prev) => (e.target.checked ? [...prev, p.id] : prev.filter((x) => x !== p.id)))}
-                        className="size-5 accent-primary"
+                        className="size-6 shrink-0 accent-primary"
                       />
                       {p.name}
                     </label>
@@ -252,10 +238,10 @@ export function ReflectionCompanion({ aiEnabled, modelLabel }: { aiEnabled: bool
           )}
 
           <div className="space-y-1">
-            <Label htmlFor="reflect-note" className="font-bold">
+            <Label htmlFor="reflect-note">
               {started ? "What's new" : "What you made and what you were trying to do"}
             </Label>
-            <p id="reflect-note-hint" className="text-sm text-muted-foreground">
+            <p id="reflect-note-hint" className="text-muted-foreground">
               For example: who it's for, the problem you started from, and one choice you're unsure about.
             </p>
             <Textarea
@@ -263,25 +249,28 @@ export function ReflectionCompanion({ aiEnabled, modelLabel }: { aiEnabled: bool
               value={note}
               maxLength={L.note}
               onChange={(e) => setNote(e.target.value)}
-              aria-describedby={errors.some((er) => er.field === "reflect-note") ? "reflect-note-hint reflect-errors-title" : "reflect-note-hint"}
-              aria-invalid={errors.some((er) => er.field === "reflect-note") ? true : undefined}
+              aria-describedby={noteErrors.length ? "reflect-note-hint reflect-note-error" : "reflect-note-hint"}
+              aria-invalid={noteErrors.length ? true : undefined}
               rows={5}
             />
+            {noteErrors.length > 0 && <FieldMessage id="reflect-note-error">{noteErrors.map((er) => er.message).join(". ")}</FieldMessage>}
           </div>
 
           <div className="space-y-2">
-            <p className="text-sm font-bold">Screenshots (optional, up to {L.images} in this reflection)</p>
-            <p id="reflect-shots-hint" className="text-sm text-muted-foreground">
+            <p className="type-label">
+              Screenshots <span className="font-normal text-muted-foreground">(optional, up to {L.images} in this reflection)</span>
+            </p>
+            <p id="reflect-shots-hint" className="text-muted-foreground">
               Crop out names, faces, emails and phone numbers before you upload. Screenshots are shrunk in your browser, sent with this request
               only, and not stored.
             </p>
             {files.length > 0 && (
               <ul className="space-y-2" aria-label="Attached screenshots">
                 {files.map((f, i) => (
-                  <li key={`${i}-${f.file.name}`} className="flex flex-wrap items-end gap-2 rounded-lg bg-muted/50 p-3">
+                  <li key={`${i}-${f.file.name}`} className="flex flex-wrap items-end gap-2 rounded-lg border bg-muted p-3">
                     <div className="min-w-0 flex-1 space-y-1">
-                      <Label htmlFor={`reflect-shot-${i}`} className="font-bold">
-                        Describe {f.file.name} (optional)
+                      <Label htmlFor={`reflect-shot-${i}`} className="[overflow-wrap:anywhere]">
+                        Describe {f.file.name} <span className="font-normal text-muted-foreground">(optional)</span>
                       </Label>
                       <Input
                         id={`reflect-shot-${i}`}
@@ -298,17 +287,22 @@ export function ReflectionCompanion({ aiEnabled, modelLabel }: { aiEnabled: bool
                 ))}
               </ul>
             )}
-            {fileError && <p className="text-sm font-semibold text-destructive">{fileError}</p>}
+            {fileError && <FieldMessage id="reflect-shots-error">{fileError}</FieldMessage>}
             {imagesLeft - files.length > 0 && (
-              <label className="inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-full border border-outline px-4 text-sm font-medium text-primary hover:bg-muted has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring">
-                <ImagePlus aria-hidden="true" className="size-4" />
+              <label
+                className={buttonVariants({
+                  variant: "outline",
+                  className: "has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring",
+                })}
+              >
+                <ImagePlus aria-hidden="true" className="size-5" />
                 Add screenshots
                 <input
                   ref={fileRef}
                   type="file"
                   accept={L.imageTypes.join(",")}
                   multiple
-                  aria-describedby="reflect-shots-hint"
+                  aria-describedby={fileError ? "reflect-shots-hint reflect-shots-error" : "reflect-shots-hint"}
                   className="sr-only"
                   onChange={(e) => onPickFiles(e.target.files)}
                 />
@@ -332,7 +326,7 @@ export function ReflectionCompanion({ aiEnabled, modelLabel }: { aiEnabled: bool
                 Start a new reflection
               </Button>
             )}
-            <p className="text-sm text-muted-foreground">The companion asks questions. It never scores or grades your work.</p>
+            <p className="text-muted-foreground">The companion asks questions. It never scores or grades your work.</p>
           </div>
         </form>
       )}
@@ -344,8 +338,8 @@ export function ReflectionCompanion({ aiEnabled, modelLabel }: { aiEnabled: bool
 function SentNote({ message }: { message: UIMessage }) {
   const images = message.parts.filter((p) => p.type === "file")
   return (
-    <details className="rounded-2xl bg-muted/60 p-4">
-      <summary className="min-h-11 cursor-pointer py-2 font-bold">
+    <details className="rounded-2xl border bg-muted p-4">
+      <summary className="min-h-12 cursor-pointer py-3 font-bold">
         What you sent{images.length > 0 && ` (${images.length} ${images.length === 1 ? "screenshot" : "screenshots"})`}
       </summary>
       <p className="mt-2 whitespace-pre-wrap [overflow-wrap:anywhere]">{textOf(message)}</p>
@@ -364,25 +358,38 @@ function SentNote({ message }: { message: UIMessage }) {
   )
 }
 
-function AssistantTurn({ message, streaming, stage, modelLabel }: { message: UIMessage; streaming: boolean; stage: string; modelLabel: string }) {
+function AssistantTurn({
+  message,
+  streaming,
+  latest,
+  stage,
+  modelLabel,
+}: {
+  message: UIMessage
+  streaming: boolean
+  latest: boolean
+  stage: string
+  modelLabel: string
+}) {
   const text = textOf(message)
   const review = useMemo(() => (streaming ? null : readReview(text)), [streaming, text])
   if (streaming) {
     return (
-      <p className="flex items-center gap-2 rounded-2xl border p-4 text-muted-foreground">
-        <Sparkles aria-hidden="true" className="size-4" />
+      <p className="flex items-center gap-2 rounded-2xl border-[1.5px] border-dashed border-draft p-4 text-draft">
+        <Sparkles aria-hidden="true" className="size-5" />
         The companion (AI) is writing questions…
       </p>
     )
   }
   if (!review) {
     return (
-      <p className="rounded-2xl border-2 border-dashed p-4">
+      <p className="flex gap-2 rounded-2xl border-2 border-destructive bg-error-soft p-4">
+        <CircleAlert aria-hidden="true" className="mt-1 size-5 shrink-0 text-destructive" />
         The companion&apos;s reply couldn&apos;t be read, so it isn&apos;t shown. Try asking again.
       </p>
     )
   }
-  return <ReviewPanel review={review} stage={stage} messageId={message.id} modelLabel={modelLabel} />
+  return <ReviewPanel review={review} stage={stage} messageId={message.id} modelLabel={modelLabel} latest={latest} />
 }
 
 /** No API key: the page still works, with BRIDGEGOOD's own prompts for this moment. */
@@ -396,16 +403,18 @@ function OffState() {
         question: p.text,
         origin: "prompt" as const,
         answerable: true,
-        context: <p className="text-xs font-bold tracking-wide text-primary uppercase">Reflection prompt {p.id}</p>,
+        context: <p className="type-small font-semibold text-primary">Reflection prompt {p.id}, from BRIDGEGOOD</p>,
       })),
     []
   )
   return (
     <div className="space-y-6">
-      <p role="status" className="rounded-2xl border-2 border-dashed border-outline p-5">
-        The AI companion isn&apos;t switched on for this demo (no API key configured). You can still reflect on your own with
-        BRIDGEGOOD&apos;s questions below, and share any of them with your mentor.
-      </p>
+      <Notice>
+        <p>
+          The AI companion isn&apos;t switched on for this demo (no API key configured). You can still reflect on your own
+          with BRIDGEGOOD&apos;s questions below, and share any of them with your mentor.
+        </p>
+      </Notice>
       <div className="rounded-2xl border bg-card p-5 lg:p-6">
         <QuestionList
           items={items}

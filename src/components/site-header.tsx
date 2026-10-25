@@ -39,7 +39,7 @@ export function SiteHeader({ role }: { role?: Role }) {
             </SheetTrigger>
             <SheetContent side="right" className="w-[85vw] max-w-sm overflow-y-auto p-6">
               <SheetHeader className="p-0">
-                <SheetTitle className="text-lg">Menu</SheetTitle>
+                <SheetTitle>Menu</SheetTitle>
               </SheetHeader>
               <SheetAccount />
               <nav aria-label="Main">
@@ -60,7 +60,7 @@ export function SiteHeader({ role }: { role?: Role }) {
               {role &&
                 ROLE_INFO[role].sidebar.map((group, i) => (
                   <nav key={group.label ?? i} aria-label={`${ROLE_INFO[role].label}: ${group.label ?? "overview"}`}>
-                    <h2 className="mb-1 text-sm font-semibold text-muted-foreground">{group.label ?? `${ROLE_INFO[role].label} area`}</h2>
+                    <h2 className="mb-1 font-sans type-small font-semibold text-muted-foreground">{group.label ?? `${ROLE_INFO[role].label} area`}</h2>
                     <ul className="flex flex-col">
                       {group.items.map((item) => (
                         <li key={item.href}>

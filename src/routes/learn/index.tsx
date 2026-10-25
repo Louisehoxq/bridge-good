@@ -2,7 +2,7 @@ import { Link } from "react-router"
 import { Icon } from "@/components/icon"
 import { DraftNote } from "@/components/library/library-page"
 import { buttonVariants } from "@/components/ui/button"
-import { FRAMEWORK_META, PILLARS } from "@/content/framework"
+import { FRAMEWORK_META } from "@/content/framework"
 import { LIBRARY, LIBRARY_SECTIONS } from "@/lib/library"
 import { pageMeta } from "@/lib/meta"
 
@@ -12,8 +12,8 @@ export default function LibraryIndex() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
       <header className="mb-12 max-w-3xl space-y-3">
-        <h1 className="text-4xl font-bold lg:text-5xl">Library</h1>
-        <p className="text-lg text-muted-foreground">
+        <h1 className="type-title-1">Library</h1>
+        <p className="type-body-lg text-muted-foreground">
           BRIDGEGOOD&apos;s Design for Social Good framework, the questions behind it, and guides for each role. Open to
           everyone, no login needed. Read it in order, or go straight to what you need. Role areas link back here
           instead of keeping their own copies.
@@ -29,7 +29,7 @@ export default function LibraryIndex() {
           const entries = LIBRARY.filter((e) => e.section === section.id)
           return (
             <section key={section.id} id={section.id} aria-labelledby={`${section.id}-title`} className="scroll-mt-24">
-              <h2 id={`${section.id}-title`} className="mb-2 text-3xl font-bold">
+              <h2 id={`${section.id}-title`} className="mb-2 type-title-2">
                 {section.label}
               </h2>
               {section.id === "framework" && (
@@ -39,22 +39,20 @@ export default function LibraryIndex() {
                 </p>
               )}
               <ul className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {entries.map((e) => {
-                  const pillar = PILLARS.find((p) => e.href.endsWith(`/${p.id}`))
-                  return (
-                    <li key={e.href}>
-                      <Link to={e.href} className="group flex h-full flex-col gap-2 rounded-2xl border bg-card p-5 hover:border-primary hover:bg-muted">
-                        <span className="text-lg font-bold">{e.title}</span>
-                        <span className="line-clamp-3 text-muted-foreground">{pillar ? pillar.meaning : e.summary}</span>
-                        <span className="mt-auto inline-flex items-center gap-2 pt-2 font-bold text-primary">
-                          Read
-                          <span className="sr-only">: {e.title}</span>
-                          <Icon name="arrow_forward" className="text-base transition-transform group-hover:translate-x-1" />
-                        </span>
-                      </Link>
-                    </li>
-                  )
-                })}
+                {entries.map((e) => (
+                  <li key={e.href}>
+                    {/* The full summary, never clamped: short enough to read whole, and it survives text spacing. */}
+                    <Link to={e.href} className="group flex h-full flex-col gap-2 rounded-2xl border bg-card p-5 hover:border-primary hover:bg-muted">
+                      <span className="type-title-3 font-heading">{e.title}</span>
+                      <span className="text-muted-foreground">{e.summary}</span>
+                      <span className="mt-auto inline-flex items-center gap-2 pt-2 font-bold text-primary">
+                        Read
+                        <span className="sr-only">: {e.title}</span>
+                        <Icon name="arrow_forward" className="text-base transition-transform group-hover:translate-x-1" />
+                      </span>
+                    </Link>
+                  </li>
+                ))}
               </ul>
               {section.id === "framework" && (
                 <div className="mt-6">

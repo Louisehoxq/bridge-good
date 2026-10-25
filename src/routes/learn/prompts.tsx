@@ -22,14 +22,14 @@ export default function PromptsPage() {
       }
     >
       <div className="grid gap-10 lg:grid-cols-[3fr_2fr]">
-        <section aria-labelledby="all-title">
-          <h2 id="all-title" className="mb-4 text-2xl font-bold">
+        <section aria-labelledby="all-title" className="min-w-0">
+          <h2 id="all-title" className="mb-4 type-title-2">
             All 12 prompts
           </h2>
           <PromptList prompts={REFLECTION_PROMPTS} showPillars />
         </section>
-        <section aria-labelledby="moments-title">
-          <h2 id="moments-title" className="mb-2 text-2xl font-bold">
+        <section aria-labelledby="moments-title" className="min-w-0">
+          <h2 id="moments-title" className="mb-2 type-title-2">
             Where they come up
           </h2>
           <p className="mb-4 text-muted-foreground">
@@ -38,9 +38,9 @@ export default function PromptsPage() {
           <ul className="space-y-4">
             {DECISION_MOMENTS.map((m) => (
               <li key={m} className="rounded-2xl border bg-card p-5">
-                <h3 className="text-lg font-bold">{DECISION_MOMENT_INFO[m].label}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">{WHERE[m]}</p>
-                <p className="mt-2 text-sm">
+                <h3 className="type-title-3">{DECISION_MOMENT_INFO[m].label}</h3>
+                <p className="mt-1 text-muted-foreground">{WHERE[m]}</p>
+                <p className="mt-2">
                   <span className="font-bold">Prompts: </span>
                   {PROMPTS_BY_MOMENT[m].join(", ")}
                 </p>

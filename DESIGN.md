@@ -223,7 +223,7 @@ These follow BRIDGEGOOD's tone guide (bridgegood.com/design): supportive, direct
 
 ## 10. Migrating from the Material 3 tokens
 
-Steps 1–5 and 7 are done. Step 6, and putting the signature components on real pages, are tracked in `docs/design-followups.md`. Once pages use the `type-*` scale, remove the Material 3 compatibility aliases from `src/app.css`.
+All seven steps are done (milestone 2.5): pages use the `type-*` scale and the signature components, and the Material 3 compatibility aliases are gone from `src/app.css`. What's left is in `docs/design-followups.md`.
 
 1. In `src/app.css`, replace the Material 3 role values with the tokens above, and keep the semantic names components already use (`bg-card` → `--surface`, `text-muted-foreground` → `--ink-muted`, `border-input` → `--line-strong`, and so on).
 2. Swap the fonts in `src/root.tsx` (Google Sans → Atkinson Hyperlegible Next and Bricolage Grotesque).

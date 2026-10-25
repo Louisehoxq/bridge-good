@@ -11,12 +11,12 @@ import { Textarea } from "@/components/ui/textarea"
 import { PARTNER_PROBLEM_ID, SPRINT_MILESTONES } from "@/content/journey"
 import { PROBLEMS } from "@/content/problems"
 import { newId, nowLabel } from "@/lib/demo-store"
-import { ROLE_INFO } from "@/lib/roles"
+import { Icon } from "@/components/icon"
+import { ErrorSummary, Notice } from "@/components/notice"
+import { CHAPTER_LEAD, PARTNER_NAME, teamFor, TeamView } from "@/components/team/team-view"
 import { pageMeta } from "@/lib/meta"
 
 export const meta = () => pageMeta("My project and team")
-
-const CHAPTER_LEAD = ROLE_INFO.ambassador.demoAccount.name
 
 export default function PartnerProject() {
   const [matches] = useMatches()
@@ -27,21 +27,24 @@ export default function PartnerProject() {
 
   return (
     <>
-      <PageHeader eyebrow="My project and team" title={project.title}>
+      <PageHeader title={project.title}>
         Where your project is, who&apos;s working on it, and how to tell us what&apos;s changing for the people you serve.
       </PageHeader>
 
-      <div className="grid gap-6 xl:grid-cols-[3fr_2fr]">
-        <section aria-labelledby="status-title" className="space-y-3 rounded-2xl border bg-card p-6">
+      <div className="grid gap-6 xl:grid-cols-[2fr_3fr]">
+        <section aria-labelledby="status-title" className="min-w-0 space-y-3 rounded-2xl border bg-card p-6">
           <div className="flex flex-wrap items-center gap-2">
-            <h2 id="status-title" className="text-xl font-bold">
+            <h2 id="status-title" className="type-title-3">
               Status
             </h2>
             {project.synthetic && <SyntheticBadge />}
           </div>
-          <p className="rounded-lg bg-archetype-soft p-3 font-bold">{status}</p>
+          <p className="flex gap-2 rounded-lg bg-archetype-soft p-3 font-bold">
+            <Icon name={match ? "pencil-ruler" : "clipboard-list"} className="mt-0.5" />
+            {status}
+          </p>
           <p>{project.summary}</p>
-          <dl className="grid gap-2 text-sm sm:grid-cols-2">
+          <dl className="grid gap-2 sm:grid-cols-2">
             <div>
               <dt className="font-bold">Who it&apos;s for</dt>
               <dd>{project.community}</dd>
@@ -55,37 +58,35 @@ export default function PartnerProject() {
           </dl>
         </section>
 
-        <section id="team" aria-labelledby="team-title" className="scroll-mt-24 rounded-2xl bg-archetype-soft p-6">
-          <h2 id="team-title" className="text-xl font-bold">
+        <section id="team" aria-labelledby="team-title" className="min-w-0 scroll-mt-24 rounded-2xl border bg-card p-6">
+          <h2 id="team-title" className="type-title-3">
             Your team
           </h2>
           {match ? (
-            <dl className="mt-3 space-y-2">
-              <div>
-                <dt className="font-bold">Apprentices</dt>
-                <dd>{match.apprentices.join(", ")}</dd>
-              </div>
-              <div>
-                <dt className="font-bold">Mentor</dt>
-                <dd>{match.mentorName}</dd>
-              </div>
-              <div>
-                <dt className="font-bold">Chapter lead</dt>
-                <dd>{CHAPTER_LEAD}</dd>
-              </div>
-              <dd className="text-sm text-muted-foreground">Everyone shown is a synthetic example.</dd>
-            </dl>
+            <>
+              <p className="mb-6 text-muted-foreground">The people working on your project with you. Everyone shown is a synthetic example.</p>
+              <TeamView label="Your project team" members={teamFor(match, PARTNER_NAME)} />
+            </>
           ) : (
-            <p className="mt-2">
-              Your chapter lead, {CHAPTER_LEAD}, is talking with apprentices who are interested in your brief. You&apos;ll
-              meet the team at kickoff (synthetic example).
-            </p>
+            <>
+              <p className="mt-2 mb-6">
+                Your chapter lead, {CHAPTER_LEAD}, is talking with apprentices who are interested in your brief. You&apos;ll
+                meet the team at kickoff (synthetic example).
+              </p>
+              <TeamView
+                label="Your project so far"
+                members={[
+                  { name: PARTNER_NAME, role: "community-partner", you: true },
+                  { name: CHAPTER_LEAD, role: "chapter-lead" },
+                ]}
+              />
+            </>
           )}
         </section>
       </div>
 
       <section id="timeline" aria-labelledby="timeline-title" className="mt-12 scroll-mt-24">
-        <h2 id="timeline-title" className="text-2xl font-bold">
+        <h2 id="timeline-title" className="type-title-2">
           Four-week sprint
         </h2>
         <p className="text-muted-foreground">
@@ -97,7 +98,7 @@ export default function PartnerProject() {
 
       <div className="mt-12">
         <SubmittedBriefs />
-        <p className="mt-3 text-sm">
+        <p className="mt-3">
           Have another problem?{" "}
           <Link to="/partner/submit" className="font-semibold underline underline-offset-4">
             Submit a problem
@@ -114,7 +115,7 @@ function FeedbackForm() {
   const [feedback, setFeedback] = usePartnerFeedback()
   const [error, setError] = useState("")
   const [sent, setSent] = useState(false)
-  const errorRef = useRef<HTMLParagraphElement>(null)
+  const errorRef = useRef<HTMLDivElement>(null)
   const mine = feedback.filter((f) => f.problemId === PARTNER_PROBLEM_ID).toReversed()
 
   function submit(e: FormEvent<HTMLFormElement>) {
@@ -141,7 +142,7 @@ function FeedbackForm() {
     <section id="feedback" aria-labelledby="feedback-title" className="mt-12 grid scroll-mt-24 gap-6 xl:grid-cols-[3fr_2fr]">
       <form onSubmit={submit} noValidate className="space-y-4 rounded-2xl border bg-card p-6">
         <div>
-          <h2 id="feedback-title" className="text-2xl font-bold">
+          <h2 id="feedback-title" className="type-title-2">
             Tell us how it&apos;s going
           </h2>
           <p className="mt-1 text-muted-foreground">
@@ -149,33 +150,31 @@ function FeedbackForm() {
             decides what changes in the philosophy, and credits where each change came from.
           </p>
         </div>
-        {error && (
-          <p ref={errorRef} tabIndex={-1} role="alert" className="rounded-lg border-2 border-destructive p-3 font-semibold">
-            {error}
-          </p>
-        )}
-        {sent && (
-          <p role="status" className="rounded-lg bg-archetype-soft p-3">
-            Thank you. Saved in this browser (demo). In the real service, BRIDGEGOOD would receive it.
-          </p>
-        )}
+        <ErrorSummary errors={error ? [{ field: "fb-changed", message: error }] : []} summaryRef={errorRef} title="Before sending:" />
+        <div role="status">
+          {sent && (
+            <Notice tone="success">
+              <p>Thank you. Saved in this browser (demo). In the real service, BRIDGEGOOD would receive it.</p>
+            </Notice>
+          )}
+        </div>
         <div className="space-y-1">
-          <Label htmlFor="fb-changed" className="font-bold">
+          <Label htmlFor="fb-changed">
             What has changed for the people you serve?
           </Label>
           <Textarea id="fb-changed" name="changed" />
         </div>
         <div className="space-y-1">
-          <Label htmlFor="fb-heard" className="font-bold">
+          <Label htmlFor="fb-heard">
             What have community members told you about the work?
           </Label>
-          <p id="fb-heard-hint" className="text-sm text-muted-foreground">
+          <p id="fb-heard-hint" className="text-muted-foreground">
             Describe what people said as a group. No names or personal details, and only what they agreed to share.
           </p>
           <Textarea id="fb-heard" name="heard" aria-describedby="fb-heard-hint" />
         </div>
         <div className="space-y-1">
-          <Label htmlFor="fb-not" className="font-bold">
+          <Label htmlFor="fb-not">
             What isn&apos;t working, or what should change?
           </Label>
           <Textarea id="fb-not" name="notWorking" />
@@ -185,14 +184,14 @@ function FeedbackForm() {
         </Button>
       </form>
       <div>
-        <h3 className="mb-3 text-lg font-bold">What you&apos;ve sent</h3>
+        <h3 className="mb-3 type-title-3">What you&apos;ve sent</h3>
         {mine.length === 0 ? (
           <p className="text-muted-foreground">Nothing yet.</p>
         ) : (
           <ul className="space-y-3">
             {mine.map((f) => (
-              <li key={f.id} className="rounded-xl border bg-card p-4 text-sm">
-                <p className="text-muted-foreground">{f.at}</p>
+              <li key={f.id} className="rounded-xl border bg-card p-4 [overflow-wrap:anywhere]">
+                <p className="type-small text-muted-foreground">{f.at}</p>
                 {f.whatChanged && <p className="mt-1">{f.whatChanged}</p>}
                 {f.communityHeard && <p className="mt-1">{f.communityHeard}</p>}
                 {f.notWorking && <p className="mt-1">{f.notWorking}</p>}
