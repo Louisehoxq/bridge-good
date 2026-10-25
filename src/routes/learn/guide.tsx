@@ -1,7 +1,6 @@
 import { data } from "react-router"
 import type { Route } from "./+types/guide"
 import { LibraryPage, PromptList } from "@/components/library/library-page"
-import { SyntheticBadge } from "@/components/synthetic-badge"
 import { DidntFit, guideTarget } from "@/components/feedback/didnt-fit" // Milestone 3 hook
 import { ADAPTATION } from "@/content/adaptation"
 import { AI_SOCIAL_GOOD_GUIDE, AMBASSADOR_VETTING, MENTOR_COMMITMENT, MOCK_CASE_GUIDE, REAL_CASE_GUIDE, type HowToGuide } from "@/content/guides"
@@ -125,7 +124,7 @@ function AiGuide() {
               </p>
               <div>
                 <p className="flex flex-wrap items-center gap-2 font-bold">
-                  Try this <SyntheticBadge />
+                  Try this
                 </p>
                 <p>{s.tryThis}</p>
               </div>

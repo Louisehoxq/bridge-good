@@ -65,8 +65,7 @@ export default function KitReply() {
             No feedback with that code in this browser.
           </p>
           <p>
-            Check the code for typos. In this demo, feedback is kept in the browser it was sent from, so a code from another
-            device won&apos;t work here.
+            Check the code for typos.
           </p>
         </div>
       )}

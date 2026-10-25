@@ -113,8 +113,7 @@ export function KitFeedbackForm() {
           <p>Your reply code is:</p>
           <p className="font-mono text-2xl font-bold tracking-wider">{code}</p>
           <p>
-            Keep it somewhere safe. It&apos;s the only way to read BRIDGEGOOD&apos;s reply, because we didn&apos;t ask who you are. Demo:
-            the reply lives in this browser.
+            Keep it somewhere safe. It&apos;s the only way to read BRIDGEGOOD&apos;s reply, because we didn&apos;t ask who you are.
           </p>
           <CopyButton text={code} label="Copy reply code" />
           <div className="flex flex-wrap gap-4">
