@@ -1,8 +1,6 @@
 import { Link } from "react-router"
 import { Icon } from "@/components/icon"
-import { DraftNote } from "@/components/library/library-page"
 import { buttonVariants } from "@/components/ui/button"
-import { FRAMEWORK_META } from "@/content/framework"
 import { LIBRARY, LIBRARY_SECTIONS } from "@/lib/library"
 import { pageMeta } from "@/lib/meta"
 
@@ -54,13 +52,6 @@ export default function LibraryIndex() {
                   </li>
                 ))}
               </ul>
-              {section.id === "framework" && (
-                <div className="mt-6">
-                  <DraftNote>
-                    {FRAMEWORK_META.note}
-                  </DraftNote>
-                </div>
-              )}
             </section>
           )
         })}

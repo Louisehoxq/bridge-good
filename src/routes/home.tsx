@@ -45,7 +45,7 @@ const TOOLKITS: { icon: IconName; title: string; body: string; href: string; cta
   {
     icon: "scale",
     title: "Practice moments",
-    body: "Make a call in a short, synthetic dilemma, then see how BRIDGEGOOD reasons about it. Never scored.",
+    body: "Make a call in a short dilemma, then see how BRIDGEGOOD reasons about it. Never scored.",
     href: "/learn/practice",
     cta: "Try a practice moment",
   },
@@ -121,8 +121,8 @@ export default function WelcomePage() {
               Already taking part?{" "}
               <Link to="/login" className="font-semibold text-primary underline underline-offset-4">
                 Log in to your area
-              </Link>{" "}
-              (demo accounts, no password).
+              </Link>
+              .
             </p>
           </nav>
         </div>
@@ -206,7 +206,7 @@ export default function WelcomePage() {
           </h2>
           <p className="mt-3 mb-8 max-w-[70ch] type-body-lg text-muted-foreground">
             The pillars describe what apprentices learn. These six ways of working describe how BRIDGEGOOD, mentors,
-            ambassadors and partners work together so the pillars can happen. Draft wording, for BRIDGEGOOD to review.
+            ambassadors and partners work together so the pillars can happen.
           </p>
           <ul className="grid gap-x-8 gap-y-6 md:grid-cols-2 xl:grid-cols-3">
             {PRINCIPLES.map((p) => (
@@ -245,8 +245,7 @@ export default function WelcomePage() {
             <p className="max-w-[70ch] type-body-lg">
               Since 2009, BRIDGEGOOD has helped people see themselves as creators, leaders and problem-solvers. Design for
               Social Good is the way of working behind that: design that benefits communities, values lived experience, and
-              grows confidence, access and economic mobility for the people doing it. Apprentices pay no tuition, with no
-              income share agreements (public fact; confirm with BRIDGEGOOD).
+              grows confidence, access and economic mobility for the people doing it.
             </p>
           </div>
           <div className="rounded-2xl border bg-card p-6">

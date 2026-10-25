@@ -11,11 +11,6 @@ import type { PillarId, ReflectionPromptId } from "@/content/framework"
  * a conversation, not to rank anyone.
  */
 
-export const PRACTICE_META = {
-  status: "Draft reasoning for BRIDGEGOOD to review",
-  note: "The hackathon team wrote these scenarios and the reasoning from BRIDGEGOOD's framework. BRIDGEGOOD reviews and approves the wording, and can change it at any time.",
-} as const
-
 /** The roles practice moments are written for. Each shows with its icon, label and color. */
 export const PRACTICE_ROLES = ["apprentice", "mentor", "chapter-lead", "community-partner"] as const satisfies readonly StudioRole[]
 export type PracticeRole = (typeof PRACTICE_ROLES)[number]

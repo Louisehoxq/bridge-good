@@ -7,7 +7,7 @@ import { buttonVariants } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { NativeSelect } from "@/components/ui/select"
 import { CHAPTERS } from "@/content/chapters"
-import { EVENT_TYPE_INFO, EVENTS_NOTE } from "@/content/events"
+import { EVENT_TYPE_INFO } from "@/content/events"
 import { canHost, FORMAT_INFO, past, upcoming } from "@/lib/events/logic"
 import { useEvents, useRsvps, whoFor } from "@/lib/events/store"
 import { EVENT_FORMATS, EVENT_TYPES, type CommunityEvent } from "@/lib/events/types"
@@ -54,10 +54,6 @@ export default function EventsPage() {
               Each chapter keeps a calendar of small, free events where people practice BRIDGEGOOD&apos;s Design for Social Good
               approach together: critique circles, site visits, listening sessions and more. Every event says up front how
               accessible it is.
-            </p>
-            <p className="inline-flex items-start gap-1.5 rounded-xl border border-dashed border-muted-foreground px-3 py-2 type-small font-semibold text-muted-foreground">
-              <Icon name="info" className="mt-0.5 text-base" />
-              {EVENTS_NOTE}
             </p>
           </div>
           {canHost(who?.role) && (

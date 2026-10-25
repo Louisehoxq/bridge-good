@@ -6,9 +6,6 @@ export function ResetDemoButton() {
   const [done, setDone] = useState(false)
   return (
     <div className="space-y-2">
-      <p className="text-muted-foreground">
-        Submissions, messages and bookings you make are saved in this browser only.
-      </p>
       <Button
         variant="outline"
         size="sm"

@@ -3,14 +3,14 @@ import { Link, useLocation } from "react-router"
 import { CreditConsent, ErrorSummary, FieldError, personalDataError, TextField, type FieldErrors } from "@/components/feedback/fields"
 import { YourFeedback } from "@/components/feedback/your-feedback"
 import { Icon } from "@/components/icon"
-import { DraftNote, PillarChip, PromptList } from "@/components/library/library-page"
+import { PillarChip, PromptList } from "@/components/library/library-page"
 import { FieldNote } from "@/components/studio/field-note"
 import { RoleBadge } from "@/components/studio/role-badge"
 import { SyntheticBadge } from "@/components/synthetic-badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { PRACTICE_META, type PracticeChoice, type PracticeMoment } from "@/content/practice"
+import { type PracticeChoice, type PracticeMoment } from "@/content/practice"
 import { DEMO_MENTOR, DEMO_STUDENT } from "@/content/seed"
 import { newId, nowLabel } from "@/lib/demo-store"
 import { useConversationStarters } from "@/lib/evaluator/store"
@@ -164,12 +164,7 @@ export function PracticeMomentView({ moment, level = 1, embedded }: { moment: Pr
           Open this practice moment in the library
           <Icon name="arrow-right" />
         </Link>
-      ) : (
-        <DraftNote>
-          {PRACTICE_META.status}. {PRACTICE_META.note} The scenario, the people in it and the &ldquo;what others chose&rdquo; numbers
-          are synthetic.
-        </DraftNote>
-      )}
+      ) : null}
     </div>
   )
 }
@@ -248,8 +243,6 @@ function Reasoning({ moment, chosen, level }: { moment: PracticeMoment; chosen: 
           </tbody>
         </table>
       </div>
-
-      <DraftNote>Draft reasoning, written by the hackathon team for BRIDGEGOOD to review and approve.</DraftNote>
     </>
   )
 }

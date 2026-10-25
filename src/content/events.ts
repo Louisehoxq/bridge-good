@@ -13,9 +13,6 @@ import type { CommunityEvent, EventFormat, EventType, Rsvp } from "@/lib/events/
  * BRIDGEGOOD reviews and owns the wording.
  */
 
-export const EVENTS_NOTE =
-  "Every event here is a synthetic example to show how chapter calendars could work. They aren't real BRIDGEGOOD events. Places are shown as an area only, never an address."
-
 export type EventTemplate = {
   /** The default title, which the host edits. */
   title: string

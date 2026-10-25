@@ -46,12 +46,6 @@ export type Chapter = {
   synthetic: true
 }
 
-/** Show this label wherever chapters appear. */
-export const CHAPTER_MODEL_LABEL = "Proposed chapter model (concept)"
-
-export const CHAPTER_MODEL_NOTE =
-  "These chapters are made up to show how a chapter model could work. They are not BRIDGEGOOD chapters. A real chapter would need BRIDGEGOOD's approval and an ambassador BRIDGEGOOD has vetted."
-
 const inbox = (id: string) => `${id}@chapters.example.org`
 
 export const CHAPTERS: Chapter[] = [

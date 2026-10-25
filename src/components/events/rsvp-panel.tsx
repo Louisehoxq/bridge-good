@@ -60,8 +60,7 @@ export function RsvpPanel({ event, now }: { event: CommunityEvent; now: number }
       {!ended && !session && (
         <div className="space-y-3">
           <p>
-            RSVPs are for people in a BRIDGEGOOD chapter: apprentices, alumni, mentors, ambassadors and community partners. In this
-            prototype, log in with a demo account to try it. There&apos;s no password.
+            RSVPs are for people in a BRIDGEGOOD chapter: apprentices, alumni, mentors, ambassadors and community partners.
           </p>
           <Link to={`/login?next=${encodeURIComponent(`/events/${event.id}`)}`} className={buttonVariants({ size: "lg" })}>
             <Icon name="log-in" />
@@ -97,7 +96,7 @@ export function RsvpPanel({ event, now }: { event: CommunityEvent; now: number }
 
       {(mine || hosting) && event.format === "online" && !ended && (
         <p className="rounded-xl bg-muted p-3">
-          <span className="font-semibold">Join link (synthetic):</span> <span className="[overflow-wrap:anywhere]">{joinLink(event)}</span>
+          <span className="font-semibold">Join link:</span> <span className="[overflow-wrap:anywhere]">{joinLink(event)}</span>
         </p>
       )}
       {(mine || hosting) && event.format === "in-person" && !ended && (
@@ -146,7 +145,7 @@ function WhoIsComing({ event }: { event: CommunityEvent }) {
       ) : (
         <p className="text-muted-foreground">No demo accounts yet.</p>
       )}
-      {event.seedGoing ? <p className="type-small text-muted-foreground">Plus {event.seedGoing} synthetic RSVPs, counted but not named.</p> : null}
+      {event.seedGoing ? <p className="type-small text-muted-foreground">Plus {event.seedGoing} others going.</p> : null}
     </div>
   )
 }
@@ -157,7 +156,7 @@ export function PretendEnded({ event }: { event: CommunityEvent }) {
   return (
     <div className="space-y-2 rounded-2xl border border-dashed p-5">
       <p>
-        After the event, you&apos;ll tell BRIDGEGOOD what you learned here. In this prototype you can skip ahead to try it.
+        After the event, you&apos;ll tell BRIDGEGOOD what you learned here.
       </p>
       <Button
         type="button"

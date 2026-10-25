@@ -180,7 +180,7 @@ export const PUBLIC_NAV: NavItem[] = [
   { label: "Welcome", href: "/" },
   { label: "Library", href: "/learn" },
   { label: "Events", href: "/events" },
-  { label: "Chapters (concept)", href: "/chapters" },
+  { label: "Chapters", href: "/chapters" },
 ]
 
 export function isRole(value: unknown): value is Role {

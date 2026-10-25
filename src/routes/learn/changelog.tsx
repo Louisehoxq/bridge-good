@@ -1,7 +1,7 @@
 import { Link } from "react-router"
 import { ChangelogList } from "@/components/feedback/changelog-list"
 import { FrameworkVersion } from "@/components/feedback/framework-hooks"
-import { DraftNote, LibraryPage } from "@/components/library/library-page"
+import { LibraryPage } from "@/components/library/library-page"
 import { FRAMEWORK_META } from "@/content/framework"
 import { pageMeta } from "@/lib/meta"
 
@@ -50,16 +50,13 @@ export default function ChangelogPage() {
         </section>
       </div>
       <ChangelogList />
-      <div className="mt-10">
-        <DraftNote>
-          Demo: the entries marked &ldquo;Synthetic example&rdquo; are made up, and decisions you make as the steward are saved in this browser
-          only. {FRAMEWORK_META.note} Want to suggest a change? Chapter leads can{" "}
-          <Link to="/ambassador/playbook#propose" className="underline underline-offset-4">
-            propose an adaptation
-          </Link>
-          , and apprentices and mentors can flag any pillar, guide or prompt that didn&apos;t fit.
-        </DraftNote>
-      </div>
+      <p className="mt-10 max-w-prose">
+        Want to suggest a change? Chapter leads can{" "}
+        <Link to="/ambassador/playbook#propose" className="underline underline-offset-4">
+          propose an adaptation
+        </Link>
+        , and apprentices and mentors can flag any pillar, guide or prompt that didn&apos;t fit.
+      </p>
     </LibraryPage>
   )
 }

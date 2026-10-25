@@ -7,7 +7,7 @@ import { Icon } from "@/components/icon"
 import { FieldNote } from "@/components/studio/field-note"
 import { SyntheticBadge } from "@/components/synthetic-badge"
 import { buttonVariants } from "@/components/ui/button"
-import { CHAPTER_MODEL_LABEL, chapterLabel, getChapter } from "@/content/chapters"
+import { chapterLabel, getChapter } from "@/content/chapters"
 import { getPillar } from "@/content/framework"
 import { getPracticeMoment } from "@/content/practice"
 import { canHost, upcoming } from "@/lib/events/logic"
@@ -24,7 +24,7 @@ export function loader({ params }: Route.LoaderArgs) {
 
 export const meta = ({ params }: Route.MetaArgs) => {
   const chapter = getChapter(params.id)
-  return pageMeta(chapter ? `${chapterLabel(chapter)} (proposed)` : "Chapter not found")
+  return pageMeta(chapter ? chapterLabel(chapter) : "Chapter not found")
 }
 
 /** One chapter in the proposed model: who runs it, who it works with, its calendar and its field notes. */
@@ -54,18 +54,13 @@ export default function ChapterPage({ loaderData }: Route.ComponentProps) {
 
         <div className="mb-10 max-w-3xl space-y-3">
           <div className="flex flex-wrap items-center gap-2">
-            <p className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-muted-foreground px-3 py-1 type-small font-semibold text-muted-foreground">
-              <Icon name="info" className="text-base" />
-              {CHAPTER_MODEL_LABEL}
-            </p>
             <SyntheticBadge />
           </div>
           <h1 className="type-title-1">
             {label}, {chapter.country}
           </h1>
           <p className="type-body-lg text-muted-foreground">
-            A made-up chapter in the proposed model, not a BRIDGEGOOD chapter. The people, companies and partners here are synthetic, and the
-            location is the city only.
+            Location is the city only.
           </p>
         </div>
 
