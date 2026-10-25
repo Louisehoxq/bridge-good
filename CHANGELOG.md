@@ -10,6 +10,11 @@ The roles are: **apprentice** (BRIDGEGOOD's word for a student), **mentor**, **a
 
 ## Unreleased
 
+### Steward area and library: less disclaimer copy
+
+- **For stewards:** the inbox header is one sentence (you decide what changes, always with a reason, and the sender sees the outcome). The versions page drops "BRIDGEGOOD authors the framework" (the footer says it) and feedback detail drops "(synthetic demo account)".
+- **Everyone:** the changelog says "Published {date}", the kit's reply-code screen no longer says the reply lives in this browser, and the reply page's not-found note is one line. Guides lose "(Draft)", the repeated "BRIDGEGOOD will confirm" and the AI-guide labelling sentence; "Try this" boxes and example case studies carry one synthetic label per section instead of one each.
+
 ### Partner area: less disclaimer copy
 
 - **For community partners:** the example projects page, the project page, the scoping studio and the toolkit say "synthetic", "draft estimate" and "demo" once instead of repeatedly. The AI assistant's off message reads "The AI assistant is off right now. You can still write the brief yourself.", and the toolkit shows "Draft: BRIDGEGOOD will confirm" on its first draft answer only. The AI label and every `DraftFrame` stay.

@@ -70,15 +70,12 @@ export function TrainingTrack({ audience, headingLevel = 2 }: { audience: Audien
 
         <section aria-labelledby={`${audience}-cases`}>
           <H id={`${audience}-cases`} className="mb-4 type-title-3">
-            Example case studies
+            Example case studies <SyntheticBadge />
           </H>
           <ul className="space-y-3">
             {cases.map((c) => (
               <li key={c.id} className="rounded-xl border bg-card p-4">
-                <div className="flex items-start justify-between gap-2">
-                  <p className="font-bold">{c.title}</p>
-                  <SyntheticBadge />
-                </div>
+                <p className="font-bold">{c.title}</p>
                 <p className="mt-1 text-muted-foreground">
                   {c.organizationType} · {c.location}
                 </p>
