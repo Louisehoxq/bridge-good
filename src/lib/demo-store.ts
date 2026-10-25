@@ -1,5 +1,3 @@
-"use client"
-
 import { useCallback, useSyncExternalStore } from "react"
 
 /**
@@ -27,7 +25,8 @@ function read<T>(key: string, seed: T[]): T[] {
   let value: T[] = seed
   if (raw) {
     try {
-      value = JSON.parse(raw) as T[]
+      const parsed: unknown = JSON.parse(raw)
+      value = Array.isArray(parsed) ? (parsed as T[]) : seed
     } catch {
       value = seed
     }

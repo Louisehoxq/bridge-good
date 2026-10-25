@@ -1,5 +1,3 @@
-"use client"
-
 import { useCollection } from "@/lib/demo-store"
 import type { SubmittedBrief } from "@/components/partner/scoping-studio"
 

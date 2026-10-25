@@ -1,4 +1,4 @@
-import { ClockIcon, PlayCircleIcon } from "lucide-react"
+import { Icon } from "@/components/icon"
 import { PROBLEMS } from "@/content/problems"
 import { TRAINING, type Audience } from "@/content/training"
 import { SyntheticBadge } from "@/components/synthetic-badge"
@@ -27,11 +27,11 @@ export function TrainingTrack({ audience, headingLevel = 2 }: { audience: Audien
               <div>
                 <p className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                   <span className="inline-flex items-center gap-1 font-semibold text-foreground">
-                    <PlayCircleIcon className="size-4" aria-hidden="true" />
+                    <Icon name="play_circle" className="text-base" />
                     {m.format}
                   </span>
                   <span className="inline-flex items-center gap-1">
-                    <ClockIcon className="size-4" aria-hidden="true" />
+                    <Icon name="schedule" className="text-base" />
                     {m.duration}
                   </span>
                 </p>

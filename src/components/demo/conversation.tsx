@@ -1,7 +1,5 @@
-"use client"
-
 import { useState, type FormEvent } from "react"
-import { SendIcon } from "lucide-react"
+import { Icon } from "@/components/icon"
 import { newId, nowLabel, useCollection } from "@/lib/demo-store"
 import { DEMO_MENTOR, SEED_MESSAGES, type Message } from "@/content/seed"
 import { Button } from "@/components/ui/button"
@@ -31,13 +29,13 @@ export function Conversation({ thread, as, title }: { thread: string; as: "stude
       <h2 id="conversation-title" className="border-b p-4 text-lg font-bold">
         {title}
       </h2>
-      <ol className="flex-1 space-y-3 overflow-y-auto p-4" aria-live="polite">
+      <ol className="flex-1 space-y-3 overflow-y-auto p-4" role="log" aria-label="Messages">
         {items.length === 0 && <li className="text-muted-foreground">No messages yet. Say hello.</li>}
         {items.map((m) => {
           const mine = m.from === as
           return (
             <li key={m.id} className={cn("flex", mine ? "justify-end" : "justify-start")}>
-              <div className={cn("max-w-[75%] rounded-2xl px-4 py-2", mine ? "bg-archetype text-white" : "bg-muted")}>
+              <div className={cn("max-w-[75%] min-w-0 rounded-2xl px-4 py-2 [overflow-wrap:anywhere]", mine ? "bg-archetype text-on-archetype" : "bg-muted")}>
                 <p className="text-xs font-bold opacity-90">
                   {mine ? "You" : m.fromName} · {m.at}
                 </p>
@@ -57,12 +55,12 @@ export function Conversation({ thread, as, title }: { thread: string; as: "stude
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             placeholder="Write a message"
-            className="min-h-11"
+            className="min-h-12"
             rows={2}
           />
         </div>
-        <Button type="submit" className="bg-archetype text-white hover:bg-archetype/90">
-          <SendIcon aria-hidden="true" />
+        <Button type="submit" className="bg-archetype text-on-archetype hover:bg-archetype/90">
+          <Icon name="send" />
           Send
         </Button>
       </form>

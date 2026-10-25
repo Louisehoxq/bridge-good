@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import { resetDemoData } from "@/lib/demo-store"
 import { Button } from "@/components/ui/button"

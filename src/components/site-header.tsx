@@ -1,5 +1,5 @@
-import Link from "next/link"
-import { MenuIcon } from "lucide-react"
+import { Link } from "react-router"
+import { Icon } from "@/components/icon"
 import { PUBLIC_NAV, ROLE_INFO, type Role } from "@/lib/roles"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
@@ -12,7 +12,7 @@ export function SiteHeader({ role }: { role?: Role }) {
   return (
     <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/85">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-6 px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="rounded-md" aria-label="BridgeGoodx home">
+        <Link to="/" className="rounded-md" aria-label="BridgeGoodx home">
           <Wordmark />
         </Link>
 
@@ -35,7 +35,7 @@ export function SiteHeader({ role }: { role?: Role }) {
           <AccountMenu />
           <Sheet>
             <SheetTrigger render={<Button variant="outline" size="icon" aria-label="Open menu" className="lg:hidden" />}>
-              <MenuIcon aria-hidden="true" />
+              <Icon name="menu" />
             </SheetTrigger>
             <SheetContent side="right" className="w-[85vw] max-w-sm overflow-y-auto p-6">
               <SheetHeader className="p-0">
@@ -48,8 +48,8 @@ export function SiteHeader({ role }: { role?: Role }) {
                     <li key={item.href}>
                       <SheetClose
                         nativeButton={false}
-                        render={<Link href={item.href} />}
-                        className="flex min-h-11 w-full items-center rounded-md px-2 font-medium hover:bg-muted"
+                        render={<Link to={item.href} />}
+                        className="flex min-h-12 w-full items-center rounded-md px-2 font-medium hover:bg-muted"
                       >
                         {item.label}
                       </SheetClose>
@@ -65,8 +65,8 @@ export function SiteHeader({ role }: { role?: Role }) {
                       <li key={item.href}>
                         <SheetClose
                           nativeButton={false}
-                          render={<Link href={item.href} />}
-                          className="flex min-h-11 w-full items-center rounded-md px-2 font-medium hover:bg-muted"
+                          render={<Link to={item.href} />}
+                          className="flex min-h-12 w-full items-center rounded-md px-2 font-medium hover:bg-muted"
                         >
                           {item.label}
                         </SheetClose>

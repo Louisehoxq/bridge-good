@@ -1,9 +1,7 @@
-"use client"
-
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
-import { useMemo, useRef, useState, type FormEvent } from "react"
-import { BotIcon, ImagePlusIcon, SendIcon, XIcon } from "lucide-react"
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react"
+import { Icon } from "@/components/icon"
 import { BRIEF_FIELDS, type Brief } from "@/lib/brief"
 import { newId, nowLabel, useCollection } from "@/lib/demo-store"
 import { Button } from "@/components/ui/button"
@@ -20,18 +18,53 @@ const STARTERS = [
   "Here's a screenshot of our donation page. People give up halfway.",
 ]
 
-const MAX_IMAGE_BYTES = 4 * 1024 * 1024
+// Match the limits in src/routes/api.scope.ts.
+const MAX_IMAGES = 4
+const IMAGE_TYPES = ["image/png", "image/jpeg", "image/webp"]
+const MAX_SOURCE_BYTES = 15 * 1024 * 1024
+const MAX_EDGE_PX = 1568
 
-/** Two-pane desktop studio: chat with the scoping assistant on the left, the live capstone brief on the right. */
+/** Shrink a screenshot to at most 1568px on its longest side as a JPEG, so requests stay small. */
+async function downscale(file: File): Promise<File> {
+  const bitmap = await createImageBitmap(file)
+  const scale = Math.min(1, MAX_EDGE_PX / Math.max(bitmap.width, bitmap.height))
+  const canvas = document.createElement("canvas")
+  canvas.width = Math.round(bitmap.width * scale)
+  canvas.height = Math.round(bitmap.height * scale)
+  const ctx = canvas.getContext("2d")
+  if (!ctx) return file
+  ctx.fillStyle = "#fff"
+  ctx.fillRect(0, 0, canvas.width, canvas.height)
+  ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height)
+  bitmap.close()
+  const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.85))
+  if (!blob) return file
+  return new File([blob], file.name.replace(/\.\w+$/, "") + ".jpg", { type: "image/jpeg" })
+}
+
+/** The scoping route answers errors as { error: "…" }; show that sentence when we have it. */
+function errorMessage(error: Error) {
+  try {
+    const parsed = JSON.parse(error.message) as { error?: string }
+    if (parsed.error) return parsed.error
+  } catch {
+    // Not JSON: fall through to the general message.
+  }
+  return "Something went wrong talking to the assistant. Try again, or fill in the brief yourself."
+}
+
+/** Two-pane desktop studio: chat with the scoping assistant on the left, the live project brief on the right. */
 export function ScopingStudio({ aiEnabled }: { aiEnabled: boolean }) {
-  const { messages, sendMessage, status, error, stop } = useChat({
-    transport: new DefaultChatTransport({ api: "/api/scope" }),
-  })
+  const [transport] = useState(() => new DefaultChatTransport({ api: "/api/scope" }))
+  const { messages, sendMessage, setMessages, status, error, stop } = useChat({ transport })
   const [input, setInput] = useState("")
   const [files, setFiles] = useState<File[]>([])
   const [fileError, setFileError] = useState("")
+  const [preparing, setPreparing] = useState(false)
+  const [announcement, setAnnouncement] = useState("")
   const fileRef = useRef<HTMLInputElement>(null)
-  const busy = status === "submitted" || status === "streaming"
+  const listRef = useRef<HTMLOListElement>(null)
+  const busy = preparing || status === "submitted" || status === "streaming"
 
   // Merge every updateBrief call, in order, into the AI's current draft.
   const aiBrief = useMemo(() => {
@@ -46,35 +79,65 @@ export function ScopingStudio({ aiEnabled }: { aiEnabled: boolean }) {
     return merged
   }, [messages])
 
-  function send(text: string) {
-    if (!text.trim() && files.length === 0) return
-    const dt = new DataTransfer()
-    files.forEach((f) => dt.items.add(f))
-    sendMessage({ text: text.trim() || "Here's a screenshot.", files: files.length ? dt.files : undefined })
-    setInput("")
-    setFiles([])
-    if (fileRef.current) fileRef.current.value = ""
+  // Keep the newest message in view.
+  useEffect(() => {
+    const list = listRef.current
+    if (list) list.scrollTop = list.scrollHeight
+  }, [messages, status])
+
+  // Announce each finished reply once, instead of reading streamed text as it arrives.
+  const lastStatus = useRef(status)
+  useEffect(() => {
+    if (lastStatus.current === "streaming" && status === "ready") {
+      const last = messages.at(-1)
+      const updated = last?.parts.some((p) => p.type === "tool-updateBrief")
+      setAnnouncement(updated ? "The assistant replied and updated your brief." : "The assistant replied.")
+    }
+    lastStatus.current = status
+  }, [status, messages])
+
+  async function send(text: string) {
+    if (busy || (!text.trim() && files.length === 0)) return
+    setPreparing(true)
+    try {
+      const prepared = await Promise.all(files.map(downscale))
+      const dt = new DataTransfer()
+      prepared.forEach((f) => dt.items.add(f))
+      await sendMessage({ text: text.trim() || "Here's a screenshot.", files: prepared.length ? dt.files : undefined })
+      setInput("")
+      setFiles([])
+      if (fileRef.current) fileRef.current.value = ""
+    } catch {
+      setFileError("That screenshot couldn't be read. Try a PNG or JPEG.")
+    } finally {
+      setPreparing(false)
+    }
   }
 
   function onSubmit(e: FormEvent) {
     e.preventDefault()
-    send(input)
+    void send(input)
   }
 
   function onPickFiles(list: FileList | null) {
     if (!list) return
     const picked = Array.from(list)
-    const tooBig = picked.filter((f) => f.size > MAX_IMAGE_BYTES)
-    setFileError(tooBig.length ? "Images must be under 4 MB each." : "")
-    setFiles(picked.filter((f) => f.size <= MAX_IMAGE_BYTES && f.type.startsWith("image/")))
+    const images = picked.filter((f) => IMAGE_TYPES.includes(f.type) && f.size <= MAX_SOURCE_BYTES)
+    const next = [...files, ...images].slice(0, MAX_IMAGES)
+    const problems = [
+      images.length < picked.length && "Only PNG, JPEG or WebP images under 15 MB can be added.",
+      files.length + images.length > MAX_IMAGES && `You can add up to ${MAX_IMAGES} screenshots.`,
+    ].filter(Boolean)
+    setFileError(problems.join(" "))
+    setFiles(next)
   }
 
   return (
-    <div className="grid gap-6 2xl:grid-cols-[1fr_1fr] xl:grid-cols-[5fr_6fr]">
-      <section aria-labelledby="chat-title" className="flex min-h-[40rem] flex-col rounded-2xl border bg-card xl:sticky xl:top-20 xl:h-[calc(100vh-7rem)]">
+    <div className="grid gap-6 xl:grid-cols-[5fr_6fr] 2xl:grid-cols-[1fr_1fr]">
+      <section aria-labelledby="chat-title" className="flex min-h-[32rem] flex-col rounded-2xl border bg-card xl:sticky xl:top-20 xl:h-[calc(100vh-7rem)]">
         <header className="flex items-center gap-3 border-b p-4">
-          <span className="flex size-10 items-center justify-center rounded-full bg-archetype text-white" aria-hidden="true">
-            <BotIcon className="size-5" />
+          <span className="flex size-10 items-center justify-center rounded-full bg-archetype text-on-archetype" aria-hidden="true">
+            <Icon name="smart_toy" className="text-xl" />
           </span>
           <div>
             <h2 id="chat-title" className="font-bold">
@@ -84,7 +147,11 @@ export function ScopingStudio({ aiEnabled }: { aiEnabled: boolean }) {
           </div>
         </header>
 
-        <ol className="flex-1 space-y-4 overflow-y-auto p-4" aria-live="polite" aria-busy={busy}>
+        <p role="status" className="sr-only">
+          {announcement}
+        </p>
+
+        <ol ref={listRef} className="max-h-[70vh] flex-1 space-y-4 overflow-y-auto p-4 xl:max-h-none" aria-busy={busy} aria-label="Conversation">
           {messages.length === 0 && (
             <li className="space-y-3">
               <p>
@@ -101,7 +168,7 @@ export function ScopingStudio({ aiEnabled }: { aiEnabled: boolean }) {
                       key={s}
                       type="button"
                       onClick={() => setInput(s)}
-                      className="min-h-11 rounded-lg border px-3 py-2 text-left text-sm hover:bg-muted"
+                      className="min-h-12 rounded-lg border border-input px-3 py-2 text-left text-sm hover:bg-muted"
                     >
                       {s}
                     </button>
@@ -112,17 +179,21 @@ export function ScopingStudio({ aiEnabled }: { aiEnabled: boolean }) {
           )}
           {messages.map((m) => (
             <li key={m.id} className={cn("flex", m.role === "user" ? "justify-end" : "justify-start")}>
-              <div className={cn("max-w-[85%] space-y-2 rounded-2xl px-4 py-3", m.role === "user" ? "bg-archetype text-white" : "bg-muted")}>
+              <div
+                className={cn(
+                  "max-w-[85%] min-w-0 space-y-2 rounded-2xl px-4 py-3 [overflow-wrap:anywhere]",
+                  m.role === "user" ? "bg-archetype text-on-archetype" : "bg-muted"
+                )}
+              >
                 <p className="text-xs font-bold opacity-90">{m.role === "user" ? "You" : "Assistant (AI)"}</p>
                 {m.parts.map((part, i) => {
                   if (part.type === "text") return <p key={i} className="whitespace-pre-wrap">{part.text}</p>
                   if (part.type === "file" && part.mediaType?.startsWith("image/"))
-                    // eslint-disable-next-line @next/next/no-img-element -- data URL preview of the user's own upload
                     return <img key={i} src={part.url} alt={`Uploaded screenshot${part.filename ? `: ${part.filename}` : ""}`} className="max-h-48 rounded-lg border" />
                   if (part.type === "tool-updateBrief")
                     return (
                       <p key={i} className="text-sm italic opacity-80">
-                        {part.state === "input-streaming" ? "Updating your brief…" : "Updated your brief →"}
+                        {part.state === "input-streaming" ? "Updating your brief…" : "Updated your brief."}
                       </p>
                     )
                   return null
@@ -130,33 +201,33 @@ export function ScopingStudio({ aiEnabled }: { aiEnabled: boolean }) {
               </div>
             </li>
           ))}
-          {status === "submitted" && <li className="text-sm text-muted-foreground">Thinking…</li>}
+          {(preparing || status === "submitted") && <li className="text-sm text-muted-foreground">Thinking…</li>}
         </ol>
 
         {!aiEnabled ? (
-          <p role="status" className="m-4 rounded-lg border-2 border-dashed p-4 text-sm">
+          <p role="status" className="m-4 rounded-lg border-2 border-dashed border-input p-4 text-sm">
             The AI assistant isn&apos;t switched on for this demo (no API key configured). You can still fill in the brief
-            yourself on the right.
+            yourself.
           </p>
         ) : (
           <form onSubmit={onSubmit} className="space-y-2 border-t p-4">
             {error && (
               <p role="alert" className="rounded-lg border-2 border-destructive p-3 text-sm">
-                Something went wrong talking to the assistant. Try again, or fill in the brief yourself.
+                {errorMessage(error)}
               </p>
             )}
             {(files.length > 0 || fileError) && (
               <ul className="flex flex-wrap gap-2" aria-label="Attached screenshots">
-                {files.map((f) => (
-                  <li key={f.name} className="flex items-center gap-1 rounded-full bg-muted py-1 pr-1 pl-3 text-sm">
-                    {f.name}
+                {files.map((f, i) => (
+                  <li key={`${i}-${f.name}`} className="flex max-w-full items-center gap-1 rounded-full bg-muted py-1 pr-1 pl-3 text-sm">
+                    <span className="truncate">{f.name}</span>
                     <button
                       type="button"
                       aria-label={`Remove ${f.name}`}
                       onClick={() => setFiles(files.filter((x) => x !== f))}
-                      className="flex size-8 items-center justify-center rounded-full hover:bg-background"
+                      className="flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-background"
                     >
-                      <XIcon className="size-4" aria-hidden="true" />
+                      <Icon name="close" className="text-base" />
                     </button>
                   </li>
                 ))}
@@ -171,27 +242,27 @@ export function ScopingStudio({ aiEnabled }: { aiEnabled: boolean }) {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
+                if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
                   e.preventDefault()
-                  if (!busy) send(input)
+                  void send(input)
                 }
               }}
               placeholder="Describe the problem… (Enter to send, Shift+Enter for a new line)"
               rows={3}
             />
             <div className="flex items-center justify-between gap-2">
-              <label className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border px-3 text-sm font-semibold hover:bg-muted has-focus-visible:outline-3 has-focus-visible:outline-ring">
-                <ImagePlusIcon className="size-4" aria-hidden="true" />
+              <label className="inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-full border border-input px-4 text-sm font-medium text-primary hover:bg-muted has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring">
+                <Icon name="add_photo_alternate" className="text-base" />
                 Add screenshot
-                <input ref={fileRef} type="file" accept="image/*" multiple className="sr-only" onChange={(e) => onPickFiles(e.target.files)} />
+                <input ref={fileRef} type="file" accept={IMAGE_TYPES.join(",")} multiple className="sr-only" onChange={(e) => onPickFiles(e.target.files)} />
               </label>
               {busy ? (
                 <Button type="button" variant="outline" onClick={() => stop()}>
                   Stop
                 </Button>
               ) : (
-                <Button type="submit" className="bg-archetype text-white hover:bg-archetype/90">
-                  <SendIcon aria-hidden="true" />
+                <Button type="submit" className="bg-archetype text-on-archetype hover:bg-archetype/90">
+                  <Icon name="send" />
                   Send
                 </Button>
               )}
@@ -200,42 +271,60 @@ export function ScopingStudio({ aiEnabled }: { aiEnabled: boolean }) {
         )}
       </section>
 
-      <BriefEditor aiBrief={aiBrief} />
+      <BriefEditor aiBrief={aiBrief} onStartOver={() => setMessages([])} />
     </div>
   )
 }
 
-function BriefEditor({ aiBrief }: { aiBrief: Brief }) {
-  const [edits, setEdits] = useState<Brief>({})
-  const [, setBriefs] = useCollection<SubmittedBrief>("briefs", [])
-  const [errors, setErrors] = useState<string[]>([])
-  const [submitted, setSubmitted] = useState<string | null>(null)
-  const brief: Brief = { ...aiBrief, ...edits }
+const REQUIRED: { key: keyof Brief; message: string }[] = [
+  { key: "title", message: "Add a project title" },
+  { key: "problem", message: "Describe the problem" },
+  { key: "community", message: "Describe the community affected" },
+]
 
-  const setField = (key: keyof Brief, value: string, list?: boolean) =>
-    setEdits((prev) => ({
-      ...prev,
-      [key]: list ? value.split("\n").map((s) => s.trim()).filter(Boolean) : value,
-    }))
+const asText = (value: Brief[keyof Brief]) => (Array.isArray(value) ? value.join("\n") : (value ?? ""))
+const asList = (text: string) => text.split("\n").map((s) => s.trim()).filter(Boolean)
+
+function BriefEditor({ aiBrief, onStartOver }: { aiBrief: Brief; onStartOver: () => void }) {
+  // The person's edits, kept as the raw text they typed. Lists are split into items only when sending.
+  const [edits, setEdits] = useState<Partial<Record<keyof Brief, string>>>({})
+  const [, setBriefs] = useCollection<SubmittedBrief>("briefs", [])
+  const [errors, setErrors] = useState<typeof REQUIRED>([])
+  const [submitted, setSubmitted] = useState<string | null>(null)
+  const summaryRef = useRef<HTMLDivElement>(null)
+  const doneRef = useRef<HTMLHeadingElement>(null)
+
+  const text = (key: keyof Brief) => edits[key] ?? asText(aiBrief[key])
+
+  useEffect(() => {
+    if (errors.length) summaryRef.current?.focus()
+  }, [errors])
+
+  useEffect(() => {
+    if (submitted) doneRef.current?.focus()
+  }, [submitted])
 
   function submit(e: FormEvent) {
     e.preventDefault()
-    const missing = [
-      !brief.title?.trim() && "Add a project title",
-      !brief.problem?.trim() && "Describe the problem",
-      !brief.community?.trim() && "Describe the community affected",
-    ].filter(Boolean) as string[]
+    const missing = REQUIRED.filter((r) => !text(r.key).trim())
     setErrors(missing)
     if (missing.length) return
-    const at = nowLabel()
-    setBriefs((prev) => [...prev, { ...brief, id: newId(), submittedAt: at }])
+    const brief: Brief = {}
+    for (const f of BRIEF_FIELDS) {
+      const value = text(f.key).trim()
+      if (!value) continue
+      Object.assign(brief, { [f.key]: f.list ? asList(value) : value })
+    }
+    setBriefs((prev) => [...prev, { ...brief, id: newId(), submittedAt: nowLabel() }])
     setSubmitted(brief.title ?? "Your brief")
   }
 
   if (submitted) {
     return (
-      <div role="status" className="h-fit rounded-2xl border-2 border-archetype bg-archetype-soft p-6">
-        <h2 className="text-xl font-bold">Brief sent for review</h2>
+      <div className="h-fit rounded-2xl border-2 border-archetype bg-archetype-soft p-6">
+        <h2 ref={doneRef} tabIndex={-1} className="text-xl font-bold">
+          Brief sent for review
+        </h2>
         <p className="mt-2">
           &ldquo;{submitted}&rdquo; is with BRIDGEGOOD. In the real service, a person would review it, follow up with
           questions, and look for an ambassador and student team.
@@ -247,6 +336,8 @@ function BriefEditor({ aiBrief }: { aiBrief: Brief }) {
           onClick={() => {
             setSubmitted(null)
             setEdits({})
+            setErrors([])
+            onStartOver()
           }}
         >
           Start another brief
@@ -260,7 +351,7 @@ function BriefEditor({ aiBrief }: { aiBrief: Brief }) {
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
           <h2 id="brief-heading" className="text-xl font-bold">
-            Capstone brief (draft)
+            Project brief (draft)
           </h2>
           <p className="text-sm text-muted-foreground">
             Fills in as you chat. Edit anything: your changes take priority over the assistant&apos;s.
@@ -269,38 +360,56 @@ function BriefEditor({ aiBrief }: { aiBrief: Brief }) {
         <span className="rounded-full bg-muted px-3 py-1 text-xs font-bold">Reviewed by BRIDGEGOOD before matching</span>
       </div>
       {errors.length > 0 && (
-        <div role="alert" className="rounded-lg border-2 border-destructive p-3">
-          <p className="font-bold">Before sending:</p>
-          <ul className="list-disc pl-5 text-destructive">
+        <div ref={summaryRef} tabIndex={-1} role="alert" aria-labelledby="brief-errors-title" className="rounded-lg border-2 border-destructive p-3">
+          <p id="brief-errors-title" className="font-bold">
+            Before sending:
+          </p>
+          <ul className="list-disc pl-5">
             {errors.map((er) => (
-              <li key={er}>{er}</li>
+              <li key={er.key}>
+                <a href={`#brief-field-${er.key}`} className="font-medium text-destructive underline underline-offset-4">
+                  {er.message}
+                </a>
+              </li>
             ))}
           </ul>
         </div>
       )}
       <div className="grid gap-4 lg:grid-cols-2">
         {BRIEF_FIELDS.map((f) => {
-          const raw = brief[f.key]
-          const value = Array.isArray(raw) ? raw.join("\n") : (raw ?? "")
           const fromAi = aiBrief[f.key] !== undefined && edits[f.key] === undefined
           const id = `brief-field-${f.key}`
+          const error = errors.find((er) => er.key === f.key)
+          const describedBy = [f.list && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(" ") || undefined
+          const fieldProps = {
+            id,
+            value: text(f.key),
+            "aria-invalid": error ? true : undefined,
+            "aria-describedby": describedBy,
+            onChange: (e: { target: { value: string } }) => setEdits((prev) => ({ ...prev, [f.key]: e.target.value })),
+          }
           return (
             <div key={f.key} className={cn("space-y-1", (f.long || f.list) && "lg:col-span-2")}>
               <Label htmlFor={id} className="font-bold">
                 {f.label}
                 {fromAi && <span className="ml-2 rounded bg-archetype-soft px-1.5 py-0.5 text-xs font-semibold text-archetype">AI draft</span>}
               </Label>
-              {f.list && <p className="text-xs text-muted-foreground">One per line</p>}
-              {f.long || f.list ? (
-                <Textarea id={id} value={value} rows={f.list ? 3 : 2} onChange={(e) => setField(f.key, e.target.value, f.list)} />
-              ) : (
-                <Input id={id} value={value} onChange={(e) => setField(f.key, e.target.value)} />
+              {f.list && (
+                <p id={`${id}-hint`} className="text-xs text-muted-foreground">
+                  One per line
+                </p>
               )}
+              {error && (
+                <p id={`${id}-error`} className="text-sm font-semibold text-destructive">
+                  {error.message}
+                </p>
+              )}
+              {f.long || f.list ? <Textarea rows={f.list ? 3 : 2} {...fieldProps} /> : <Input {...fieldProps} />}
             </div>
           )
         })}
       </div>
-      <Button type="submit" size="lg" className="bg-archetype text-white hover:bg-archetype/90">
+      <Button type="submit" size="lg" className="bg-archetype text-on-archetype hover:bg-archetype/90">
         Send brief to BRIDGEGOOD
       </Button>
     </form>

@@ -4,16 +4,17 @@
 
 ## Stack
 
-Next.js 16 (App Router, `src/`, Cache Components on), Tailwind 4, shadcn/ui on Base UI (`render` prop, not `asChild`), zod 4, and AI SDK v7 (docs in `node_modules/ai/docs`). Deploy on Vercel.
+React Router 7 in framework mode on Vite 8 (`src/` is the app directory, server rendering on), React 19, TanStack Query 5, Tailwind 4, shadcn/ui on Base UI (`render` prop, not `asChild`), zod 4, and AI SDK v7 (docs in `node_modules/ai/docs`). No database: demo data lives in the browser. Deploy on Vercel (the `@vercel/react-router` preset switches on when `VERCEL` is set).
 
-- Layout is **desktop-first**. Public pages use `AppShell`. Role areas (`src/app/{student,mentor,ambassador,partner}`) use `RoleShell` with a sidebar driven by `ROLE_INFO` in `src/lib/roles.ts`.
-- Login is a demo cookie (`bgx-session`), guarded by `src/proxy.ts`. Interactive data goes through `useCollection` in `src/lib/demo-store.ts`.
-- Brand tokens are in `src/app/globals.css`. See `docs/design-system.md` before changing styles or copy.
+- Routes are listed in `src/routes.ts`; route modules live in `src/routes/`. Use `meta` exports with `pageMeta()` from `src/lib/meta.ts` for titles.
+- Layout is **desktop-first**. Public pages use `AppShell`. Role areas (`src/routes/{student,mentor,ambassador,partner}`) use a layout route with `RoleShell` and a sidebar driven by `ROLE_INFO` in `src/lib/roles.ts`.
+- Login is a demo cookie (`bgx-session`, httpOnly) handled in `src/lib/session.server.ts`. Each role layout's `loader` calls `requireRole`, and the root loader exposes the role to `useSessionRole()`. Interactive data goes through `useCollection` in `src/lib/demo-store.ts`.
+- Design tokens follow the BRIDGEGOOD Design System (Material 3) and live in `src/app.css`. Icons are Material Symbols Rounded via `<Icon>` in `src/components/icon.tsx`. See `docs/design-system.md` before changing styles or copy.
 
 ## AI features
 
 - Every AI surface must be labelled as AI, leave the human with the final decision (editable output, BRIDGEGOOD review), and never request personal data.
-- Partner scoping lives in `src/app/api/scope/route.ts`.
+- Partner scoping is the resource route `src/routes/api.scope.ts` (validated messages, partner session required, size caps). Server-only helpers are in `src/lib/ai.server.ts`.
 
 Hackathon project for BRIDGEGOOD: codify and scale the Design for Social Good philosophy. The full brief is in `docs/challenge.md`. Read it before proposing concepts or writing content.
 

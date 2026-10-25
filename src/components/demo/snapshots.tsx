@@ -1,6 +1,4 @@
-"use client"
-
-import Link from "next/link"
+import { Link } from "react-router"
 import { useCollection } from "@/lib/demo-store"
 import {
   DEMO_MENTOR,
@@ -20,7 +18,7 @@ function Stat({ label, value, href, cta }: { label: string; value: string | numb
     <div className="flex flex-col gap-1 rounded-2xl border bg-card p-5">
       <p className="text-sm font-bold text-muted-foreground">{label}</p>
       <p className="font-heading text-3xl font-bold">{value}</p>
-      <Link href={href} className="mt-auto inline-flex min-h-11 items-center font-semibold text-archetype underline underline-offset-4">
+      <Link to={href} className="mt-auto inline-flex min-h-12 items-center font-semibold text-archetype underline underline-offset-4">
         {cta}
       </Link>
     </div>

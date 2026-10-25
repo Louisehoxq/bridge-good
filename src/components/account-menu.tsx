@@ -1,8 +1,5 @@
-"use client"
-
-import Link from "next/link"
-import { LogInIcon } from "lucide-react"
-import { logout } from "@/app/actions"
+import { Form, Link } from "react-router"
+import { Icon } from "@/components/icon"
 import { ROLE_INFO } from "@/lib/roles"
 import { useSessionRole } from "@/lib/session"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -23,8 +20,8 @@ export function AccountMenu() {
 
   if (!role) {
     return (
-      <Link href="/login" className={buttonVariants({ size: "default", className: "hidden md:inline-flex" })}>
-        <LogInIcon aria-hidden="true" />
+      <Link to="/login" className={buttonVariants({ size: "default", className: "hidden md:inline-flex" })}>
+        <Icon name="login" />
         Log in
       </Link>
     )
@@ -38,19 +35,19 @@ export function AccountMenu() {
         <span className="text-muted-foreground">Signed in as {info.label.toLowerCase()} (demo)</span>
       </p>
       <span
-        className="flex size-10 items-center justify-center rounded-full bg-archetype font-bold text-white"
+        className="flex size-10 items-center justify-center rounded-full bg-archetype font-bold text-on-archetype"
         aria-hidden="true"
       >
         {info.demoAccount.name.charAt(0)}
       </span>
-      <Link href="/login" className={buttonVariants({ variant: "ghost", size: "sm", className: "hidden xl:inline-flex" })}>
+      <Link to="/login" className={buttonVariants({ variant: "ghost", size: "sm", className: "hidden xl:inline-flex" })}>
         Switch role
       </Link>
-      <form action={logout}>
+      <Form method="post" action="/logout">
         <Button type="submit" variant="outline" size="sm">
           Log out
         </Button>
-      </form>
+      </Form>
     </div>
   )
 }
@@ -60,8 +57,8 @@ export function SheetAccount() {
   const role = useSessionRole()
   if (!role) {
     return (
-      <Link href="/login" className={buttonVariants({ className: "w-full" })}>
-        <LogInIcon aria-hidden="true" />
+      <Link to="/login" className={buttonVariants({ className: "w-full" })}>
+        <Icon name="login" />
         Log in
       </Link>
     )
@@ -73,18 +70,18 @@ export function SheetAccount() {
         <span className="block font-bold">{info.demoAccount.name}</span>
         <span className="text-sm text-muted-foreground">Signed in as {info.label.toLowerCase()} (demo)</span>
       </p>
-      <Link href={info.home} className={buttonVariants({ size: "sm", className: "w-full bg-archetype text-white hover:bg-archetype/90" })}>
+      <Link to={info.home} className={buttonVariants({ size: "sm", className: "w-full bg-archetype text-on-archetype hover:bg-archetype/90" })}>
         My {info.label.toLowerCase()} area
       </Link>
       <div className="flex gap-2">
-        <Link href="/login" className={buttonVariants({ variant: "outline", size: "sm" })}>
+        <Link to="/login" className={buttonVariants({ variant: "outline", size: "sm" })}>
           Switch role
         </Link>
-        <form action={logout}>
+        <Form method="post" action="/logout">
           <Button type="submit" variant="outline" size="sm">
             Log out
           </Button>
-        </form>
+        </Form>
       </div>
     </div>
   )

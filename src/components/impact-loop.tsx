@@ -33,13 +33,13 @@ export function ImpactLoop({ current }: { current?: Role }) {
                 <span
                   className={cn(
                     "flex size-8 items-center justify-center rounded-full text-sm font-bold",
-                    step.roles.length ? "bg-archetype text-white" : "bg-foreground text-background"
+                    step.roles.length ? "bg-archetype text-on-archetype" : "bg-foreground text-background"
                   )}
                   aria-hidden="true"
                 >
                   {i + 1}
                 </span>
-                {isYou && <span className="rounded-full bg-archetype px-2.5 py-0.5 text-xs font-bold text-white">You are here</span>}
+                {isYou && <span className="rounded-full bg-archetype px-2.5 py-0.5 text-xs font-bold text-on-archetype">You are here</span>}
               </div>
               <h3 className="font-bold">{step.title}</h3>
               <p className="mt-1 text-muted-foreground">{step.body}</p>
