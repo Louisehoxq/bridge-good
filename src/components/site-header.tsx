@@ -10,7 +10,7 @@ import { Wordmark } from "@/components/wordmark"
 /** Desktop-first top bar. Below lg the links collapse into a sheet; below md account actions move there too. */
 export function SiteHeader({ role }: { role?: Role }) {
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/85">
+    <header className="sticky top-0 z-40 print:hidden border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/85">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-6 px-4 sm:px-6 lg:px-8">
         <Link to="/" className="rounded-md" aria-label="BridgeGoodx home">
           <Wordmark />

@@ -4,7 +4,7 @@ import { ErrorSummary, RadioGroup, TextField, type FieldErrors } from "@/compone
 import { Icon } from "@/components/icon"
 import { Button } from "@/components/ui/button"
 import { newId, nowLabel } from "@/lib/demo-store"
-import { addReply, allowedEffects, decide, DecisionError, EFFECT_INFO, nextVersion, type DecisionInput } from "@/lib/feedback/logic"
+import { addReply, allowedEffects, canReply as canReplyTo, decide, DecisionError, EFFECT_INFO, nextVersion, type DecisionInput } from "@/lib/feedback/logic"
 import { useChangelog, useFeedbackItems, useFieldNotes, useFramework, useWordingVersions } from "@/lib/feedback/store"
 import type { Effect, FeedbackItem } from "@/lib/feedback/types"
 import { accountFor } from "@/lib/roles"
@@ -16,6 +16,7 @@ type Outcome = "accepted" | "declined" | "reply"
 function draftText(item: FeedbackItem, effect: Effect | undefined, currentWording: string) {
   if (effect === "wording") return currentWording
   if (effect === "field-note" && item.kind === "adaptation") return [item.changed, item.why, item.happened].filter(Boolean).join(" ")
+  if (effect === "field-note" && item.kind === "outside-community") return item.changed
   return ""
 }
 
@@ -33,7 +34,7 @@ export function DecisionForm({ item }: { item: FeedbackItem }) {
   const [, setWordings] = useWordingVersions()
   const framework = useFramework()
   const effects = allowedEffects(item)
-  const canReply = !!item.from.role
+  const canReply = canReplyTo(item)
   const pillarId = item.target.type === "pillar" ? item.target.id : undefined
   const currentWording = pillarId ? framework.wording(pillarId).text : ""
 
@@ -138,11 +139,11 @@ export function DecisionForm({ item }: { item: FeedbackItem }) {
       {outcome === "accepted" && (effect === "field-note" || effect === "wording") && (
         <TextField
           id={ids.text}
-          label={effect === "wording" ? "New official wording" : "Field note, as it will appear on the pillar page"}
+          label={effect === "wording" ? "New official wording" : `Field note, as it will appear on the ${item.target.type === "practice" ? "practice moment" : "pillar page"}`}
           hint={
             effect === "wording"
               ? `Starts from the current wording. Publishes version ${nextVersion(framework.version)}.`
-              : "Starts from the chapter's own words. Keep their meaning; they're credited only if they said yes."
+              : "Starts from the sender's own words. Keep their meaning; they're credited only if they said yes."
           }
           value={text}
           onChange={setText}

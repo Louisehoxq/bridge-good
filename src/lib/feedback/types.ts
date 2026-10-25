@@ -1,4 +1,5 @@
 import type { StudioRole } from "@/components/studio/role-badge"
+import type { GroupType } from "@/content/carry-forward"
 import type { PillarId, ReflectionPromptId } from "@/content/framework"
 
 /**
@@ -6,7 +7,7 @@ import type { PillarId, ReflectionPromptId } from "@/content/framework"
  * Nothing here holds personal data. Notes are free text the sender writes, screened for email addresses
  * and phone numbers before they're saved, and senders are the synthetic demo accounts.
  */
-export const FEEDBACK_KINDS = ["adaptation", "didnt-fit", "ai-disagreement", "retrospective", "community"] as const
+export const FEEDBACK_KINDS = ["adaptation", "didnt-fit", "ai-disagreement", "retrospective", "community", "outside-community"] as const
 export type FeedbackKind = (typeof FEEDBACK_KINDS)[number]
 
 /** What the feedback is about. It also tags the item in the inbox. */
@@ -16,6 +17,8 @@ export type FeedbackTarget =
   | { type: "guide"; id: string }
   | { type: "project"; id: string }
   | { type: "framework" }
+  | { type: "practice"; id: string }
+  | { type: "kit" }
 
 /** Who sent it. Aggregated items (AI disagreement counts, community cards) have no role or name. */
 export type FeedbackSender = {
@@ -108,7 +111,20 @@ export type CommunityFeedback = Base & {
   themes: { theme: string; count: number; pillarId?: PillarId }[]
 }
 
-export type FeedbackItem = AdaptationFeedback | DidntFitFeedback | AiDisagreementFeedback | RetrospectiveFeedback | CommunityFeedback
+/**
+ * From a group outside BRIDGEGOOD that ran the carry-it-forward kit. No names and no contact details:
+ * the group checks BRIDGEGOOD's reply with a code. Credit only with consent.
+ */
+export type OutsideCommunityFeedback = Base & {
+  kind: "outside-community"
+  groupType: GroupType
+  changed: string
+  didntFit: string
+  /** The code the group uses to check BRIDGEGOOD's reply, like "BG-7KQ4-M2XP". */
+  replyCode: string
+}
+
+export type FeedbackItem = AdaptationFeedback | DidntFitFeedback | AiDisagreementFeedback | RetrospectiveFeedback | CommunityFeedback | OutsideCommunityFeedback
 
 export type ChangelogType = "published" | "wording" | "field-note" | "noted"
 
@@ -134,10 +150,15 @@ export type ChangelogEntry = {
   synthetic?: boolean
 }
 
-/** A recognized local variant, shown beneath BRIDGEGOOD's official wording on a pillar page. */
+/**
+ * A recognized local variant, shown beneath BRIDGEGOOD's official wording on a pillar page, or beneath
+ * BRIDGEGOOD's reasoning on a practice moment (then `practice` is set and `pillarId` isn't).
+ */
 export type FieldNoteRecord = {
   id: string
-  pillarId: PillarId
+  pillarId?: PillarId
+  /** The practice moment's slug. */
+  practice?: string
   chapter: string
   text: string
   version: string

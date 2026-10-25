@@ -2,6 +2,7 @@ import { useId, useState } from "react"
 import { Link, useSearchParams } from "react-router"
 import { PageHeader } from "@/components/app-shell"
 import { CommunityCard } from "@/components/feedback/community-card"
+import { OutsideBadge } from "@/components/feedback/outside-badge"
 import { KindTag, StatusTag, TargetTag } from "@/components/feedback/tags"
 import { Icon } from "@/components/icon"
 import { RoleBadge, STUDIO_ROLES } from "@/components/studio/role-badge"
@@ -23,6 +24,8 @@ function tagsFor(item: FeedbackItem) {
   const tags: string[] = item.pillarIds.map((p) => `pillar:${p}`)
   if (item.target.type === "guide") tags.push("guides")
   if (item.target.type === "prompt") tags.push("prompts")
+  if (item.target.type === "practice") tags.push("practice")
+  if (item.kind === "outside-community") tags.push("kit")
   return tags
 }
 
@@ -47,8 +50,9 @@ export default function StewardInbox() {
     <>
       <PageHeader title="Inbox">
         Every piece of feedback on the Design for Social Good framework, in one place: local adaptations, &ldquo;this didn&apos;t
-        fit&rdquo; flags, disagreements with the AI, partner retrospectives and community feedback. You decide what changes, always
-        with a reason, and the people who sent it see the outcome.
+        fit&rdquo; flags, disagreements with the AI, partner retrospectives, community feedback, and groups outside BRIDGEGOOD
+        that ran the carry-it-forward kit. You decide what changes, always with a reason, and the people who sent it see the
+        outcome.
       </PageHeader>
 
       {decided && (
@@ -105,6 +109,8 @@ export default function StewardInbox() {
                 ))}
                 <option value="guides">Guides</option>
                 <option value="prompts">Reflection prompts</option>
+                <option value="practice">Practice moments</option>
+                <option value="kit">The carry-it-forward kit</option>
               </NativeSelect>
             </div>
           </fieldset>
@@ -139,6 +145,7 @@ export default function StewardInbox() {
               <li>Only a steward changes BRIDGEGOOD&apos;s official wording. Each change publishes a new version.</li>
               <li>The public changelog credits people only when they said yes.</li>
               <li>AI disagreements and community cards are counts and themes, with no names.</li>
+              <li>Outside communities leave no name or email. They read your reply with a code, so reply in plain words.</li>
             </ul>
           </section>
         </aside>
@@ -179,6 +186,8 @@ function InboxItem({ item }: { item: FeedbackItem }) {
             {sender}
             {item.from.group && item.from.group !== item.from.name ? `, ${item.from.group}` : ""}
           </RoleBadge>
+        ) : item.kind === "outside-community" ? (
+          <OutsideBadge item={item} />
         ) : (
           <span>Counts only, no names</span>
         )}

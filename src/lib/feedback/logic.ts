@@ -1,4 +1,6 @@
+import { GROUP_TYPES } from "@/content/carry-forward"
 import { getPillar, getPrompt, PILLARS, type PillarId } from "@/content/framework"
+import { getPracticeMoment } from "@/content/practice"
 import { GUIDE_SLUGS, GUIDE_TITLES, type GuideSlug } from "@/lib/library"
 import type { Role } from "@/lib/roles"
 import type {
@@ -10,6 +12,7 @@ import type {
   FeedbackKind,
   FeedbackTarget,
   FieldNoteRecord,
+  OutsideCommunityFeedback,
   Reply,
   WordingVersion,
 } from "@/lib/feedback/types"
@@ -25,12 +28,13 @@ export const KIND_INFO: Record<FeedbackKind, { label: string; plural: string }> 
   "ai-disagreement": { label: "AI disagreement", plural: "AI disagreements" },
   retrospective: { label: "Partner retrospective", plural: "Partner retrospectives" },
   community: { label: "Community feedback", plural: "Community feedback" },
+  "outside-community": { label: "Outside community", plural: "Outside communities" },
 }
 
 export const EFFECT_INFO: Record<Effect, { label: string; hint: string }> = {
   "field-note": {
     label: "Show it as a field note",
-    hint: "A recognized local variant, shown beneath BRIDGEGOOD's official wording on the pillar page. The official wording doesn't change.",
+    hint: "A recognized local variant, shown beneath BRIDGEGOOD's official wording on the pillar page, or beneath BRIDGEGOOD's reasoning on a practice moment. The official wording doesn't change.",
   },
   wording: {
     label: "Change BRIDGEGOOD's official wording",
@@ -90,6 +94,10 @@ export function targetLabel(target: FeedbackTarget): string {
       return "A partner project"
     case "framework":
       return "The whole framework"
+    case "practice":
+      return `Practice moment: ${getPracticeMoment(target.id)?.title ?? target.id}`
+    case "kit":
+      return "The carry-it-forward kit"
   }
 }
 
@@ -107,6 +115,10 @@ export function targetHref(target: FeedbackTarget): string | undefined {
       return "/learn/prompts"
     case "guide":
       return `/learn/guides/${target.id}`
+    case "practice":
+      return `/learn/practice/${target.id}`
+    case "kit":
+      return "/learn/carry-it-forward"
     default:
       return undefined
   }
@@ -127,14 +139,32 @@ export function sourceLabel(item: FeedbackItem): string {
       return "A project retrospective from a community partner"
     case "community":
       return `Aggregated community feedback: ${item.source}`
+    case "outside-community":
+      return `${outsideGroup(item, true)} that ran the carry-it-forward kit`
   }
+}
+
+/** An outside group as the public sees it: its name only when it said yes to credit. */
+export function outsideGroup(item: OutsideCommunityFeedback, capital = false) {
+  if (item.credit.consent) return item.credit.as
+  const noun = GROUP_TYPES[item.groupType].noun
+  return capital ? noun[0].toUpperCase() + noun.slice(1) : noun
+}
+
+/** Where a field note came from, as its label shows it: "Local adaptation from …". */
+export function noteSource(item: FeedbackItem): string {
+  if (item.kind === "adaptation") return item.chapter
+  if (item.kind === "outside-community") return `${outsideGroup(item)} outside BRIDGEGOOD`
+  return "a chapter"
 }
 
 /** A heading for the inbox and the detail page. */
 export function itemTitle(item: FeedbackItem): string {
   switch (item.kind) {
     case "adaptation":
-      return `${item.chapter}: ${getPillar(item.pillarIds[0]).name}`
+      return item.target.type === "practice"
+        ? `${item.chapter}: ${getPracticeMoment(item.target.id)?.title ?? "a practice moment"}`
+        : `${item.chapter}: ${getPillar(item.pillarIds[0]).name}`
     case "didnt-fit":
       return `Didn\u2019t fit: ${targetTag(item.target)}`
     case "ai-disagreement":
@@ -143,6 +173,8 @@ export function itemTitle(item: FeedbackItem): string {
       return `Retrospective: ${item.project}`
     case "community":
       return `Community feedback: ${item.source}`
+    case "outside-community":
+      return `Outside community: ${GROUP_TYPES[item.groupType].label.toLowerCase()}`
   }
 }
 
@@ -161,6 +193,8 @@ export function itemSummary(item: FeedbackItem): string {
       return item.change || item.didnt || item.worked
     case "community":
       return `${item.responses} responses. Top theme: ${item.themes[0]?.theme.toLowerCase() ?? "none yet"}.`
+    case "outside-community":
+      return item.changed
   }
 }
 
@@ -209,10 +243,14 @@ export function openDisagreementGroups(records: DisagreementRecord[], items: Fee
 
 // Decisions ------------------------------------------------------------------------------------------
 
-/** What an accepted item can do. Only adaptations become field notes; only pillar items change wording. */
+/**
+ * What an accepted item can do. Local adaptations (on a pillar or a practice moment) and outside groups'
+ * changes on a pillar can become field notes; only pillar items change wording.
+ */
 export function allowedEffects(item: FeedbackItem): Effect[] {
   const onPillar = item.target.type === "pillar"
-  if (item.kind === "adaptation") return onPillar ? ["field-note", "wording"] : ["noted"]
+  if (item.kind === "adaptation") return onPillar ? ["field-note", "wording"] : item.target.type === "practice" ? ["field-note", "noted"] : ["noted"]
+  if (item.kind === "outside-community") return onPillar ? ["field-note", "noted"] : ["noted"]
   if (item.kind === "didnt-fit") return onPillar ? ["noted", "wording"] : ["noted"]
   return ["noted"]
 }
@@ -272,19 +310,24 @@ export function decide(item: FeedbackItem, input: DecisionInput, ctx: DecisionCo
   const decided: FeedbackItem = { ...item, status: "accepted", decision: { ...base, effect, changelogId } }
 
   if (effect === "field-note") {
-    if (item.kind !== "adaptation" || item.target.type !== "pillar") throw new DecisionError("effect", "Only a local adaptation on a pillar can become a field note.")
-    if (!text) throw new DecisionError("text", "Write the field note as it will appear on the pillar page.")
-    const pillar = getPillar(item.target.id)
+    const { target } = item
+    const practice = target.type === "practice" ? getPracticeMoment(target.id) : undefined
+    if (!(item.kind === "adaptation" || item.kind === "outside-community") || !(target.type === "pillar" || practice))
+      throw new DecisionError("effect", "Only a local adaptation on a pillar or a practice moment can become a field note.")
+    if (!text) throw new DecisionError("text", `Write the field note as it will appear on the ${practice ? "practice moment" : "pillar page"}.`)
+    const chapter = noteSource(item)
+    const where = practice ? practice.title : getPillar((target as { id: PillarId }).id).name
+    const at = practice ? { practice: practice.slug } : { pillarId: (target as { id: PillarId }).id }
     return {
       item: decided,
       changelog: {
         ...entry,
         version: ctx.version,
         type: "field-note",
-        title: `Field note: ${pillar.name}, ${item.chapter}`,
-        summary: summary || `Recognized as a local variant on the ${pillar.name} pillar.`,
+        title: `Field note: ${where}, ${chapter}`,
+        summary: summary || (practice ? `Recognized as a local variant on the practice moment ${where}.` : `Recognized as a local variant on the ${where} pillar.`),
       },
-      fieldNote: { id: ctx.newId(), pillarId: pillar.id, chapter: item.chapter, text, version: ctx.version, at: ctx.now, changelogId, credit },
+      fieldNote: { id: ctx.newId(), ...at, chapter, text, version: ctx.version, at: ctx.now, changelogId, credit },
     }
   }
 
@@ -347,6 +390,33 @@ export function changeWording(
     },
     wording: { id: ctx.newId(), pillarId, version, meaning: text, at: ctx.now, changelogId },
   }
+}
+
+/** Whether the steward can reply: the sender is a demo account, or an outside group with a reply code. */
+export function canReply(item: FeedbackItem) {
+  return !!item.from.role || item.kind === "outside-community"
+}
+
+// Reply codes ----------------------------------------------------------------------------------------
+
+/** No 0/O, 1/I/L or 5/S, so a code read aloud or copied by hand still works. */
+const CODE_ALPHABET = "ABCDEFGHJKMNPQRTUVWXYZ2346789"
+
+/** A code like "BG-7KQ4-M2XP" an outside group uses to check BRIDGEGOOD's reply, instead of an email. */
+export function newReplyCode(random: (n: number) => Uint8Array = (n) => crypto.getRandomValues(new Uint8Array(n))) {
+  const chars = [...random(8)].map((b) => CODE_ALPHABET[b % CODE_ALPHABET.length]).join("")
+  return `BG-${chars.slice(0, 4)}-${chars.slice(4)}`
+}
+
+/** Accepts a code typed loosely: any case, spaces or no dashes. */
+export function normalizeReplyCode(code: string) {
+  const raw = code.toUpperCase().replace(/[^A-Z0-9]/g, "").replace(/^BG/, "")
+  return raw.length === 8 ? `BG-${raw.slice(0, 4)}-${raw.slice(4)}` : ""
+}
+
+export function findByReplyCode(items: FeedbackItem[], code: string) {
+  const wanted = normalizeReplyCode(code)
+  return wanted ? items.find((i): i is OutsideCommunityFeedback => i.kind === "outside-community" && i.replyCode === wanted) : undefined
 }
 
 /** Adds a reply. A steward's reply on an open item moves it to "in conversation". */

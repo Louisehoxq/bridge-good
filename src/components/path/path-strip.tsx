@@ -19,7 +19,7 @@ function Strip({ pathKey, role, label }: { pathKey: PathKey; role: string; label
   const step = linked >= 0 ? linked : current
 
   return (
-    <aside aria-label="Your path" data-archetype={role} className="border-b bg-archetype-soft">
+    <aside aria-label="Your path" data-archetype={role} className="border-b bg-archetype-soft print:hidden">
       <p className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-3 gap-y-1 px-4 py-2 sm:px-6 lg:px-8">
         <span>
           <span className="sr-only">{label}: </span>

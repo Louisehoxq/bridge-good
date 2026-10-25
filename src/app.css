@@ -185,6 +185,25 @@
   }
 }
 
+/* Print (the carry-it-forward kit): always the light palette on white paper, whatever the screen theme. */
+@media print {
+  :root {
+    color-scheme: light;
+    --paper: #ffffff;
+    --surface: #ffffff;
+    --surface-sunken: #f3ede1;
+    --ink: #1f2a44;
+    --ink-muted: #3e4760;
+    --action: #1f3a6b;
+    --on-action: #ffffff;
+    --line: #e2d9c8;
+    --line-strong: #767066;
+    --note: #fff1b8;
+    --gold: #cc9900;
+    --note-shadow: none;
+  }
+}
+
 /*
  * Role scopes: set data-archetype on a container, then use text-archetype, bg-archetype-soft,
  * border-archetype, or bg-archetype with text-on-archetype. Chapter lead and company host are two kinds

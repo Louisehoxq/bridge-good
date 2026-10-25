@@ -9,6 +9,7 @@ import { TRAINING, type Audience } from "@/content/training"
  */
 export const LIBRARY_SECTIONS = [
   { id: "framework", label: "The framework" },
+  { id: "practice", label: "Practice and carry it forward" },
   { id: "tracks", label: "Role tracks" },
   { id: "guides", label: "Guides" },
   { id: "joining", label: "Joining" },
@@ -82,6 +83,18 @@ export const LIBRARY: LibraryEntry[] = [
     title: "Changelog",
     section: "framework",
     summary: "Every version of the framework, what BRIDGEGOOD changed, why, and whose feedback it came from.",
+  },
+  {
+    href: "/learn/practice",
+    title: "Practice moments",
+    section: "practice",
+    summary: "Short dilemmas from real projects. Make a call, then see how BRIDGEGOOD reasons about it. Never scored.",
+  },
+  {
+    href: "/learn/carry-it-forward",
+    title: "Carry it forward kit",
+    section: "practice",
+    summary: "Run a critique circle in your own community, without BRIDGEGOOD in the room. Printable, with prompt cards and a credit line.",
   },
   ...TRACKS.map((t) => ({ href: `/learn/tracks/${t.slug}`, title: t.title, section: "tracks" as const, summary: TRAINING[t.audience].tagline })),
   ...GUIDE_SLUGS.map((g) => ({ href: `/learn/guides/${g}`, title: GUIDE_TITLES[g].title, section: "guides" as const, summary: GUIDE_TITLES[g].summary })),

@@ -4,6 +4,7 @@ import routes from "../src/routes"
 import { PILLARS } from "../src/content/framework"
 import { AUDIENCES } from "../src/content/training"
 import { GUIDE_SLUGS, TRACKS } from "../src/lib/library"
+import { PRACTICE_MOMENTS } from "../src/content/practice"
 import { SEED_FEEDBACK } from "../src/content/feedback-seed"
 import { ALL_ROLES, type Role } from "../src/lib/roles"
 
@@ -17,6 +18,7 @@ const PATH_PARAMS: Record<string, readonly string[]> = {
   "learn/pillars/:pillarId": PILLARS.map((p) => p.id),
   "learn/tracks/:slug": TRACKS.map((t) => t.slug),
   "learn/guides/:slug": GUIDE_SLUGS,
+  "learn/practice/:slug": PRACTICE_MOMENTS.map((m) => m.slug),
   // Every seeded kind and status, plus an open AI disagreement group.
   "steward/feedback/:id": [...SEED_FEEDBACK.map((f) => f.id), "ai-responsible-ai"],
 }

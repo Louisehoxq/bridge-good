@@ -12,6 +12,7 @@ export const KIND_ICON: Record<FeedbackKind, IconName> = {
   "ai-disagreement": "bot",
   retrospective: "heart-handshake",
   community: "users",
+  "outside-community": "globe",
 }
 
 const STATUS: Record<FeedbackStatus, { label: string; icon: IconName; className: string }> = {

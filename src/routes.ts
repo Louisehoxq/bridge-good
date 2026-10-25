@@ -26,6 +26,10 @@ export default [
     route("guides/:slug", "routes/learn/guide.tsx"),
     route("self-check", "routes/learn/self-check.tsx"),
     route("changelog", "routes/learn/changelog.tsx"), // Milestone 3
+    route("practice", "routes/learn/practice.tsx"),
+    route("practice/:slug", "routes/learn/practice-moment.tsx"),
+    route("carry-it-forward", "routes/learn/carry-it-forward.tsx"),
+    route("carry-it-forward/reply", "routes/learn/kit-reply.tsx"),
   ]),
 
   area("student", ["practice", "projects", "submissions", "reflection", "mentor", "community"]),
