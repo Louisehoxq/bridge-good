@@ -38,7 +38,7 @@ export function TrainingTrack({ audience, headingLevel = 2 }: { audience: Audien
                   {m.outcomes.join(" · ")}
                 </p>
                 {m.pillarIds && (
-                  <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Pillars">
+                  <ul className="mt-3 flex flex-wrap gap-x-1.5 gap-y-2" aria-label="Pillars">
                     {m.pillarIds.map((id) => (
                       <li key={id}>
                         <PillarChip id={id} />

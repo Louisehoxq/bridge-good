@@ -72,13 +72,17 @@ export function LibraryPage({ href, title, intro, children }: { href: string; ti
   )
 }
 
-/** A link to a pillar's library page. A 10px-radius link, not a pill: tags are round, links and controls aren't. */
+/**
+ * A link to a pillar's library page. A 10px-radius link, not a pill: tags are round, links and controls aren't.
+ * It looks 40px tall, and an invisible layer pads the hit area to 48px (DESIGN.md target size). Lists of these
+ * need at least 8px between rows so the padded areas don't overlap.
+ */
 export function PillarChip({ id }: { id: PillarId }) {
   const pillar = getPillar(id)
   return (
     <Link
       to={`/learn/pillars/${id}`}
-      className="inline-flex min-h-8 items-center rounded-md border border-input bg-card px-2.5 type-small font-semibold text-primary underline-offset-4 hover:underline"
+      className="relative inline-flex min-h-10 items-center rounded-md border border-input bg-card px-3 type-small font-semibold text-primary underline-offset-4 after:absolute after:inset-x-0 after:-inset-y-1 after:content-[''] hover:underline"
     >
       <span className="sr-only">Pillar: </span>
       {pillar.name}
@@ -102,7 +106,7 @@ export function PromptList({ prompts, showPillars }: { prompts: (ReflectionPromp
               {p.text}
             </p>
             {showPillars && (
-              <ul className="flex flex-wrap gap-1.5" aria-label="Pillars">
+              <ul className="flex flex-wrap gap-x-1.5 gap-y-2" aria-label="Pillars">
                 {p.pillarIds.map((id) => (
                   <li key={id}>
                     <PillarChip id={id} />

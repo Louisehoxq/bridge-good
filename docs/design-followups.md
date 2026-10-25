@@ -23,6 +23,10 @@ This tracks how far the pages follow `DESIGN.md`, and records the accessibility 
 | `RoleBadge` | Login cards, the account menu and sheet menu, the sidebar (and the tab strip on small screens), the welcome page's "Start where you are", the impact loop, the principles table headers, and "Reviewed by BRIDGEGOOD" (steward). |
 | `JourneyStepper` style | The role path stepper now uses the same marks: a check for done, a filled role color for the current step, outlined for later steps, and a dotted gold line joining the stages. |
 
+### Target size (DESIGN.md §7, WCAG 2.5.8)
+
+- Pillar links were 32px tall. They now look 40px tall, with an invisible layer padding the hit area to 48px (the same approach as the small buttons). Rows of them have 8px between them so the padded areas don't overlap.
+
 ### Content organization (evaluation section 2c)
 
 - **Welcome (`/`)** is shorter and organized around the 5 pillars. Order: hero with "Start where you are" (one card per role, linking to that role's library track, plus log in), the five pillars, "How BRIDGEGOOD works with everyone involved" (the 6 principles, with the by-role table behind a disclosure), the impact loop, and who the philosophy belongs to.
@@ -88,7 +92,6 @@ The team path stacks as a plain list below 640px and hides the curve, so it neve
 
 - **A real VoiceOver (or NVDA) pass** on a device, especially the scoping studio and the companion with a live model. The tree review above isn't a substitute.
 - **Live AI check:** both AI surfaces were checked with mocked replies only. Run them once with an API key.
-- **Pillar links** are 32px tall: they pass WCAG 2.5.8 (24px), but they're below Bridge Studio's 48px target.
 - **Field notes:** `FieldNote` is still only on `/design`. It belongs under official wording once chapters can adapt it, which is the milestone 3 feedback loop.
 - **Reading level:** the grade 8 check from `DESIGN.md` §8 hasn't been run on the content.
 - **Logo:** the wordmark is still a text placeholder until BRIDGEGOOD supplies the SVGs.
