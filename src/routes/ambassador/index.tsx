@@ -74,7 +74,6 @@ function ChapterLeadOverview() {
           </li>
         ))}
       </ul>
-      <p className="text-muted-foreground">Counts come from synthetic example projects.</p>
     </div>
   )
 }
