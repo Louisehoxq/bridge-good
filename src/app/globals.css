@@ -29,8 +29,10 @@
   --color-student-soft: var(--student-soft);
   --color-ambassador: var(--ambassador);
   --color-ambassador-soft: var(--ambassador-soft);
-  --color-problem-owner: var(--problem-owner);
-  --color-problem-owner-soft: var(--problem-owner-soft);
+  --color-mentor: var(--mentor);
+  --color-mentor-soft: var(--mentor-soft);
+  --color-partner: var(--partner);
+  --color-partner-soft: var(--partner-soft);
   --color-archetype: var(--archetype);
   --color-archetype-soft: var(--archetype-soft);
   --radius-sm: calc(var(--radius) * 0.6);
@@ -68,13 +70,15 @@
   --ring: #1d4ed8;
   --radius: 0.75rem;
 
-  /* One colour per archetype, each at least 4.5:1 against white. */
+  /* One colour per role, each at least 4.5:1 against white. */
   --student: #0f5e63;
   --student-soft: #e3f1f1;
+  --mentor: #2c5d8f;
+  --mentor-soft: #e5eef7;
   --ambassador: #5b3a99;
   --ambassador-soft: #eee8f7;
-  --problem-owner: #a63d14;
-  --problem-owner-soft: #fbeae2;
+  --partner: #a63d14;
+  --partner-soft: #fbeae2;
 
   --archetype: var(--primary);
   --archetype-soft: var(--secondary);
@@ -88,9 +92,13 @@
   --archetype: var(--ambassador);
   --archetype-soft: var(--ambassador-soft);
 }
-[data-archetype="problem-owner"] {
-  --archetype: var(--problem-owner);
-  --archetype-soft: var(--problem-owner-soft);
+[data-archetype="mentor"] {
+  --archetype: var(--mentor);
+  --archetype-soft: var(--mentor-soft);
+}
+[data-archetype="partner"] {
+  --archetype: var(--partner);
+  --archetype-soft: var(--partner-soft);
 }
 
 @layer base {

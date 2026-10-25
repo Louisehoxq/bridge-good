@@ -1,12 +1,12 @@
 import { MapPinIcon, UsersIcon, AccessibilityIcon } from "lucide-react"
 import { PROBLEMS, STATUS_LABEL, type ProblemStatus } from "@/content/problems"
-import { SyntheticBadge } from "@/components/section"
+import { SyntheticBadge } from "@/components/synthetic-badge"
 
 export function ProblemBoard({ status }: { status?: ProblemStatus[] }) {
   const problems = status ? PROBLEMS.filter((p) => status.includes(p.status)) : PROBLEMS
 
   return (
-    <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
       {problems.map((p) => (
         <li key={p.id}>
           <article aria-labelledby={`${p.id}-title`} className="flex h-full flex-col gap-3 rounded-xl border bg-card p-5">
@@ -21,6 +21,13 @@ export function ProblemBoard({ status }: { status?: ProblemStatus[] }) {
             </h3>
             <p className="text-sm text-muted-foreground">{p.organisationType}</p>
             <p>{p.summary}</p>
+            {p.outcome && (
+              <p className="rounded-lg bg-archetype-soft p-3 text-sm">
+                <span className="font-bold">Outcome: </span>
+                {p.outcome}
+                {p.team && <span className="mt-1 block text-muted-foreground">Team: {p.team}</span>}
+              </p>
+            )}
             <dl className="mt-auto space-y-1.5 text-sm">
               <div className="flex gap-2">
                 <dt>

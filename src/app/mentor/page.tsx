@@ -1,0 +1,24 @@
+import type { Metadata } from "next"
+import { PageHeader } from "@/components/app-shell"
+import { ImpactLoop } from "@/components/impact-loop"
+import { MentorSnapshot } from "@/components/demo/snapshots"
+import { ROLE_INFO } from "@/lib/roles"
+
+export const metadata: Metadata = { title: "Mentor overview" }
+
+export default function MentorHome() {
+  return (
+    <>
+      <PageHeader eyebrow="Mentor area" title={`Welcome back, ${ROLE_INFO.mentor.demoAccount.name.split(" ")[0]}`}>
+        Thank you for mentoring. Care, honesty and encouragement are what make this work.
+      </PageHeader>
+      <MentorSnapshot />
+      <section aria-labelledby="loop-title" className="mt-12">
+        <h2 id="loop-title" className="mb-6 text-2xl font-bold">
+          Where you fit
+        </h2>
+        <ImpactLoop current="mentor" />
+      </section>
+    </>
+  )
+}
