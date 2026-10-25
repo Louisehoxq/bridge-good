@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Practice moments and kit mockups</title>
+<meta name="description" content="Rough mockups of practice moments and the carry-it-forward kit for BridgeGoodx. All scenarios and people are synthetic examples.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600&display=swap">
+<style>
+:root {
+  color-scheme: light;
+  --paper: #FAF6EE; --surface: #FFFFFF; --surface-sunken: #F3EDE1;
+  --ink: #1F2A44; --ink-muted: #3E4760; --action: #1F3A6B; --on-action: #FFFFFF;
+  --line: #E2D9C8; --line-strong: #767066; --marker: #F6D57A; --note: #FFF1B8; --gold: #CC9900;
+  --draft: #5B4B9A; --draft-soft: #EEEAF8; --success: #2B6A3F; --success-soft: #E3F1E6;
+  --apprentice: #2A4F95; --apprentice-soft: #E6ECF7; --mentor: #2F6B4F; --mentor-soft: #E2F0E7;
+  --ambassador: #6A3F86; --ambassador-soft: #EFE7F5; --partner: #8A4B12; --partner-soft: #F7EADB;
+  --font-body: "Atkinson Hyperlegible Next", system-ui, sans-serif; --font-head: "Bricolage Grotesque", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --paper: #14181F; --surface: #1C222B; --surface-sunken: #10141A;
+    --ink: #EDE8DE; --ink-muted: #C4BFB4; --action: #A9C1EC; --on-action: #14181F;
+    --line: #2E3642; --line-strong: #8A8F99; --marker: #5C4A12; --note: #3A3216; --gold: #D9AE3C;
+    --draft: #BDB2F0; --draft-soft: #25213A; --success: #93CFA4; --success-soft: #1A2E22;
+    --apprentice: #9DB8EE; --apprentice-soft: #1E2A40; --mentor: #8FCBAA; --mentor-soft: #1A2E25;
+    --ambassador: #C9AEE0; --ambassador-soft: #2A2036; --partner: #E7B07A; --partner-soft: #33261A;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 1rem/1.625 var(--font-body); }
+h1, h2, h3 { font-family: var(--font-head); font-weight: 600; line-height: 1.2; margin: 0; }
+h1 { font-size: 2.25rem; } h2 { font-size: 1.75rem; } h3 { font-size: 1.375rem; }
+p { margin: 0; } a { color: var(--action); text-underline-offset: 3px; }
+:focus-visible { outline: 3px solid var(--action); outline-offset: 2px; }
+.wrap { max-width: 72rem; margin: 0 auto; padding: 0 24px; }
+.stack > * + * { margin-top: 16px; }
+.row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.muted { color: var(--ink-muted); } .small { font-size: .875rem; line-height: 1.375rem; }
+.section { padding: 48px 0; border-bottom: 1px solid var(--line); }
+.label { display: inline-block; font-size: .875rem; font-weight: 600; color: var(--ink-muted); }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
+.sunken { background: var(--surface-sunken); border-radius: 16px; padding: 20px; }
+.grid { display: grid; gap: 16px; }
+.g3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
+.g2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); }
+.tag { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; font-size: .875rem; font-weight: 600; }
+.t-pillar { background: var(--surface-sunken); color: var(--ink); }
+.t-apprentice { background: var(--apprentice-soft); color: var(--apprentice); }
+.t-mentor { background: var(--mentor-soft); color: var(--mentor); }
+.t-partner { background: var(--partner-soft); color: var(--partner); }
+.t-ambassador { background: var(--ambassador-soft); color: var(--ambassador); }
+.t-synthetic { background: var(--surface-sunken); color: var(--ink-muted); font-weight: 400; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 20px; border-radius: 10px; font: 600 1rem/1.5 var(--font-body); cursor: pointer; border: 1.5px solid transparent; text-decoration: none; }
+.btn-primary { background: var(--action); color: var(--on-action); }
+.btn-secondary { background: var(--surface); color: var(--action); border-color: var(--line-strong); }
+.mark { background: var(--marker); color: var(--ink); padding: 0 4px; border-radius: 2px; }
+.note { background: var(--note); color: var(--ink); border-radius: 2px; padding: 16px 18px; transform: rotate(-0.6deg); }
+.field-note { background: var(--note); border-left: 0; border-radius: 2px; padding: 14px 16px; }
+fieldset { border: 0; margin: 0; padding: 0; } legend { font-weight: 700; font-size: 1.125rem; margin-bottom: 8px; }
+.choice { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border: 1.5px solid var(--line-strong); border-radius: 10px; background: var(--surface); cursor: pointer; min-height: 48px; }
+.choice + .choice { margin-top: 10px; }
+.choice input { width: 22px; height: 22px; margin-top: 2px; accent-color: var(--action); flex-shrink: 0; }
+.choice:has(input:checked) { border-color: var(--action); border-width: 2px; }
+.input { width: 100%; min-height: 48px; padding: 10px 14px; border: 1.5px solid var(--line-strong); border-radius: 10px; background: var(--surface); color: var(--ink); font: inherit; }
+textarea.input { min-height: 88px; }
+.field { display: grid; gap: 6px; } .field label { font-weight: 600; } .hint { font-size: .875rem; color: var(--ink-muted); }
+.reveal[hidden] { display: none; }
+.timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.timeline li { display: grid; grid-template-columns: 3rem 1fr; gap: 16px; align-items: start; }
+.dot { width: 44px; height: 44px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; background: var(--surface); border: 2px solid var(--gold); }
+.prompt-card { background: var(--surface); border: 1.5px dashed var(--line-strong); border-radius: 12px; padding: 18px; min-height: 9rem; display: grid; align-content: space-between; gap: 12px; }
+.prompt-card b { font-family: var(--font-head); font-size: 1.25rem; line-height: 1.3; font-weight: 600; }
+.bar { display: grid; grid-template-columns: 9rem 1fr 3rem; gap: 10px; align-items: center; }
+.bar span.track { height: 12px; border-radius: 999px; background: var(--surface-sunken); overflow: hidden; }
+.bar span.fill { display: block; height: 100%; background: var(--line-strong); }
+.where { border-top: 1px solid var(--line); padding-top: 16px; }
+code { font-family: ui-monospace, monospace; background: var(--surface-sunken); padding: 2px 6px; border-radius: 4px; }
+@media print { .no-print { display: none !important; } .prompt-card { break-inside: avoid; } body { background: #fff; } }
+@media (prefers-reduced-motion: reduce) { .note { transform: none; } }
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<section class="section stack" aria-labelledby="intro">
+  <span class="tag t-synthetic">Rough mockups · synthetic examples · not final content</span>
+  <h1 id="intro">Practice moments and the carry-it-forward kit</h1>
+  <p class="muted" style="max-width:70ch">Two features the milestone 3 evaluation recommends. A <b>practice moment</b> shows how BRIDGEGOOD reasons through a real dilemma, so people practice judgment instead of taking a module. The <b>carry-it-forward kit</b> lets a teacher or community leader run a session without BRIDGEGOOD in the room, while keeping credit and sending what they learned back.</p>
+</section>
+
+<!-- ============ PRACTICE MOMENTS ============ -->
+<section class="section stack" aria-labelledby="pm-title">
+  <span class="label">1 · Practice moments, at <code>/learn/practice</code>, also embedded where decisions happen</span>
+  <h2 id="pm-title">Practice moments</h2>
+
+  <div class="grid g3">
+    <article class="card stack">
+      <div class="row"><span class="tag t-pillar">Design for Good</span><span class="small muted">5 min</span></div>
+      <h3>&ldquo;Can we skip the interviews?&rdquo;</h3>
+      <p class="muted">The deadline is tight and your partner wants to go with what staff already know.</p>
+      <div class="row"><span class="tag t-apprentice">Apprentices</span><span class="tag t-partner">Partners</span></div>
+    </article>
+    <article class="card stack">
+      <div class="row"><span class="tag t-pillar">Responsible AI</span><span class="small muted">5 min</span></div>
+      <h3>&ldquo;The AI wrote the persona&rdquo;</h3>
+      <p class="muted">A teammate used AI to write user personas. They look polished. Nobody talked to anyone.</p>
+      <div class="row"><span class="tag t-apprentice">Apprentices</span><span class="tag t-mentor">Mentors</span></div>
+    </article>
+    <article class="card stack">
+      <div class="row"><span class="tag t-pillar">Ethics &amp; Impact</span><span class="small muted">6 min</span></div>
+      <h3>&ldquo;Pre-tick the consent box&rdquo;</h3>
+      <p class="muted">A partner asks for the newsletter box to be ticked by default, to grow their list.</p>
+      <div class="row"><span class="tag t-apprentice">Apprentices</span><span class="tag t-ambassador">Chapter leads</span></div>
+    </article>
+  </div>
+
+  <article class="card stack" aria-labelledby="pm1" style="margin-top:24px">
+    <div class="row"><span class="tag t-pillar">Design for Good</span><span class="tag t-pillar">Accessibility &amp; Inclusion</span><span class="tag t-synthetic">Synthetic scenario</span></div>
+    <h3 id="pm1" style="font-size:1.75rem">&ldquo;Can we skip the interviews?&rdquo;</h3>
+    <div class="sunken"><p>You're two weeks into a four-week sprint with a food pantry. The intake form confuses families, and many give up. The pantry director says: <i>&ldquo;We're short on time. My staff know what families need. Let's skip interviews and design from what we know.&rdquo;</i></p></div>
+
+    <form class="stack" id="pm-form" novalidate>
+      <fieldset>
+        <legend>What would you do?</legend>
+        <label class="choice"><input type="radio" name="pm" value="a"><span><b>Agree.</b> Staff see families every week, and the deadline is real.</span></label>
+        <label class="choice"><input type="radio" name="pm" value="b"><span><b>Propose something small.</b> Two 20-minute conversations with families at Saturday distribution, then design.</span></label>
+        <label class="choice"><input type="radio" name="pm" value="c"><span><b>Push back.</b> Hold the design until there's a full round of interviews, even if the sprint slips.</span></label>
+      </fieldset>
+      <p class="small muted">There's no score. Your choice stays private unless you share it.</p>
+      <p id="pm-error" class="small" style="color:var(--ink);font-weight:600" hidden>Choose an option first.</p>
+      <button class="btn btn-primary" type="submit">See how BRIDGEGOOD reasons about it</button>
+    </form>
+
+    <div id="pm-reveal" class="reveal stack" hidden aria-labelledby="pm-reveal-title" tabindex="-1">
+      <h4 id="pm-reveal-title" style="font:600 1.375rem/1.3 var(--font-head);margin:0">How BRIDGEGOOD reasons about it</h4>
+      <p>There isn't one right answer, but the reasoning matters. The pantry director knows a lot, and staff knowledge is real evidence. It's still <i>secondhand</i>. The prompts that matter here:</p>
+      <ul class="stack" style="padding-left:20px;margin:0">
+        <li><span class="mark">Are we solving the problem people actually have, or the problem we assume they have?</span> (prompt 4)</li>
+        <li>Whose voice has not been heard yet? (prompt 3)</li>
+        <li>Are we choosing what is easiest for us or what is most useful for the community? (prompt 8)</li>
+      </ul>
+      <p>BRIDGEGOOD teams have often chosen the small option: short conversations where families already are, with consent, and a volunteer interpreter when needed. It respects the deadline <i>and</i> the families. Option C protects the principle but can cost the partner's trust, and option A risks designing for staff instead of families.</p>
+      <div class="sunken stack">
+        <p class="label">What others chose (synthetic data, to start a conversation, not to rank)</p>
+        <div class="bar"><span>Agree</span><span class="track"><span class="fill" style="width:15%"></span></span><span>15%</span></div>
+        <div class="bar"><span>Something small</span><span class="track"><span class="fill" style="width:62%"></span></span><span>62%</span></div>
+        <div class="bar"><span>Push back</span><span class="track"><span class="fill" style="width:23%"></span></span><span>23%</span></div>
+      </div>
+      <div class="row no-print">
+        <button class="btn btn-secondary" type="button">Talk it over with my mentor</button>
+        <button class="btn btn-secondary" type="button">This would play out differently in my community</button>
+      </div>
+      <div class="field-note stack">
+        <p class="small"><b>Field note · Chicago chapter (local adaptation)</b></p>
+        <p>In our chapter, partners often don't have Saturday distributions. We do conversations by phone with a paid community member leading them.</p>
+      </div>
+    </div>
+
+    <div class="where small muted">
+      <b>Where it appears:</b> the apprentice's "Your path" (the mini project step), the mentor's "Prepare" page, and the partner toolkit. <b>Feeds back:</b> "This would play out differently" goes to the steward inbox as a local adaptation, and an accepted one becomes a field note like the one above.
+    </div>
+  </article>
+</section>
+
+<!-- ============ CARRY IT FORWARD ============ -->
+<section class="section stack" aria-labelledby="kit-title">
+  <span class="label">2 · Carry-it-forward kit, at <code>/learn/carry-it-forward</code>: public, no login, printable</span>
+  <h2 id="kit-title">Run a critique circle in your community</h2>
+  <p class="muted" style="max-width:70ch">For teachers, community organizers and design leads who want to practice BRIDGEGOOD's Design for Social Good approach without BRIDGEGOOD staff in the room. You don't need to be a designer.</p>
+  <div class="row"><span class="tag t-pillar">60 minutes</span><span class="tag t-pillar">4–12 people</span><span class="tag t-pillar">One piece of work to discuss</span><span class="tag t-pillar">Printed prompt cards</span></div>
+
+  <div class="grid g2" style="margin-top:8px">
+    <div class="card stack">
+      <h3>The session</h3>
+      <ol class="timeline">
+        <li><span class="dot">1</span><div><b>Set up · 5 min</b><p class="muted">Agree how you'll talk: be kind, credit others' ideas, and don't share anyone's personal story without permission.</p></div></li>
+        <li><span class="dot">2</span><div><b>Share the work · 10 min</b><p class="muted">Someone shows a flyer, a form, a website or a sketch. Say who it's for.</p></div></li>
+        <li><span class="dot">3</span><div><b>Critique with the prompts · 30 min</b><p class="muted">Draw three prompt cards. Talk through each one. Write down what you notice, not who's right.</p></div></li>
+        <li><span class="dot">4</span><div><b>Decide one change · 10 min</b><p class="muted">Agree on one change you'll test with the people the work is for.</p></div></li>
+        <li><span class="dot">5</span><div><b>Tell BRIDGEGOOD · 5 min</b><p class="muted">Share what you changed about the session, and what didn't fit your community.</p></div></li>
+      </ol>
+    </div>
+    <div class="stack">
+      <div class="card stack">
+        <h3>Keep, and adapt</h3>
+        <p><b>Keep</b> (BRIDGEGOOD's core commitments): the people affected help shape the work · access from day one · credit people's ideas · no personal stories without permission.</p>
+        <p><b>Adapt freely:</b> language, examples, timing, which prompts you use, where you meet.</p>
+      </div>
+      <div class="card stack">
+        <h3>Credit line</h3>
+        <p class="sunken small" id="credit">Based on BRIDGEGOOD's Design for Social Good framework, version 1.1 (bridgegood.com). Adapted by <i>[your group]</i>.</p>
+        <button class="btn btn-secondary no-print" type="button" id="copy-credit">Copy credit line</button>
+        <p class="small muted" role="status" id="copy-status"></p>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:24px">Prompt cards <span class="small muted" style="font-family:var(--font-body)">(6 of 12 shown)</span></h3>
+  <div class="grid g3">
+    <div class="prompt-card"><b>Who benefits from this decision?</b><span class="small muted">Prompt 1 · Design for Good</span></div>
+    <div class="prompt-card"><b>Who might be left out?</b><span class="small muted">Prompt 2 · Accessibility &amp; Inclusion</span></div>
+    <div class="prompt-card"><b>Whose voice has not been heard yet?</b><span class="small muted">Prompt 3 · Design for Good</span></div>
+    <div class="prompt-card"><b>Are we solving the problem people actually have, or the problem we assume they have?</b><span class="small muted">Prompt 4 · Design for Good</span></div>
+    <div class="prompt-card"><b>Is this accessible to people with different abilities, resources, devices, languages, or circumstances?</b><span class="small muted">Prompt 7 · Accessibility &amp; Inclusion</span></div>
+    <div class="prompt-card"><b>What would we change if we were designing with the community rather than only for the community?</b><span class="small muted">Prompt 12 · Design for Good</span></div>
+  </div>
+  <div class="row no-print"><button class="btn btn-secondary" type="button" onclick="window.print()">Print the kit and cards</button></div>
+
+  <div class="card stack" style="margin-top:24px">
+    <h3>Tell BRIDGEGOOD what you changed</h3>
+    <p class="muted">This goes to the BRIDGEGOOD steward inbox. Please don't include names or personal details. We'll give you a code to check BRIDGEGOOD's reply, so you don't need to leave an email.</p>
+    <form class="grid g2" novalidate>
+      <div class="field"><label for="where">What kind of group ran it?</label><input class="input" id="where" placeholder="High school design class"></div>
+      <div class="field"><label for="changed">What did you change about the session?</label><textarea class="input" id="changed"></textarea></div>
+      <div class="field"><label for="didnt">What didn't fit your community?</label><span class="hint" id="didnt-hint">Optional</span><textarea class="input" id="didnt" aria-describedby="didnt-hint"></textarea></div>
+      <div class="field" style="align-content:start">
+        <label class="choice" style="margin-top:28px"><input type="checkbox"><span>BRIDGEGOOD may credit our group by name if they use our change. (Optional)</span></label>
+      </div>
+      <div class="row"><button class="btn btn-primary" type="button">Send to BRIDGEGOOD</button><span class="small muted">You'll see a reply code next.</span></div>
+    </form>
+    <div class="where small muted"><b>Feeds back:</b> it arrives in the steward inbox as an "outside community" item. If it's accepted, it can become a field note on a pillar page or an entry in the public changelog, credited only with consent.</div>
+  </div>
+</section>
+
+<footer class="wrap small muted" style="padding:24px 0 48px">The Design for Social Good philosophy is authored and stewarded by BRIDGEGOOD. All scenarios, numbers and groups on this page are synthetic examples.</footer>
+</main>
+<script>
+  const form = document.getElementById("pm-form"), reveal = document.getElementById("pm-reveal"), err = document.getElementById("pm-error")
+  form.addEventListener("submit", (e) => {
+    e.preventDefault()
+    if (!form.querySelector("input[name=pm]:checked")) { err.hidden = false; return }
+    err.hidden = true; reveal.hidden = false; reveal.focus()
+  })
+  form.addEventListener("change", () => { err.hidden = true })
+  document.getElementById("copy-credit").addEventListener("click", async () => {
+    const status = document.getElementById("copy-status")
+    try { await navigator.clipboard.writeText(document.getElementById("credit").innerText); status.textContent = "Copied." }
+    catch { status.textContent = "Select the text above to copy it." }
+  })
+</script>
+</body>
+</html>
