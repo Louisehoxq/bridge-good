@@ -10,6 +10,10 @@ The roles are: **apprentice** (BRIDGEGOOD's word for a student), **mentor**, **a
 
 ## Unreleased
 
+### The home title keeps cycling
+
+- **Everyone:** the words after "Design for" now loop (2.2 seconds each) instead of playing once. A "Pause animation" button under the title stops it on "social good"; it never starts under reduced motion.
+
 ### Steward area and library: less disclaimer copy
 
 - **For stewards:** the inbox header is one sentence (you decide what changes, always with a reason, and the sender sees the outcome). The versions page drops "BRIDGEGOOD authors the framework" (the footer says it) and feedback detail drops "(synthetic demo account)".
