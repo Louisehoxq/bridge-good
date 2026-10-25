@@ -38,3 +38,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 !.env.example
+
+# claude code worktrees (skills in .claude/skills are committed)
+/.claude/worktrees/

@@ -93,6 +93,17 @@ Two answers to the weakest criteria in the [milestone 3 evaluation](docs/evaluat
 - Unit tests for the new decision rules and reply codes, and an end-to-end spec (`tests/practice-and-kit.spec.ts`) for both flows. The axe and layout checks cover the new pages automatically.
 - A print stylesheet: the light palette on white, and the header, footer and path strip hidden.
 
+### Reusable evaluation skills
+
+**For the team**
+- `/evaluate-mission` scores the app against the challenge brief on the same 13 criteria as earlier evaluations, with code evidence for each score, a guardrail check and the biggest gaps, then archives the previous report.
+- `/evaluate-rubric` scores what judges would see in the 4-minute pitch against the judging rubric (weighted total out of 100 plus the accessibility bonus), checks live-demo readiness (AI key, live AI runs, deploy, CI, demo routes) and ranks at most five changes by points per hour.
+
+**Technical**
+- First run: [evaluation-rubric-2026-10-25.md](docs/evaluation-rubric-2026-10-25.md) scores `main` at 53/100, mainly because the AI has never run live and the demo still closes on the kit mockup.
+- The demo script ([docs/demo-script.md](docs/demo-script.md)) is now on `main`, rewritten so the live kit replaces the mockup: a synthetic community group's kit feedback is accepted by the steward as a field note, and the group reads the decision with its reply code. The partner login is gone, leaving two logins in the pitch.
+- Project skills in `.claude/skills/evaluate-mission/` and `.claude/skills/evaluate-rubric/` (the rubric itself is in `rubric.md` beside it). `.claude/worktrees/` is now ignored so the skills can be committed.
+
 ### Docs housekeeping
 
 - Added this changelog and a single prioritized backlog, [docs/BACKLOG.md](docs/BACKLOG.md).
