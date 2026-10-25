@@ -148,7 +148,7 @@ export function ScopingStudio({ aiEnabled }: { aiEnabled: boolean }) {
             <h2 id="chat-title" className="type-title-3">
               Scoping assistant (AI)
             </h2>
-            <p className="text-muted-foreground">Helps draft your brief. You decide what goes in it, and a person at BRIDGEGOOD reviews every brief.</p>
+            <p className="text-muted-foreground">Helps draft your brief. You decide what goes in it, and a person at your community chapter reviews every brief.</p>
           </div>
         </header>
 
