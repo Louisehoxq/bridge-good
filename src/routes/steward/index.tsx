@@ -51,10 +51,8 @@ export default function StewardInbox() {
   return (
     <>
       <PageHeader title="Inbox">
-        Every piece of feedback on the Design for Social Good framework, in one place: local adaptations, &ldquo;this didn&apos;t
-        fit&rdquo; flags, disagreements with the AI, partner retrospectives, community feedback, groups outside BRIDGEGOOD that
-        ran the carry-it-forward kit, and what hosts learned from community events. You decide what changes, always with a reason, and the people who sent it see the
-        outcome.
+        Feedback on the framework from every role and community. You decide what changes, always with a reason, and the sender sees
+        the outcome.
       </PageHeader>
 
       {decided && (

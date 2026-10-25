@@ -108,7 +108,7 @@ function WhatWasSent({ item }: { item: FeedbackItem }) {
         ) : (
           <span className="text-muted-foreground">Counts only, with no names</span>
         )}
-        {item.from.name && <span className="type-small text-muted-foreground">Sent by {item.from.name} (synthetic demo account)</span>}
+        {item.from.name && <span className="type-small text-muted-foreground">Sent by {item.from.name}</span>}
       </p>
       <dl className="space-y-4">
         {item.kind === "adaptation" && (

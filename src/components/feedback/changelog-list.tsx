@@ -37,7 +37,7 @@ export function ChangelogList({ headingLevel = 2 }: { headingLevel?: 2 | 3 }) {
               <H id={`v-${version}`} className="type-title-2">
                 Version {version}
               </H>
-              {date && <span className="text-muted-foreground">{published ? `Published ${date}` : `Published in this demo, ${date}`}</span>}
+              {date && <span className="text-muted-foreground">{published ? `Published ${date}` : `Published ${date}`}</span>}
             </div>
             {published && (
               <p className="max-w-3xl type-body-lg">

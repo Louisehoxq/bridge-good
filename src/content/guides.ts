@@ -42,7 +42,7 @@ export const MOCK_CASE_GUIDE: HowToGuide = {
   audience: "mentor",
   summary:
     "A mock case is a practice project with a made-up partner. Peers play community members. Students can try every step of a real project, and get things wrong, with no real people at risk.",
-  timing: "Suggested: 1 to 2 weeks, part time. Adjust to your group. (Draft)",
+  timing: "Suggested: 1 to 2 weeks, part time. Adjust to your group.",
   steps: [
     {
       title: "Set it up",
@@ -197,7 +197,7 @@ export const AI_SOCIAL_GOOD_GUIDE = {
     },
   ] satisfies TeachingSection[],
   limits:
-    "This guide doesn't make anyone an AI expert, and facts about specific tools change fast. Check current documentation, and follow BRIDGEGOOD's latest guidance on AI tools. AI features in this app are labeled as AI, produce drafts you can edit, and are reviewed by a person at BRIDGEGOOD.",
+    "This guide doesn't make anyone an AI expert, and facts about specific tools change fast. Check current documentation, and follow BRIDGEGOOD's latest guidance on AI tools.",
   draft: true,
 }
 
@@ -220,7 +220,7 @@ export const MENTOR_COMMITMENT = {
     { do: "Tell BRIDGEGOOD how mentoring is going, and ask your student how it's landing.", why: "Feedback changes the plan, for mentors too." },
   ],
   bridgegoodOffers:
-    "Our draft: training before you start, a named BRIDGEGOOD staff contact, and credit for your time. BRIDGEGOOD will confirm what it offers mentors.",
+    "Our draft: training before you start, a named BRIDGEGOOD staff contact, and credit for your time.",
   draft: true,
 }
 
