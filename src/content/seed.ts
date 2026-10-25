@@ -1,9 +1,16 @@
+import type { PillarId } from "@/content/framework"
+
 /**
  * SYNTHETIC seed data for the browser-only demo store. No real people.
+ * Every seeded record carries `synthetic: true` so the UI can label it "Synthetic example".
+ * Records people create in the demo leave the flag unset.
  * The demo student is Ari Santos and the demo mentor is Jordan Lee (see ROLE_INFO).
  */
 export const DEMO_STUDENT = "Ari Santos"
 export const DEMO_MENTOR = "Jordan Lee"
+
+/** Label to show next to any seeded person, post or project. */
+export const SYNTHETIC_LABEL = "Synthetic example"
 
 export type Submission = {
   id: string
@@ -14,6 +21,7 @@ export type Submission = {
   summary: string
   reflection: string
   submittedAt: string
+  synthetic?: boolean
 }
 
 export type Evaluation = {
@@ -24,6 +32,7 @@ export type Evaluation = {
   strengths: string
   nextSteps: string
   at: string
+  synthetic?: boolean
 }
 
 export type Message = {
@@ -34,6 +43,7 @@ export type Message = {
   fromName: string
   body: string
   at: string
+  synthetic?: boolean
 }
 
 export type Slot = {
@@ -43,6 +53,7 @@ export type Slot = {
   focus: string
   bookedBy?: string
   bookingNote?: string
+  synthetic?: boolean
 }
 
 export type Post = {
@@ -51,14 +62,45 @@ export type Post = {
   author: string
   body: string
   at: string
+  synthetic?: boolean
 }
 
+/**
+ * Mentor rubric. Levels describe where the work is now, as a starting point for a
+ * growth conversation. They are not a pass or fail. `pillarIds` links each row to the
+ * framework pillars it draws on (see docs/ai-evaluator.md, section 3).
+ */
 export const RUBRIC = [
-  { id: "community", label: "Community voice", question: "Did the people affected shape the problem and the solution?" },
-  { id: "access", label: "Inclusion & accessibility", question: "Does it work for people at the margins, including disabled users?" },
-  { id: "iteration", label: "Feedback & iteration", question: "Did feedback visibly change the design?" },
-  { id: "story", label: "Impact story", question: "Is it clear who it's for, what changed and why it matters?" },
-  { id: "craft", label: "Design craft", question: "Is the work clear, usable and well executed?" },
+  {
+    id: "community",
+    label: "Community voice",
+    question: "Did the people affected shape the problem and the solution?",
+    pillarIds: ["design-for-good"] as PillarId[],
+  },
+  {
+    id: "access",
+    label: "Inclusion & accessibility",
+    question: "Does it work for the people most likely to be left out, including disabled people?",
+    pillarIds: ["access-inclusion"] as PillarId[],
+  },
+  {
+    id: "iteration",
+    label: "Feedback & iteration",
+    question: "Did feedback from the people affected visibly change the design?",
+    pillarIds: ["responsible-ai"] as PillarId[],
+  },
+  {
+    id: "story",
+    label: "Impact story",
+    question: "Is it clear who it's for, what changed for them, and how you know?",
+    pillarIds: ["design-for-good", "ethics-impact"] as PillarId[],
+  },
+  {
+    id: "craft",
+    label: "Design craft",
+    question: "Is the work clear, usable and well made, with a strong hierarchy?",
+    pillarIds: ["craft"] as PillarId[],
+  },
 ] as const
 
 export const RUBRIC_LEVELS = ["Emerging", "Developing", "Proficient", "Exemplary"] as const
@@ -72,7 +114,8 @@ export const SEED_SUBMISSIONS: Submission[] = [
     link: "https://example.org/demo/maya-synthesis",
     summary: "Interviewed 6 (synthetic) pantry visitors and mapped the booking journey. Proposed a 3-message SMS flow.",
     reflection: "I assumed everyone had smartphones. Listening changed my whole direction.",
-    submittedAt: "Mon 21 Oct, 3:10 pm",
+    submittedAt: "Mon, Oct 21, 3:10 PM",
+    synthetic: true,
   },
   {
     id: "seed-dev",
@@ -81,8 +124,9 @@ export const SEED_SUBMISSIONS: Submission[] = [
     activity: "Case study",
     link: "https://example.org/demo/dev-listings",
     summary: "Paper prototype of event listings that show captioning and interpretation up front.",
-    reflection: "I need to test with Deaf users directly rather than guessing what they need.",
-    submittedAt: "Tue 22 Oct, 10:45 am",
+    reflection: "I need to test with Deaf people directly rather than guessing what they need.",
+    submittedAt: "Tue, Oct 22, 10:45 AM",
+    synthetic: true,
   },
   {
     id: "seed-ari",
@@ -92,7 +136,8 @@ export const SEED_SUBMISSIONS: Submission[] = [
     link: "https://example.org/demo/ari-forms",
     summary: "Redesigned a sign-up form with plain language, clear errors and larger tap targets.",
     reflection: "Writing error messages that don't blame people was harder than I expected.",
-    submittedAt: "Wed 16 Oct, 6:20 pm",
+    submittedAt: "Wed, Oct 16, 6:20 PM",
+    synthetic: true,
   },
 ]
 
@@ -102,9 +147,10 @@ export const SEED_EVALUATIONS: Evaluation[] = [
     submissionId: "seed-ari",
     mentorName: DEMO_MENTOR,
     scores: { community: 2, access: 4, iteration: 3, story: 3, craft: 3 },
-    strengths: "Your error messages are kind and specific. The accessibility thinking is excellent.",
-    nextSteps: "Test the form with two people who'd actually use it, and show what you changed afterwards.",
-    at: "Fri 18 Oct, 9:00 am",
+    strengths: "Your error messages are kind and specific. You checked contrast, labels and tap targets without being asked.",
+    nextSteps: "Test the form with two people who'd actually use it, and show what you changed afterward.",
+    at: "Fri, Oct 18, 9:00 AM",
+    synthetic: true,
   },
 ]
 
@@ -115,7 +161,8 @@ export const SEED_MESSAGES: Message[] = [
     from: "mentor",
     fromName: DEMO_MENTOR,
     body: "Hi Ari, I left feedback on your form redesign. Happy to talk it through at office hours.",
-    at: "Fri 18 Oct, 9:05 am",
+    at: "Fri, Oct 18, 9:05 AM",
+    synthetic: true,
   },
   {
     id: "seed-m2",
@@ -123,7 +170,8 @@ export const SEED_MESSAGES: Message[] = [
     from: "student",
     fromName: DEMO_STUDENT,
     body: "Thank you! How do I find people to test with without making it awkward?",
-    at: "Fri 18 Oct, 12:30 pm",
+    at: "Fri, Oct 18, 12:30 PM",
+    synthetic: true,
   },
   {
     id: "seed-m3",
@@ -131,28 +179,30 @@ export const SEED_MESSAGES: Message[] = [
     from: "student",
     fromName: "Maya Okafor",
     body: "Could you look at my synthesis before Thursday?",
-    at: "Mon 21 Oct, 3:15 pm",
+    at: "Mon, Oct 21, 3:15 PM",
+    synthetic: true,
   },
 ]
 
 export const SEED_SLOTS: Slot[] = [
-  { id: "slot-1", mentorName: DEMO_MENTOR, when: "Tue 29 Oct, 4:00–4:30 pm PT", focus: "Portfolio reviews" },
+  { id: "slot-1", mentorName: DEMO_MENTOR, when: "Tue, Oct 29, 4:00–4:30 PM PT", focus: "Portfolio reviews", synthetic: true },
   {
     id: "slot-2",
     mentorName: DEMO_MENTOR,
-    when: "Thu 31 Oct, 5:00–5:30 pm PT",
+    when: "Thu, Oct 31, 5:00–5:30 PM PT",
     focus: "Research & testing",
     bookedBy: "Maya Okafor",
     bookingNote: "Synthesis feedback",
+    synthetic: true,
   },
-  { id: "slot-3", mentorName: "Sam Rivera", when: "Wed 30 Oct, 12:00–12:30 pm PT", focus: "Careers & interviews" },
-  { id: "slot-4", mentorName: "Sam Rivera", when: "Fri 1 Nov, 9:00–9:30 am PT", focus: "Accessibility" },
+  { id: "slot-3", mentorName: "Sam Rivera", when: "Wed, Oct 30, 12:00–12:30 PM PT", focus: "Careers & interviews", synthetic: true },
+  { id: "slot-4", mentorName: "Sam Rivera", when: "Fri, Nov 1, 9:00–9:30 AM PT", focus: "Accessibility", synthetic: true },
 ]
 
 export const CIRCLES = [
   { id: "research", name: "Research with care", description: "Recruiting, consent, and listening well." },
-  { id: "access", name: "Accessibility guild", description: "Share tools, testing tips and wins." },
-  { id: "careers", name: "Careers & confidence", description: "Interviews, portfolios, and imposter feelings." },
+  { id: "access", name: "Accessibility guild", description: "Share tools, testing tips and what worked." },
+  { id: "careers", name: "Careers & confidence", description: "Interviews, portfolios, and feeling like you don't belong yet." },
 ]
 
 export const SEED_POSTS: Post[] = [
@@ -161,20 +211,23 @@ export const SEED_POSTS: Post[] = [
     circle: "research",
     author: "Maya Okafor",
     body: "Tip: offer a choice of phone, text or in person for interviews. More people said yes.",
-    at: "Sun 20 Oct",
+    at: "Sun, Oct 20",
+    synthetic: true,
   },
   {
     id: "seed-p2",
     circle: "access",
     author: "Dev Patel",
-    body: "Free screen reader testing checklist I've been using, happy to walk anyone through it.",
-    at: "Mon 21 Oct",
+    body: "I wrote up the steps I use to test a page with a free screen reader. Happy to walk anyone through them.",
+    at: "Mon, Oct 21",
+    synthetic: true,
   },
   {
     id: "seed-p3",
     circle: "careers",
     author: "Lin Zhao",
     body: "Anyone else nervous about talking about their background in interviews? Would love to swap notes.",
-    at: "Tue 22 Oct",
+    at: "Tue, Oct 22",
+    synthetic: true,
   },
 ]
