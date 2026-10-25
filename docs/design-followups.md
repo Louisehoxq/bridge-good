@@ -51,10 +51,33 @@ The design-system workstream changed only `src/app.css`, the font links in `src/
 
 ## Accessibility fixes found by `npm run test:a11y`
 
-These are listed as `KNOWN` in `tests/a11y.spec.ts`. Remove each entry when it's fixed, because the test fails once a known violation has gone.
+axe checked all 31 page routes in light and dark (October 2026). It found violations on 3 pages. All 3 come from the same mistake, and none of them depend on the theme.
 
-- `src/components/chapter-finder.tsx`: `<ul role="region" aria-label="Chapter list" tabIndex={0}>` replaces the list role, so the `<li>`s have no list (axe `aria-allowed-role`, `listitem`, on `/chapters`). Move `role="region"`, the label and `tabIndex` onto a wrapping `<div>`, and keep a plain `<ul>` inside it.
-- `src/components/demo/conversation.tsx`: `<ol role="log" aria-label="Messages">` has the same problem (on `/student/messages` and `/mentor/messages`). Wrap the `<ol>` in `<div role="log" aria-label="Messages">`.
+| Page | Component | axe rules (impact) | WCAG 2.2 |
+| --- | --- | --- | --- |
+| `/chapters` | `src/components/chapter-finder.tsx` | `listitem` (serious), `aria-allowed-role` (minor) | 1.3.1 Info and Relationships, 4.1.2 Name, Role, Value |
+| `/student/messages` | `src/components/demo/conversation.tsx` | `listitem` (serious), `aria-allowed-role` (minor) | 1.3.1, 4.1.2 |
+| `/mentor/messages` | `src/components/demo/conversation.tsx` (same component) | `listitem` (serious), `aria-allowed-role` (minor) | 1.3.1, 4.1.2 |
+
+**What goes wrong.** A `role` on a `<ul>` or `<ol>` replaces its list role. Screen readers then don't announce it as a list ("list, 5 items"), and the `<li>`s inside are orphaned. A person using a screen reader loses the count and can't jump between items.
+
+**Fixes:**
+
+- `chapter-finder.tsx`: the code is `<ul role="region" aria-label="Chapter list" tabIndex={0}>`. Move `role="region"`, `aria-label` and `tabIndex={0}` onto a wrapping `<div>` that keeps the scroll classes (`max-h-[38rem] overflow-y-auto`), and keep a plain `<ul>` inside it. The region still needs `tabIndex={0}`, so keyboard users can scroll it.
+- `conversation.tsx`: the code is `<ol role="log" aria-label="Messages">`. Wrap the list in `<div role="log" aria-label="Messages">` and move the scroll classes onto the wrapper. Keep the `<ol>` for the messages.
+
+**How to confirm a fix.** These are listed as `KNOWN` in `tests/a11y.spec.ts`. After fixing a page, run `npm run test:a11y`. The test fails until you remove that page from `KNOWN`, so the list can't go out of date.
+
+**Not covered by axe yet.** These manual checks from `DESIGN.md` §8 haven't been done on the pages:
+
+- 200% zoom
+- a 320px viewport
+- the text-spacing bookmarklet
+- forced-colors (Windows high-contrast) emulation
+- keyboard-only walkthroughs of the forms and the scoping studio
+- a screen reader pass (VoiceOver or NVDA)
+
+Also watch for small text that axe may pass but that breaks the type rules. For example, the message metadata in `conversation.tsx` is `text-xs` (12px) with `opacity-90`. Use `type-small` with `text-muted-foreground` instead.
 
 ## Other
 
