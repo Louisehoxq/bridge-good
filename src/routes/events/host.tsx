@@ -1,5 +1,5 @@
 import { useId, useRef, useState, type FormEvent, type ReactNode } from "react"
-import { Link, useNavigate } from "react-router"
+import { Link, useNavigate, useSearchParams } from "react-router"
 import { AppShell } from "@/components/app-shell"
 import { ErrorSummary, FieldError, RadioGroup, TextField } from "@/components/feedback/fields"
 import { Icon } from "@/components/icon"
@@ -46,6 +46,10 @@ function fromTemplate(t: EventTemplate, start: string): Partial<EventDraft> {
 export default function HostEvent() {
   const session = useSession()
   const who = whoFor(session)
+  // "Host an event here" on a chapter page links with ?chapter=, so the form starts on that chapter's calendar.
+  const [search] = useSearchParams()
+  const asked = getChapter(search.get("chapter") ?? "")?.id
+  const here = asked ? `/events/host?chapter=${asked}` : "/events/host"
 
   return (
     <AppShell>
@@ -63,7 +67,7 @@ export default function HostEvent() {
         {!session || !who ? (
           <Gate>
             <p>Hosting is for chapter leads, company hosts, community partners and mentors, including alumni who mentor. In this prototype, log in with one of those demo accounts.</p>
-            <Link to={`/login?next=${encodeURIComponent("/events/host")}`} className={buttonVariants({ size: "lg" })}>
+            <Link to={`/login?next=${encodeURIComponent(here)}`} className={buttonVariants({ size: "lg" })}>
               <Icon name="log-in" />
               Log in to host
             </Link>
@@ -80,7 +84,7 @@ export default function HostEvent() {
             </Link>
           </Gate>
         ) : (
-          <HostForm defaultChapter={CHAPTERS.find((c) => `${accountFor(session).detail} ${accountFor(session).name}`.includes(c.city))?.id ?? ""} />
+          <HostForm defaultChapter={asked ?? CHAPTERS.find((c) => `${accountFor(session).detail} ${accountFor(session).name}`.includes(c.city))?.id ?? ""} />
         )}
       </div>
     </AppShell>

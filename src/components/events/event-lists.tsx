@@ -7,43 +7,6 @@ import { canHost, formatDay, isHost, todayFrom, upcoming, yourUpcoming } from "@
 import { useEvents, useRsvps, whoFor } from "@/lib/events/store"
 import { useServerNow, useSession } from "@/lib/session"
 
-/** On a chapter's entry at /chapters: its next events, and a link to its calendar. */
-export function ChapterEvents({ chapterId, city }: { chapterId: string; city: string }) {
-  const id = useId()
-  const now = useServerNow()
-  const [events] = useEvents()
-  const next = upcoming(
-    events.filter((e) => e.chapterId === chapterId),
-    now
-  )
-  const today = todayFrom(now)
-  return (
-    <div className="mt-3 border-t pt-3">
-      <h4 id={`${id}-title`} className="font-semibold">
-        Upcoming events
-      </h4>
-      {next.length === 0 ? (
-        <p className="text-muted-foreground">Nothing on the calendar yet.</p>
-      ) : (
-        <ul aria-labelledby={`${id}-title`} className="mt-1 space-y-1">
-          {next.slice(0, 2).map((e) => (
-            <li key={e.id}>
-              <Link to={`/events/${e.id}`} className="inline-flex min-h-12 items-center gap-2 text-primary underline underline-offset-4">
-                <span className="font-semibold">{formatDay(e, today, true)}</span>
-                <span>{e.title}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-      <Link to={`/events?chapter=${chapterId}`} className="inline-flex min-h-12 items-center gap-2 font-semibold text-primary underline underline-offset-4">
-        <Icon name="calendar" className="text-base" />
-        {city} calendar{next.length > 2 ? ` (${next.length} events)` : ""}
-      </Link>
-    </div>
-  )
-}
-
 /** On role overviews: what you're hosting or going to, plus a way to find or host more. */
 export function YourUpcomingEvents() {
   const id = useId()
