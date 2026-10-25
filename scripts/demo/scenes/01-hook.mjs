@@ -2,7 +2,7 @@ export default {
   id: "01-hook",
   budgetSeconds: 12,
   state: "fresh",
-  async run({ page, goto, caption, hold, scrollBy, scrollIntoView }) {
+  async run({ page, goto, caption, hold, scrollIntoView }) {
     await goto("/")
     await caption("BRIDGEGOOD's Design for Social Good travels person to person.", 4)
     await hold(1800)
