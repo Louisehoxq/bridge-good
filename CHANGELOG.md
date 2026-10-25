@@ -10,6 +10,12 @@ The roles are: **apprentice** (BRIDGEGOOD's word for a student), **mentor**, **a
 
 ## Unreleased
 
+### Reflection Companion: switchable free and low-cost models
+
+**For students and staff:** nothing changes on screen except that "How this was made" names the model and host that wrote the review.
+
+**Technical:** `EVALUATOR_PROVIDER` now accepts `gemma-google` (Google AI Studio free tier), `gemma-openrouter` (free `:free` model, or paid via `EVALUATOR_MODEL`), `gemma-gateway` and `gemma-local` (Ollama or vLLM), as well as `claude`. Switching when a free limit or budget runs out is an environment change and a redeploy. Adds `@ai-sdk/google` and `@ai-sdk/openai-compatible`. Not run against a live model. `npm run keys` (`scripts/env-keys.mjs`) sets, reads, lists and removes keys in `.env.local` with hidden input, masks them on read, writes the file with mode 600, and switches the provider.
+
 ### Reflection Companion docs and a live golden run
 
 No change in the app for any role. Docs and tooling for whoever runs or checks the AI.

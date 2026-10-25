@@ -8,12 +8,15 @@
     "start": "node --env-file-if-exists=.env.local node_modules/@react-router/serve/bin.js ./build/server/index.js",
     "typecheck": "react-router typegen && tsc",
     "lint": "eslint .",
+    "keys": "node scripts/env-keys.mjs",
     "check:contrast": "node scripts/check-contrast.mjs",
     "test:unit": "node --experimental-strip-types --no-warnings --import ./src/lib/evaluator/test/register.mjs --test \"src/lib/evaluator/test/*.test.ts\" \"src/lib/feedback/test/*.test.ts\" \"src/lib/events/test/*.test.ts\"",
     "test:a11y": "playwright test -c tests/playwright.config.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.88",
+    "@ai-sdk/google": "^4.0.105",
+    "@ai-sdk/openai-compatible": "^3.0.78",
     "@ai-sdk/react": "^4.0.157",
     "@base-ui/react": "^1.9.0",
     "@react-router/node": "^7.18.4",

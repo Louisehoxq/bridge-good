@@ -3,7 +3,7 @@
  *
  *   node --env-file-if-exists=.env.local --experimental-strip-types --no-warnings \
  *     --import ./src/lib/evaluator/test/register.mjs scripts/compare-evaluators.ts \
- *     [--providers claude,gemma-gateway] [--runs 3] [--only contrast,injection] [--dry-run] [--live http://localhost:3000]
+ *     [--providers claude,gemma-google,gemma-openrouter,gemma-local] [--runs 3] [--only contrast,injection] [--dry-run] [--live http://localhost:3000]
  *
  * It sends the same system prompt, schema and checked messages as /api/reflect, one request at a time.
  * With --live, it instead logs in as the demo apprentice and posts each item to a running server's
@@ -16,7 +16,7 @@ import { parseArgs } from "node:util"
 import { convertToModelMessages, Output, streamText, type UIMessage } from "ai"
 import { GOLDENS, type Golden } from "../src/content/evaluator-goldens"
 import { scoreReply, SCORE_LABELS, type GoldenScore } from "../src/lib/evaluator/golden-checks"
-import { EVALUATOR_PROVIDERS, evaluatorLabel, evaluatorModel, isEvaluatorConfigured, type EvaluatorProvider } from "../src/lib/evaluator/model.server"
+import { EVALUATOR_PROVIDERS, evaluatorLabel, evaluatorModel, evaluatorNeeds, isEvaluatorConfigured, type EvaluatorProvider } from "../src/lib/evaluator/model.server"
 import { studentSystemPrompt } from "../src/lib/evaluator/prompts"
 import { readReview } from "../src/lib/evaluator/read-review"
 import { composeFirstMessage, REFLECT_LIMITS } from "../src/lib/evaluator/request"
@@ -236,7 +236,7 @@ if (args.live) {
 } else {
   const ready = providers.filter((p) => {
     if (isEvaluatorConfigured(p)) return true
-    console.warn(`Skipping ${p}: not configured. ${p === "gemma-gateway" ? "Set AI_GATEWAY_API_KEY." : "Set ANTHROPIC_API_KEY or AI_GATEWAY_API_KEY."}`)
+    console.warn(`Skipping ${p}: not configured. Set ${evaluatorNeeds(p)}.`)
     return false
   })
   if (!ready.length) {

@@ -56,7 +56,9 @@ Run the same Reflection Companion on Gemma 4, behind an environment flag, withou
 | 4–6. Structured output, images, prompt fit | Not checked yet: these need a live run. The comparison script's "Readable replies" row answers step 4 | |
 | 7. Golden set and comparison script | Done: 6 synthetic items (contrast, pre-ticked consent, English-only for a Spanish-first community, clean control, injection, personal data), automatic checks, and a script | `src/content/evaluator-goldens/`, `src/lib/evaluator/golden-checks.ts`, `scripts/compare-evaluators.ts` |
 
-To try Gemma in the app, add to `.env.local`:
+**Free and low-cost providers (added after the first build).** `EVALUATOR_PROVIDER` also accepts `gemma-google` (free Google AI Studio key: `GOOGLE_GENERATIVE_AI_API_KEY`), `gemma-openrouter` (`OPENROUTER_API_KEY`; the `:free` 31B by default, or set `EVALUATOR_MODEL=google/gemma-4-31b-it` for the paid one) and `gemma-local` (`EVALUATOR_BASE_URL`, e.g. Ollama at `http://localhost:11434/v1`; default model `gemma4:12b`). To switch when a limit is hit, change the variable and redeploy. `npm run keys -- status|setup <provider>|use <provider>|get|set|unset|list` manages `.env.local` for you (hidden input, keys masked on read). Free tiers may use prompts to improve products, so use synthetic data only. A 16 GB laptop can run the E4B or 12B, not the 26B or 31B. None of these has run live yet.
+
+To try Gemma through the AI Gateway in the app, add to `.env.local`:
 
 ```bash
 AI_GATEWAY_API_KEY=<your Vercel AI Gateway key>
