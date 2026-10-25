@@ -19,6 +19,9 @@ import {
   FileText,
   Flag,
   FolderOpen,
+  History,
+  Inbox,
+  Reply,
   HeartHandshake,
   Hourglass,
   House,
@@ -98,6 +101,11 @@ const ICONS = {
   hourglass: Hourglass,
   plus: Plus,
   "chevron-down": ChevronDown,
+
+  // Milestone 3, the feedback loop: steward inbox, replies and the changelog.
+  inbox: Inbox,
+  reply: Reply,
+  history: History,
 } satisfies Record<string, LucideIcon>
 
 export type IconName = keyof typeof ICONS

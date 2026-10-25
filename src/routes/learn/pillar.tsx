@@ -2,6 +2,8 @@ import { data, Link } from "react-router"
 import type { Route } from "./+types/pillar"
 import { DraftNote, LibraryPage, PromptList } from "@/components/library/library-page"
 import { SyntheticBadge } from "@/components/synthetic-badge"
+import { DidntFit, pillarTarget } from "@/components/feedback/didnt-fit" // Milestone 3 hook
+import { FieldNotes, FrameworkVersion, OfficialWording } from "@/components/feedback/framework-hooks" // Milestone 3 hook
 import { FRAMEWORK_META, PILLARS, type PillarId } from "@/content/framework"
 import { RUBRIC } from "@/content/seed"
 import { TRAINING } from "@/content/training"
@@ -35,8 +37,11 @@ export default function PillarPage({ loaderData }: Route.ComponentProps) {
             <h2 id="meaning-title" className="mb-3 type-title-2">
               What it means
             </h2>
-            <p className="type-body-lg">{pillar.meaning}</p>
+            <OfficialWording pillarId={pillar.id} />
           </section>
+
+          {/* Milestone 3 hook: recognized local adaptations, beneath BRIDGEGOOD's official wording. */}
+          <FieldNotes pillarId={pillar.id} />
 
           <section aria-labelledby="example-title" className="rounded-2xl bg-muted p-6">
             <div className="mb-3 flex flex-wrap items-center gap-2">
@@ -104,11 +109,14 @@ export default function PillarPage({ loaderData }: Route.ComponentProps) {
               </ul>
             </section>
           )}
+
+          {/* Milestone 3 hook: "this didn't fit" flag. */}
+          <DidntFit {...pillarTarget(pillar.id)} />
         </aside>
       </div>
       <div className="mt-10">
         <DraftNote>
-          Version {FRAMEWORK_META.version}, {FRAMEWORK_META.status.toLowerCase()}. {FRAMEWORK_META.note}
+          Version <FrameworkVersion />, {FRAMEWORK_META.status.toLowerCase()}. {FRAMEWORK_META.note}
         </DraftNote>
       </div>
     </LibraryPage>

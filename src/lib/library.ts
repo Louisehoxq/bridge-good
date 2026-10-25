@@ -76,6 +76,13 @@ export const LIBRARY: LibraryEntry[] = [
     section: "framework",
     summary: "What words like inclusion, access and social good mean here, and how this approach differs from others.",
   },
+  // Milestone 3: the public changelog of the framework.
+  {
+    href: "/learn/changelog",
+    title: "Changelog",
+    section: "framework",
+    summary: "Every version of the framework, what BRIDGEGOOD changed, why, and whose feedback it came from.",
+  },
   ...TRACKS.map((t) => ({ href: `/learn/tracks/${t.slug}`, title: t.title, section: "tracks" as const, summary: TRAINING[t.audience].tagline })),
   ...GUIDE_SLUGS.map((g) => ({ href: `/learn/guides/${g}`, title: GUIDE_TITLES[g].title, section: "guides" as const, summary: GUIDE_TITLES[g].summary })),
   { href: "/learn/self-check", title: SELF_CHECK.title, section: "joining", summary: SELF_CHECK.intro },

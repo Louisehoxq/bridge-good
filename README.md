@@ -20,14 +20,15 @@ A **desktop-first web app**, following the team's wireframe. One public library 
 |---|---|---|
 | Welcome | `/` | "Start where you are" routing by role, the 5 pillars (the spine), how BRIDGEGOOD works (the 6 principles, with a by-role table behind a disclosure), the impact loop, and who the philosophy belongs to |
 | Library | `/learn` | Index of everything below, with the framework's version and BRIDGEGOOD authorship note |
-| Pillars | `/learn/pillars/:pillarId` | Meaning, a synthetic example, the learning outcome, the pillar's reflection prompts, where it's taught |
+| Pillars | `/learn/pillars/:pillarId` | BRIDGEGOOD's official meaning (versioned), field notes from chapters beneath it, a "this didn't fit" flag, a synthetic example, the learning outcome, the pillar's reflection prompts, where it's taught |
 | Reflection prompts | `/learn/prompts` | The 12 prompts, their pillars, and where they come up in the app |
 | Terms of reference | `/learn/terms` | How Design for Social Good differs from other approaches, and what each term means, isn't, and looks like when it's missing (moved here from the welcome page) |
 | Role tracks | `/learn/tracks/apprentices`, `mentors`, `ambassadors`, `company-hosts` | Modules (any order, with pillar chips), a one-page explainer, example case studies, related guides |
 | Guides | `/learn/guides/:slug` | Mock case, real case, teaching AI and social good, mentor commitment, ambassador vetting, adapt don't copy, inclusive language |
+| Changelog | `/learn/changelog` | Every version of the framework: what BRIDGEGOOD changed, why, where the feedback came from, and credit (only with consent) |
 | Self-check | `/learn/self-check` | "Is this a good fit for you right now?" No form, nothing stored, links to the official criteria |
 | Chapters (concept) | `/chapters` | Proposed chapter model: illustrative map and list |
-| Log in | `/login` | Five synthetic demo accounts |
+| Log in | `/login` | Six synthetic demo accounts |
 | Design system | `/design` | Bridge Studio tokens and signature components, for the team |
 
 Every library page has a stable URL, breadcrumbs and previous/next links. Signed in, it also shows a strip such as "Part of step 1 of your path: Bootcamp · Back to your path".
@@ -40,7 +41,8 @@ Every library page has a stable URL, breadcrumbs and previous/next links. Signed
 | **Mentor** `/mentor` | Jordan Lee, a BRIDGEGOOD alum | Overview · Prepare · Growth conversations `/mentor/conversations` (with the questions apprentices shared) · My mentee (team, profile, path, messages, office hours) |
 | **Ambassador: chapter lead** `/ambassador` | Priya Raman | Overview · Playbook · Matching & milestones · Partner pipeline · Outreach & partner toolkits |
 | **Ambassador: company host** `/ambassador` | Dana Whitfield | Same area, with its own overview and playbook |
-| **Community partner** `/partner` | Eastside Tenants Network | Overview · Submit a problem (AI scoping studio) · My project and team · Project gallery · Toolkit & FAQs (including funding and legal templates, coming soon) |
+| **Community partner** `/partner` | Eastside Tenants Network | Overview · Submit a problem (AI scoping studio) · My project and team (with a project retrospective) · Project gallery · Toolkit & FAQs (including funding and legal templates, coming soon) |
+| **BRIDGEGOOD steward** `/steward` | Morgan Ellis, program staff | Inbox (every kind of feedback, tagged by pillar, guide or prompt) · one page per piece of feedback with the decision form · Versions and wording · Public changelog |
 
 Chapter lead and company host share one `ambassador` role key; the session stores which kind.
 
@@ -74,6 +76,13 @@ Open http://localhost:5173, choose **Log in**, and pick a demo account.
 5. Back as **Apprentice**, your mentor's words are on **Submissions & feedback**, and your path has moved on to the capstone.
 6. Open any library page while signed in to see where it sits on your path.
 
+### Demo walkthrough: the feedback loop (milestone 3)
+1. Log in as **Chapter lead** (Priya). At the bottom of **Playbook**, use **Propose an adaptation**: pick a pillar, say what your chapter changed, why, and what you kept, and choose whether to credit the Chicago chapter.
+2. Log in as **BRIDGEGOOD steward** (Morgan). The **Inbox** has your proposal next to synthetic examples of every other kind: "this didn't fit" flags, AI disagreement counts from the Reflection Companion, a partner retrospective and an aggregated community feedback card. Filter by pillar, open the proposal, choose **Accept** → **Show it as a field note**, write a reason, and record the decision.
+3. Open **Public changelog**: the entry says what changed, why, where it came from, and credits the chapter only if Priya said yes. The pillar page now shows the field note beneath BRIDGEGOOD's official wording, labelled as a local adaptation.
+4. Back as **Chapter lead**, the playbook shows "BRIDGEGOOD accepted this" with the steward's reason.
+5. To change the official wording, accept a flag on a pillar with **Change BRIDGEGOOD's official wording**, or use **Versions and wording**. That publishes version 0.2 with the old and new text side by side in the changelog. Only the steward can do this.
+
 Demo data lives in this browser's localStorage. Use **Reset demo data** in the footer to start again.
 
 ## How it works
@@ -84,6 +93,7 @@ Demo data lives in this browser's localStorage. Use **Reset demo data** in the f
 - **Desktop-first layout:** a full top navigation bar and, inside role areas, a sticky left sidebar beside a wide content column (`src/components/app-shell.tsx`). Below `lg` the sidebar becomes a tab strip, and below `md` the top nav becomes a sheet menu.
 - **Demo store:** `src/lib/demo-store.ts` keeps collections in localStorage, seeded from `src/content/seed.ts`. All roles share it, so flows connect across roles.
 - **AI scoping:** the resource route `src/routes/api.scope.ts` uses the AI SDK (`streamText`, Claude Sonnet 5.5) with an `updateBrief` tool. It requires the partner session, validates the conversation, accepts only user and assistant turns, and caps message length and screenshots (shrunk in the browser first). The client (`src/components/partner/scoping-studio.tsx`) merges tool calls into an editable brief. Human judgment stays central: the brief is labelled a draft, it's always editable, BRIDGEGOOD reviews it, and the assistant never asks for personal details.
+- **Feedback loop:** `src/lib/feedback/` holds the types, the rules and the store. Only a steward decides, every decision needs a reason, credit needs consent, and only wording changes publish a new version. The steward area is `src/routes/steward/`, the changelog page is `src/routes/learn/changelog.tsx`, and the forms, flags and changelog components are in `src/components/feedback/`. Version history is in `src/content/framework-history.ts`, with synthetic seed data in `src/content/feedback-seed.ts`. Free-text feedback is screened for email addresses and phone numbers before it's saved.
 - **Reflection Companion:** `src/routes/api.reflect.ts` and `src/lib/evaluator/`. It asks apprentices questions tied to the pillars and prompts, says what it can't judge, never scores, and lets them share questions with their mentor. A Gemma 4 prototype sits behind `EVALUATOR_PROVIDER` ([docs/gemma-prototype.md](docs/gemma-prototype.md)).
 - **Content:** editable copy and data live in `src/content/`. Every person, organization, chapter and project is a **synthetic example** and labelled as one.
 
@@ -93,7 +103,7 @@ Demo data lives in this browser's localStorage. Use **Reset demo data** in the f
 DESIGN.md                Bridge Studio design system spec
 docs/                    challenge brief, evaluations, design notes, AI evaluator design, concept notes
 scripts/                 contrast check, evaluator comparison
-tests/                   Playwright accessibility tests
+tests/                   Playwright accessibility tests and the feedback-loop walkthrough
 .github/workflows/       CI
 src/
   root.tsx               HTML shell, fonts, session loader, error page
@@ -103,11 +113,12 @@ src/
     home.tsx             Welcome
     learn/               public library: index, pillars, prompts, terms, role tracks, guides, self-check
     login.tsx logout.ts chapters.tsx
-    student/ mentor/ ambassador/ partner/   role areas (layout.tsx guards the role and renders RoleShell)
+    student/ mentor/ ambassador/ partner/ steward/   role areas (layout.tsx guards the role and renders RoleShell)
     api.scope.ts         AI scoping assistant (resource route)
     api.reflect.ts       Reflection Companion (resource route)
     design.tsx           design system page
   components/            shell, nav, notices and form errors, impact loop, principles, problem board, training, toolkits
+  components/feedback/   feedback loop: adaptation form, flags, retrospective, decision form, changelog, field notes
   components/demo/       messages, office hours, submissions & growth conversations, matching data, milestones, community, snapshots
   components/library/    library page frame, breadcrumbs, prompt list, pillar chip
   components/path/       role path stepper and the "your path" strip on library pages
@@ -119,6 +130,7 @@ src/
   content/               framework, guides, eligibility, training, principles, glossary, problems, chapters, toolkits, journey and seed data
   lib/                   roles, session (cookie + guard), library index, role paths, demo store, brief schema, AI config
   lib/evaluator/         evaluator schema, prompts, checks, providers, tests
+  lib/feedback/          feedback loop types, decision and version rules, store, tests
 ```
 
 ## Guardrails we're holding ourselves to
@@ -136,7 +148,7 @@ See [docs/evaluation-milestone-2.md](docs/evaluation-milestone-2.md) for the ful
 
 - **Done:** the React Router migration, Bridge Studio tokens and components, the public library with role paths, the new roles, growth conversations, and Reflection Companion phase 1.
 - **Done in milestone 2.5:** Bridge Studio on every page (type scale, no all caps, no pill links, the AI draft frame on both AI surfaces, people and paths on team views, pinned notes, the highlighted prompt, role badges), all known layout failures fixed, a manual accessibility pass, and the content reorganization above. Results are in `docs/design-followups.md`.
-- **Milestone 3:** the feedback loop. A BRIDGEGOOD steward inbox, local adaptations, "this didn't fit" flags, mentor–AI disagreement records, and a versioned framework with a public changelog.
+- **Done in milestone 3:** the feedback loop. A BRIDGEGOOD steward role and inbox, local adaptations, "this didn't fit" flags, AI disagreement records from the companion, partner retrospectives, an aggregated community feedback card, field notes on pillar pages, and a versioned framework with a public changelog.
 - **Needs an API key:** a live check of the scoping assistant, the Reflection Companion and the Gemma comparison.
 - **Needs BRIDGEGOOD:**
   - official logo files

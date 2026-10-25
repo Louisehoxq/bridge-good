@@ -24,6 +24,7 @@ export const STUDIO_ROLE_FOR = {
   mentor: "mentor",
   ambassador: "chapter-lead",
   partner: "community-partner",
+  steward: "steward", // Milestone 3: BRIDGEGOOD staff
 } as const satisfies Record<Role, StudioRole>
 
 /** The Bridge Studio role for a signed-in demo session: ambassadors show as their own kind. */

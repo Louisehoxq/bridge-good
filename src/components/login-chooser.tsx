@@ -12,9 +12,12 @@ const ACCOUNTS: Session[] = [
   { role: "ambassador", ambassadorKind: "chapter-lead" },
   { role: "ambassador", ambassadorKind: "company-host" },
   { role: "partner" },
+  { role: "steward" }, // Milestone 3: BRIDGEGOOD staff
 ]
 
-const withArticle = (label: string) => `${/^[aeiou]/i.test(label) ? "an" : "a"} ${label.toLowerCase()}`
+/** Lowercase a label for a sentence, but keep a name in capitals: "BRIDGEGOOD steward". */
+const lower = (label: string) => label.replace(/^[A-Z](?=[a-z])/, (c) => c.toLowerCase())
+const withArticle = (label: string) => `${/^[aeiou]/i.test(label) ? "an" : "a"} ${lower(label)}`
 
 export function LoginChooser() {
   const [searchParams] = useSearchParams()
@@ -29,7 +32,7 @@ export function LoginChooser() {
           <Icon name="info" className="mt-0.5" />
           <span>
             {current
-              ? `You're signed in as ${accountFor(current).label.toLowerCase()}. That page is for ${ROLE_INFO[wanted].plural.toLowerCase()}. Choose ${withArticle(ROLE_INFO[wanted].label)} account to continue.`
+              ? `You're signed in as ${lower(accountFor(current).label)}. That page is for ${lower(ROLE_INFO[wanted].plural)}. Choose ${withArticle(ROLE_INFO[wanted].label)} account to continue.`
               : `Log in as ${withArticle(ROLE_INFO[wanted].label)} to open that page.`}
           </span>
         </p>
@@ -59,7 +62,7 @@ export function LoginChooser() {
                   </span>
                   <span className="text-muted-foreground">{summary}</span>
                   <span className="mt-auto inline-flex items-center gap-2 pt-2 font-bold text-archetype">
-                    {isCurrent ? "Continue as" : "Log in as"} {account.label.toLowerCase()}
+                    {isCurrent ? "Continue as" : "Log in as"} {lower(account.label)}
                     <Icon name="arrow-right" className="text-base transition-transform group-hover:translate-x-1" />
                   </span>
                 </button>

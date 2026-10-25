@@ -7,8 +7,9 @@ import { useSession } from "@/lib/session"
 /** Shown on library pages when someone is signed in: where this page sits on their own path. */
 export function PathStrip() {
   const session = useSession()
-  if (!session) return null
-  return <Strip pathKey={pathKeyFor(session)} role={session.role} label={accountFor(session).label} />
+  const pathKey = session && pathKeyFor(session)
+  if (!session || !pathKey) return null
+  return <Strip pathKey={pathKey} role={session.role} label={accountFor(session).label} />
 }
 
 function Strip({ pathKey, role, label }: { pathKey: PathKey; role: string; label: string }) {

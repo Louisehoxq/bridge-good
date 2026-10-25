@@ -286,7 +286,7 @@ Not verified: a live model call. No API key was available while this was built. 
 - Golden-set run as a script in CI.
 
 **Phase 3: governance**
-- Publish the rubric change log on `/training`.
+- Publish the rubric change log on `/learn`.
 - Hold a regular rubric review with staff and community representatives.
 - Write a bias audit report each cohort.
 
