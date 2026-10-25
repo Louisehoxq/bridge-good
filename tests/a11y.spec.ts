@@ -4,7 +4,8 @@ import routes from "../src/routes"
 import { PILLARS } from "../src/content/framework"
 import { AUDIENCES } from "../src/content/training"
 import { GUIDE_SLUGS, TRACKS } from "../src/lib/library"
-import { ROLES, type Role } from "../src/lib/roles"
+import { SEED_FEEDBACK } from "../src/content/feedback-seed"
+import { ALL_ROLES, type Role } from "../src/lib/roles"
 
 type RouteEntry = { path?: string; index?: boolean; file: string; children?: RouteEntry[] }
 
@@ -16,6 +17,8 @@ const PATH_PARAMS: Record<string, readonly string[]> = {
   "learn/pillars/:pillarId": PILLARS.map((p) => p.id),
   "learn/tracks/:slug": TRACKS.map((t) => t.slug),
   "learn/guides/:slug": GUIDE_SLUGS,
+  // Every seeded kind and status, plus an open AI disagreement group.
+  "steward/feedback/:id": [...SEED_FEEDBACK.map((f) => f.id), "ai-responsible-ai"],
 }
 
 /** Every page route in src/routes.ts. Resource routes and redirects (.ts files) have no page to test. */
@@ -41,7 +44,7 @@ function expand(path: string): string[] {
  */
 const KNOWN: Record<string, string[]> = {}
 
-const roleFor = (path: string) => ROLES.find((role) => path === `/${role}` || path.startsWith(`/${role}/`))
+const roleFor = (path: string) => ALL_ROLES.find((role) => path === `/${role}` || path.startsWith(`/${role}/`))
 
 /** Logs in through the demo login screen by submitting the chosen role's form. */
 async function logIn(page: Page, role: Role) {

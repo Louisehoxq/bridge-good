@@ -1,4 +1,4 @@
-import type { Role } from "@/lib/roles"
+import type { CommunityRole } from "@/lib/roles"
 
 /**
  * Design for Social Good principles, drawn from the BRIDGEGOOD challenge brief.
@@ -13,7 +13,7 @@ export type Principle = {
   id: string
   name: string
   meaning: string
-  inPractice: Record<Role, string>
+  inPractice: Record<CommunityRole, string>
 }
 
 /** One line to show above the principles, so they don't compete with the pillars. */

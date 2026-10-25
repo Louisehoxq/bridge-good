@@ -2,6 +2,7 @@ import { ThumbsDown, ThumbsUp } from "lucide-react"
 import { useId, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
+import { SentToSteward } from "@/components/feedback/framework-hooks" // Milestone 3 hook
 import { NativeSelect } from "@/components/ui/select"
 import type { PillarId } from "@/content/framework"
 import { newId, nowLabel } from "@/lib/demo-store"
@@ -77,6 +78,8 @@ export function FeedbackControls({ pillar, kind }: { pillar: PillarId; kind: "ai
           </NativeSelect>
         </div>
       )}
+      {/* Milestone 3 hook: where "not right" goes, and BRIDGEGOOD's latest decision on it. */}
+      {verdict === "not-right" && <SentToSteward pillar={pillar} />}
     </div>
   )
 }

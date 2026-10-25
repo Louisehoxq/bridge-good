@@ -1,6 +1,14 @@
+/** The four community roles that practice the philosophy. */
 export const ROLES = ["student", "mentor", "ambassador", "partner"] as const
 
-export type Role = (typeof ROLES)[number]
+export type CommunityRole = (typeof ROLES)[number]
+
+/** BRIDGEGOOD staff. The steward reviews feedback and is the only role that changes the official wording. */
+export const STAFF_ROLES = ["steward"] as const
+
+export const ALL_ROLES = [...ROLES, ...STAFF_ROLES] as const
+
+export type Role = (typeof ALL_ROLES)[number]
 
 /** Two kinds of ambassador share the `ambassador` role key; the session stores which one. */
 export const AMBASSADOR_KINDS = ["chapter-lead", "company-host"] as const
@@ -120,6 +128,25 @@ export const ROLE_INFO: Record<Role, RoleInfo> = {
       },
     ],
   },
+  // Milestone 3 (feedback loop): BRIDGEGOOD staff.
+  steward: {
+    label: "BRIDGEGOOD steward",
+    plural: "BRIDGEGOOD stewards",
+    summary: "Read every piece of feedback in one inbox, decide with a reason, and keep the framework's official wording and changelog.",
+    home: "/steward",
+    loopRole: "Listen to everyone using the philosophy, decide what changes, and credit where each change came from",
+    demoAccount: { name: "Morgan Ellis", detail: "Program staff, keeps the Design for Social Good framework (synthetic)" },
+    sidebar: [
+      { items: [{ label: "Inbox", href: "/steward" }] },
+      {
+        label: "The framework",
+        items: [
+          { label: "Versions and wording", href: "/steward/framework" },
+          { label: "Public changelog", href: "/learn/changelog" },
+        ],
+      },
+    ],
+  },
 }
 
 /** The two ambassador demo accounts. They share the ambassador area and color; the overview and playbook differ. */
@@ -155,7 +182,7 @@ export const PUBLIC_NAV: NavItem[] = [
 ]
 
 export function isRole(value: unknown): value is Role {
-  return typeof value === "string" && (ROLES as readonly string[]).includes(value)
+  return typeof value === "string" && (ALL_ROLES as readonly string[]).includes(value)
 }
 
 export function isAmbassadorKind(value: unknown): value is AmbassadorKind {

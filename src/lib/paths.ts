@@ -265,6 +265,8 @@ export const PATHS: Record<PathKey, { title: string; home: string; stages: PathS
   },
 }
 
-export function pathKeyFor(session: Session): PathKey {
+export function pathKeyFor(session: Session): PathKey | undefined {
+  // Milestone 3: BRIDGEGOOD stewards are staff, so they have no path.
+  if (session.role === "steward") return undefined
   return session.role === "ambassador" ? ((session.ambassadorKind ?? "chapter-lead") satisfies AmbassadorKind) : (session.role satisfies Role)
 }

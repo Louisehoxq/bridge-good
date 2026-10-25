@@ -43,6 +43,10 @@ const SIDEBAR_ICONS: Record<string, IconName> = {
   "/partner/project": "group",
   "/partner/gallery": "layout-grid",
   "/partner/toolkit": "folder-open",
+  // Milestone 3: the BRIDGEGOOD steward area.
+  "/steward": "inbox",
+  "/steward/framework": "scroll-text",
+  "/learn/changelog": "history",
 }
 
 /**

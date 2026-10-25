@@ -2,6 +2,7 @@ import { data } from "react-router"
 import type { Route } from "./+types/guide"
 import { DraftNote, LibraryPage, PromptList } from "@/components/library/library-page"
 import { SyntheticBadge } from "@/components/synthetic-badge"
+import { DidntFit, guideTarget } from "@/components/feedback/didnt-fit" // Milestone 3 hook
 import { ADAPTATION } from "@/content/adaptation"
 import { AI_SOCIAL_GOOD_GUIDE, AMBASSADOR_VETTING, MENTOR_COMMITMENT, MOCK_CASE_GUIDE, REAL_CASE_GUIDE, type HowToGuide } from "@/content/guides"
 import { DISABILITY_CONVENTION, PREFERRED_TERMS, WRITING_RULES } from "@/content/language"
@@ -30,6 +31,10 @@ export default function GuidePage({ loaderData }: Route.ComponentProps) {
       {slug === "ambassador-vetting" && <Vetting />}
       {slug === "adapt-locally" && <Adapt />}
       {slug === "inclusive-language" && <Language />}
+      {/* Milestone 3 hook: "this didn't fit" flag. */}
+      <div className="mt-10">
+        <DidntFit {...guideTarget(slug)} />
+      </div>
       <div className="mt-10">
         <DraftNote>{DRAFT}</DraftNote>
       </div>

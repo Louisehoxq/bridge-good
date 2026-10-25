@@ -1,4 +1,5 @@
 import { DraftNote, LibraryPage, PromptList } from "@/components/library/library-page"
+import { DidntFit } from "@/components/feedback/didnt-fit" // Milestone 3 hook
 import { DECISION_MOMENT_INFO, DECISION_MOMENTS, FRAMEWORK_META, PROMPTS_BY_MOMENT, REFLECTION_PROMPTS, type DecisionMoment } from "@/content/framework"
 import { pageMeta } from "@/lib/meta"
 
@@ -48,6 +49,10 @@ export default function PromptsPage() {
             ))}
           </ul>
         </section>
+      </div>
+      {/* Milestone 3 hook: "this didn't fit" flag, with a choice of prompt. */}
+      <div className="mt-10">
+        <DidntFit target={{ type: "prompt" }} pillarIds={[]} promptChoices={REFLECTION_PROMPTS.map((p) => p.id)} what="a prompt" />
       </div>
       <div className="mt-10">
         <DraftNote>
