@@ -1,6 +1,7 @@
+import { z } from "zod"
 import { convertToModelMessages, createUIMessageStreamResponse, Output, safeValidateUIMessages, streamText, toUIMessageStream, type UIMessage } from "ai"
 import type { Route } from "./+types/api.reflect"
-import { evaluatorModel, isEvaluatorConfigured } from "@/lib/evaluator/model.server"
+import { evaluatorModel, evaluatorProvider, isEvaluatorConfigured } from "@/lib/evaluator/model.server"
 import { studentSystemPrompt } from "@/lib/evaluator/prompts"
 import { REFLECT_LIMITS } from "@/lib/evaluator/request"
 import { studentReviewSchema } from "@/lib/evaluator/schema"
@@ -32,11 +33,16 @@ export async function action({ request }: Route.ActionArgs) {
   const checked = checkReflectMessages(validated.data)
   if (!checked.ok) return fail(checked.status, checked.error)
 
+  // Google's Gemma endpoint rejects JSON-schema mode (400), so for it the schema goes in the prompt and
+  // readReview() checks the reply.
+  const promptOnlyJson = evaluatorProvider() === "gemma-google"
   const result = streamText({
     model: evaluatorModel(),
-    system: studentSystemPrompt(),
+    system: promptOnlyJson
+      ? `${studentSystemPrompt()}\n\nReply with one JSON object only, no code fence and no other text, matching this JSON Schema:\n${JSON.stringify(z.toJSONSchema(studentReviewSchema))}`
+      : studentSystemPrompt(),
     messages: await convertToModelMessages(checked.messages),
-    output: Output.object({ schema: studentReviewSchema }),
+    ...(promptOnlyJson ? {} : { output: Output.object({ schema: studentReviewSchema }) }),
     maxOutputTokens: REFLECT_LIMITS.outputTokens,
   })
 

@@ -224,6 +224,8 @@ Use `isEvaluatorConfigured()` in `src/routes/api.reflect.ts` (both `loader` and 
 
 ### 4. Structured output
 
+**Result, 2026-10-25 (`gemma-google`, live):** Google's Gemma endpoint rejects `responseMimeType`/`responseJsonSchema` (400 or 500). The route now skips `Output.object` for `gemma-google`, appends the JSON Schema to the system prompt, and `readReview()` strips a code fence. A synthetic reflection came back as valid JSON on `gemma-4-26b-a4b-it` (about a minute, mostly reasoning), with pillar-tied questions and no verdict words. `gemma-4-31b-it` returned 500s on the same key. Other providers not yet run.
+
 The route uses `streamText` with `Output.object({ schema: studentReviewSchema })`. Check that it works for each path:
 - **Gateway:** send one request and confirm the reply is JSON that `readReview()` accepts. If the provider doesn't support schema-constrained output for Gemma, the reply may come back as JSON in plain text. `readReview()` handles that, but the rejection rate will tell us.
 - **vLLM:** its OpenAI-compatible server supports `response_format` with a JSON schema (guided decoding). Turn it on with `supportsStructuredOutputs: true` in the adapter.
