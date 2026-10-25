@@ -13,9 +13,9 @@
   color-scheme: light;
   --paper: #FAF6EE; --surface: #FFFFFF; --surface-sunken: #F3EDE1;
   --ink: #1F2A44; --ink-muted: #3E4760;
-  --action: #1F3A6B; --on-action: #FFFFFF;
+  --action: #003365; --on-action: #FFFFFF;
   --line: #E2D9C8; --line-strong: #767066;
-  --marker: #F6D57A; --note: #FFF1B8; --gold: #CC9900;
+  --marker: #F6D57A; --note: #FFF1B8; --gold: #CD991D;
   --draft: #5B4B9A; --draft-soft: #EEEAF8;
   --success: #2B6A3F; --success-soft: #E3F1E6;
   --error: #A3261B; --error-soft: #FBE8E5;
@@ -85,8 +85,8 @@ a { color: var(--action); text-underline-offset: 3px; }
 .topbar { position: sticky; top: 0; z-index: 5; background: var(--paper); border-bottom: 1px solid var(--line); }
 .topbar .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; min-height: 64px; padding-block: 8px; }
 .topbar .tag { max-width: 100%; }
-.logo { font-weight: 700; letter-spacing: .02em; text-decoration: none; color: var(--ink); }
-.logo span { color: var(--gold); }
+.logo { font-weight: 800; letter-spacing: .02em; text-decoration: none; color: var(--action); }
+.logo .gold { color: var(--gold); }
 .topbar nav { display: flex; gap: 4px; margin-left: auto; }
 
 .section { padding: 56px 0; border-bottom: 1px solid var(--line); }
@@ -227,7 +227,7 @@ legend { font-weight: 600; padding: 0; margin-bottom: 8px; }
 
 <header class="topbar">
   <div class="wrap">
-    <a class="logo" href="#main">BRIDGEGOOD<span aria-hidden="true">x</span><span class="sr-only"> BridgeGoodx</span></a>
+    <a class="logo" href="#main">BRIDGE<span class="gold">GOOD</span><span aria-hidden="true">x</span><span class="sr-only"> BridgeGoodx</span></a>
     <span class="tag t-synthetic">Design showcase · all people are synthetic</span>
     <nav aria-label="Theme">
       <button class="btn btn-quiet" type="button" data-set-theme="light" aria-pressed="false">Light</button>

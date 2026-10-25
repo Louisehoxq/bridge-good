@@ -99,13 +99,13 @@
   --surface-sunken: #f3ede1;
   --ink: #1f2a44;
   --ink-muted: #3e4760;
-  --action: #1f3a6b;
+  --action: #003365;
   --on-action: #ffffff;
   --line: #e2d9c8;
   --line-strong: #767066;
   --marker: #f6d57a;
   --note: #fff1b8;
-  --gold: #cc9900;
+  --gold: #cd991d;
   --draft: #5b4b9a;
   --draft-soft: #eeeaf8;
   --success: #2b6a3f;
@@ -194,12 +194,12 @@
     --surface-sunken: #f3ede1;
     --ink: #1f2a44;
     --ink-muted: #3e4760;
-    --action: #1f3a6b;
+    --action: #003365;
     --on-action: #ffffff;
     --line: #e2d9c8;
     --line-strong: #767066;
     --note: #fff1b8;
-    --gold: #cc9900;
+    --gold: #cd991d;
     --note-shadow: none;
   }
 }

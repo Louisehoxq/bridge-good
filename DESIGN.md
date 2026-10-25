@@ -37,12 +37,12 @@ All ratios are WCAG 2 contrast ratios, computed for these exact values. "Paper" 
 | `--surface-sunken` | `#F3EDE1` | Wells, table headers, the sidebar | — |
 | `--ink` | `#1F2A44` | Body text, headings | 13.2 on paper (AAA) |
 | `--ink-muted` | `#3E4760` | Secondary text, hints | 8.6 on paper, 7.9 on sunken (AAA) |
-| `--action` | `#1F3A6B` | Primary buttons, links, focus ring | 10.4 on paper. White on action: 11.2 |
+| `--action` | `#003365` | Primary buttons, links, focus ring | 11.7 on paper. White on action: 12.6 |
 | `--line` | `#E2D9C8` | Decorative dividers and card edges only | — |
 | `--line-strong` | `#767066` | **Control borders** (inputs, outline buttons, checkboxes) | 4.6 on paper, 4.9 on surface (needs 3:1) |
 | `--marker` | `#F6D57A` | Highlighter: background only | Ink on marker: 10.0 |
 | `--note` | `#FFF1B8` | Pinned note background | Ink on note: 12.6 |
-| `--gold` | `#CC9900` | BRIDGEGOOD gold: path lines, rules, the logo | 2.4 on paper, **decorative only, never text or the only signal** |
+| `--gold` | `#CD991D` | BRIDGEGOOD gold: path lines, rules, the logo | 2.4 on paper, **decorative only, never text or the only signal** |
 | `--draft` / `--draft-soft` | `#5B4B9A` / `#EEEAF8` | AI draft frame and label | 6.7 on paper, 6.1 on draft-soft |
 | `--success` / `--success-soft` | `#2B6A3F` / `#E3F1E6` | Success, with a check icon | 5.6 on soft |
 | `--error` / `--error-soft` | `#A3261B` / `#FBE8E5` | Errors, with an alert icon | 6.2 on soft |
@@ -81,7 +81,7 @@ Each role always shows **icon + label + color** together. Chapter lead and compa
 | Community partner | `heart-handshake` | `#8A4B12` / `#F7EADB` | 6.3, 5.7 | `#E7B07A` / `#33261A` | 7.6 |
 | BRIDGEGOOD steward | `scroll-text` | `--ink` / `--surface-sunken` | 12.2 | `--ink` / `--surface-sunken` | 15.1 |
 
-White text on a role fill passes too: apprentice 7.9, partner 6.8, action 11.2.
+White text on a role fill passes too: apprentice 7.9, partner 6.8, action 12.6.
 
 ### Rules
 
