@@ -1,5 +1,7 @@
 # Evaluation: where BridgeGoodx stands (2026-10-24)
 
+> **Superseded in part:** this reviewed the app before milestone 2. See [evaluation-milestone-2.md](evaluation-milestone-2.md) for the current state. The team also decided on **desktop-first** layouts for every role (design work happens on a laptop), so the phone-first notes below are kept as a check (phone widths must still work), not a layout target.
+
 Five read-only reviews of the app at `434deaf`, plus two companion docs: [social-good.md](social-good.md) (what the terms mean in practice) and [ai-evaluator.md](ai-evaluator.md) (one evaluator, four uses).
 
 ## The headline

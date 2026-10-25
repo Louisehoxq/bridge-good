@@ -94,3 +94,26 @@ Also watch for small text that axe may pass but that breaks the type rules. For 
 - `src/root.tsx` skip link: it uses `rounded-md bg-primary`, which already resolves to the right tokens. No change needed.
 - `focus:outline-none` on `<main tabIndex={-1}>` in `app-shell.tsx` is acceptable, because `main` is a programmatic focus target and not a control. Don't copy that pattern onto interactive elements.
 - A text-spacing and 200% zoom screenshot pass (DESIGN.md §8, CI item 3) isn't built yet.
+
+## Layout checks (WCAG 1.4.10 reflow, 1.4.4 resize, 1.4.12 text spacing)
+
+`npm run test:a11y` now also checks every page for:
+- sideways scrolling at 320px (reflow)
+- sideways scrolling at 640px (200% zoom on a 1280px screen)
+- text clipped once WCAG's text-spacing overrides are applied
+
+Fixed already: the logged-out header showed the "Log in" button beside the menu button on small screens, because the button's `inline-flex` overrode `hidden`. It made every public page scroll sideways at 320px.
+
+Still failing, listed as `KNOWN_LAYOUT` in `tests/a11y.spec.ts` (the test fails when one is fixed but still listed):
+
+| Page | Check | Likely cause |
+| --- | --- | --- |
+| `/chapters` | 320px | The map `figure` has a fixed minimum width |
+| `/learn/self-check` | 320px | The question list and status box don't wrap |
+| `/student/submissions` | 320px | The submission form's controls are wider than the column |
+| `/ambassador/matching` | 320px | A button row doesn't wrap |
+| `/learn` | text spacing | `line-clamp-3` summaries hide text. Show the full summary, or link to it. |
+| `/mentor/mentee` | text spacing | `line-clamp-1` message previews hide text |
+| `/design` | text spacing | `truncate` on icon names in the specimen grid |
+
+Still manual: forced colors (Windows high contrast), keyboard-only walkthroughs, and a screen reader pass (VoiceOver or NVDA).

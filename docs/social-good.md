@@ -1,5 +1,7 @@
 # What "social good" means here
 
+> **Decision since this was written (October 2026):** the team chose **desktop-first** layouts for every role, because design learning and project work happen on a laptop. The phone-first recommendations below stay as a requirement that phone-sized screens still work (WCAG 1.4.10 reflow, tested in `npm run test:a11y`), not as the layout target. Recommendations 1, 3 and 5 are planned in `docs/evaluation-milestone-2.md` section 4.
+
 > **Status: working draft for the team, written 2026-10-24.** BRIDGEGOOD authors and owns the Design for Social Good philosophy. This document is our reading of it, built from `docs/challenge.md`, the team spec, and BRIDGEGOOD's public pages (apprenticeship, learn/how-it-connects, accelerator, tuition, design). Anything we propose here needs BRIDGEGOOD's review before it shows up as their language in the app.
 
 The brief warns that "social good", "inclusion", "access" and "human-centered" can turn into branding. This doc gives each one a meaning you can see in what people do. It also says how you'd notice when it's missing, and what that means for the app.

@@ -1,5 +1,7 @@
 # Page copy changes (outside `src/content/`)
 
+> **Status (October 2026):** written before the move to React Router, so paths like `src/app/page.tsx` now map to `src/routes/` (for example `src/routes/home.tsx`). The restructure applied most of these; the milestone 2.5 content pass should confirm each item and delete this file once everything is applied.
+
 Written 2026-10-24 by the content-pass session, for the session porting the app to React Router. Everything in `src/content/` is already updated on branch `claude/content-pass-c9a490`. The items below live in pages, components and `src/lib/`, so the port should apply them to the ported files.
 
 Paths are the current Next.js paths. Use whatever the ported file is called. Rules behind every change are in `src/content/language.ts`: US spelling, sentence case, grade 6–8 reading level, identity-first disability language ("disabled people"), and "people from groups underrepresented in design". Say "apprentice" when describing BRIDGEGOOD's own programs. Keep "student" as the app role name.

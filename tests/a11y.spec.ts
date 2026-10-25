@@ -87,3 +87,96 @@ for (const path of paths) {
     expect(report, `${path}: ${report.map((r) => `${r.rule} (${r.targets.length})`).join(", ")}`).toEqual([])
   })
 }
+
+/** WCAG 1.4.12 text-spacing overrides: content must stay readable with these applied. */
+const TEXT_SPACING_CSS = `
+  * { line-height: 1.5 !important; letter-spacing: 0.12em !important; word-spacing: 0.16em !important; }
+  p { margin-bottom: 2em !important; }
+`
+
+/** Elements that make the page scroll sideways, ignoring content inside its own scrolling region. */
+async function sidewaysOverflow(page: Page) {
+  return page.evaluate(() => {
+    const doc = document.documentElement
+    if (doc.scrollWidth <= doc.clientWidth + 1) return []
+    const scrolls = (el: Element) => ["auto", "scroll"].includes(getComputedStyle(el).overflowX)
+    return [...document.body.querySelectorAll("*")]
+      .filter((el) => el.getBoundingClientRect().right > doc.clientWidth + 1)
+      .filter((el) => {
+        for (let p = el.parentElement; p; p = p.parentElement) if (scrolls(p)) return false
+        return true
+      })
+      .slice(0, 5)
+      .map((el) => `${el.tagName.toLowerCase()}${el.id ? `#${el.id}` : ""}.${[...el.classList].slice(0, 3).join(".")}`)
+  })
+}
+
+/** Text clipped by a box that hides its overflow (the visually hidden .sr-only pattern is allowed). */
+async function clippedText(page: Page) {
+  return page.evaluate(() =>
+    [...document.body.querySelectorAll("*")]
+      .filter((el) => {
+        const style = getComputedStyle(el)
+        const hides = (v: string) => v === "hidden" || v === "clip"
+        if (!hides(style.overflowX) && !hides(style.overflowY)) return false
+        const rect = el.getBoundingClientRect()
+        if (rect.width <= 2 || rect.height <= 2 || el.closest(".sr-only")) return false
+        if (!el.textContent?.trim()) return false
+        return el.scrollHeight > el.clientHeight + 2 || el.scrollWidth > el.clientWidth + 2
+      })
+      .slice(0, 5)
+      .map((el) => `${el.tagName.toLowerCase()}.${[...el.classList].slice(0, 3).join(".")}: "${el.textContent!.trim().slice(0, 40)}"`)
+  )
+}
+
+type LayoutCheck = "at320" | "at200" | "clipped"
+
+/**
+ * Layout failures found when these checks were added (October 2026), tracked in docs/design-followups.md.
+ * Any other failure fails the test, and so does a listed one that has gone, so this list can only shrink.
+ */
+const KNOWN_LAYOUT: Record<string, LayoutCheck[]> = {
+  // Page content wider than 320px.
+  "/chapters": ["at320"],
+  "/learn/self-check": ["at320"],
+  "/student/submissions": ["at320"],
+  "/ambassador/matching": ["at320"],
+  // Line-clamped and truncated text hides content once WCAG text spacing is applied.
+  "/design": ["clipped"],
+  "/learn": ["clipped"],
+  "/mentor/mentee": ["clipped"],
+}
+
+for (const path of paths) {
+  test(`${path} reflows, zooms and takes text spacing (WCAG 1.4.10, 1.4.4, 1.4.12)`, async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== "light", "Layout checks don't depend on the theme")
+    const role = roleFor(path)
+    if (role) await logIn(page, role)
+
+    // 1.4.10 Reflow: no sideways scrolling at 320 CSS px wide.
+    await page.setViewportSize({ width: 320, height: 640 })
+    await page.goto(path)
+    await page.evaluate(() => document.fonts.ready)
+    const at320 = await sidewaysOverflow(page)
+
+    // 1.4.4 Resize text: a 1280px screen at 200% zoom is 640 CSS px wide.
+    await page.setViewportSize({ width: 640, height: 900 })
+    await page.goto(path)
+    await page.evaluate(() => document.fonts.ready)
+    const at200 = await sidewaysOverflow(page)
+
+    // 1.4.12 Text spacing, at the desktop design width.
+    await page.setViewportSize({ width: 1280, height: 900 })
+    await page.goto(path)
+    await page.addStyleTag({ content: TEXT_SPACING_CSS })
+    await page.evaluate(() => document.fonts.ready)
+    const clipped = await clippedText(page)
+
+    const found: Record<LayoutCheck, string[]> = { at320, at200, clipped }
+    const known = KNOWN_LAYOUT[path] ?? []
+    const gone = known.filter((check) => found[check].length === 0)
+    expect(gone, `${path}: fixed, so remove these from KNOWN_LAYOUT in tests/a11y.spec.ts`).toEqual([])
+    const unexpected = Object.fromEntries(Object.entries(found).filter(([check, els]) => els.length && !known.includes(check as LayoutCheck)))
+    expect(unexpected, path).toEqual({})
+  })
+}
