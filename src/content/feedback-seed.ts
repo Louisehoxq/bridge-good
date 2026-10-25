@@ -211,6 +211,25 @@ export const SEED_FEEDBACK: FeedbackItem[] = [
     ],
     synthetic: true,
   },
+  {
+    id: "fb-event-oakland-listening",
+    kind: "event-learning",
+    at: "Oct 12, 2026",
+    from: { role: "chapter-lead", name: "Rosa Delgado", group: "Oakland chapter" },
+    target: { type: "event", id: "ev-oakland-listening-past", title: "Listening session: finding fresh food" },
+    pillarIds: ["design-for-good", "access-inclusion"],
+    eventId: "ev-oakland-listening-past",
+    eventType: "listening-session",
+    chapter: "Oakland chapter",
+    learned: "People trusted the session because a pantry volunteer they knew opened it. Neighbors corrected our notes twice during the read-back, and both corrections changed what the team will build.",
+    access: "Cantonese interpretation worked well. Childcare filled up in the first week, so some parents couldn't come.",
+    change: "The listening session template could say to book childcare for twice as many children as you expect, and to have someone the community already knows open the session.",
+    attended: 17,
+    credit: { consent: true, as: "Oakland chapter" },
+    status: "new",
+    replies: [],
+    synthetic: true,
+  },
 ]
 
 /** "Not right" records from AI feedback controls (Reflection Companion and mentor critique prep). Counts only. */

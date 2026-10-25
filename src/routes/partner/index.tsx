@@ -1,5 +1,6 @@
 import { Link } from "react-router"
 import { PageHeader } from "@/components/app-shell"
+import { YourUpcomingEvents } from "@/components/events/event-lists"
 import { ImpactLoop } from "@/components/impact-loop"
 import { PathStepper } from "@/components/path/path-stepper"
 import { SubmittedBriefs } from "@/components/partner/submitted-briefs"
@@ -29,6 +30,8 @@ export default function PartnerHome() {
         </div>
         <SubmittedBriefs />
       </div>
+      <YourUpcomingEvents />
+
       <section aria-labelledby="loop-title" className="mt-12">
         <h2 id="loop-title" className="mb-6 type-title-2">
           Where you fit

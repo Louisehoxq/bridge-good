@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { ChapterEvents } from "@/components/events/event-lists"
 import { Icon } from "@/components/icon"
 import { CHAPTERS, REGIONS } from "@/content/chapters"
 import { SyntheticBadge } from "@/components/synthetic-badge"
@@ -129,6 +130,7 @@ export function ChapterFinder() {
                   <Icon name="mail" className="text-base" />
                   <span className="min-w-0 [overflow-wrap:anywhere]">{c.email}</span>
                 </a>
+                <ChapterEvents chapterId={c.id} city={c.city} />
               </article>
             </li>
           ))}

@@ -10,6 +10,39 @@ The roles are: **apprentice** (BRIDGEGOOD's word for a student), **mentor**, **a
 
 ## Unreleased
 
+### Community events
+
+Small, Luma-style chapter calendars: each event is a simple page with an RSVP, and access details are required up front. Deliberately not a ticketing platform: no payments, waitlists, reminders, calendar sync, recurring series or check-in. Every event, host and place is synthetic, and places are an area only, never an address.
+
+**For everyone (no login)**
+- **Community events** at `/events` (new "Events" link in the header and footer): upcoming events on every chapter's calendar, filtered by chapter, type and format, with past events folded below. Filters live in the URL, so `/events?chapter=chicago` is a chapter's calendar.
+- An **event page** for each one: what it is, when (in the chapter's own time zone), the area or "Online", the host with their role badge, the plan, who it's for, and links into the library (the carry-it-forward kit, a practice moment, pillars).
+- An **Access** block on every event: step-free access, captions or interpretation, languages, childcare and cost (always free).
+- **Add to my calendar** downloads a plain `.ics` file.
+- Logged out, the event page says how to join instead of offering an RSVP, and points groups outside a chapter to the carry-it-forward kit. Logging in from an event page brings you back to it.
+- Each chapter's entry at `/chapters` shows its next two events and a link to its calendar.
+
+**Apprentices, mentors, chapter leads, company hosts and community partners**
+- **RSVP** with your demo account, and cancel it. A full event says so; there's no waitlist. Online events show a synthetic join link to people who RSVP'd; in-person events say the host shares the exact place.
+- **Your upcoming events** on every role overview: what you're hosting or going to.
+
+**Chapter leads, company hosts, community partners and mentors (including alumni)**
+- **Host an event** at `/events/host`, with a template for each type: critique circle, site visit, portfolio review, listening session, Demo Day and chapter meetup. The critique circle is pre-filled from the carry-it-forward kit, and shows the kit's four commitments to keep. Choosing another type only replaces what you haven't changed.
+- Access details are required, the area is checked for street addresses, and free text is screened for email addresses and phone numbers.
+- The host sees who's coming. After the event, they send **What we learned** to BRIDGEGOOD: what they learned about the approach, what worked for access, what BRIDGEGOOD should change, and roughly how many came (a number, no names). Credit only if they tick the box. In the demo, "pretend this event has happened" opens the form early.
+- Apprentices see that they host with their chapter lead.
+
+**BRIDGEGOOD stewards**
+- A new inbox type, **What we learned (event)**, and a "Community events" tag filter. It follows the same rules: a reason for every decision, credit only with consent, no personal data. The steward's reply shows on the event page.
+- **Featured events** in the inbox sidebar (Demo Day and listening sessions), and "Community events" in the steward sidebar.
+
+**Technical**
+- Model in `src/lib/events/types.ts`; pure rules in `src/lib/events/logic.ts` (time zones without a library, upcoming and past, RSVP counts, the host form's checks, the `.ics` file); demo collections `community-events` and `event-rsvps` in `src/lib/events/store.ts`. Templates and synthetic seeds in `src/content/events.ts`; seed dates are days from today, so there are always upcoming and past events. Chapters now carry an IANA time zone.
+- The root loader returns `now` (`useServerNow()`), so the server and the browser agree on what's upcoming. Times are labelled "Chicago time", not Intl's zone names, which differ between Node and browsers.
+- Feedback types: the `event-learning` kind and an `event` target.
+- Login follows `next` back to `/events` pages as well as the role's own area.
+- Unit tests for the event rules (`src/lib/events/test/`), an end-to-end spec (`tests/community-events.spec.ts`) for the whole loop, and the axe and layout checks now cover every seed event page and the host form (signed in).
+
 ### Practice moments and the carry-it-forward kit
 
 Two answers to the weakest criteria in the [milestone 3 evaluation](docs/evaluation-milestone-3.md): outside communities can now run a session without BRIDGEGOOD, and people practice judgment instead of taking a module.

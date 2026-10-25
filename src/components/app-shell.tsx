@@ -47,6 +47,7 @@ const SIDEBAR_ICONS: Record<string, IconName> = {
   "/steward": "inbox",
   "/steward/framework": "scroll-text",
   "/learn/changelog": "history",
+  "/events": "calendar",
 }
 
 /**

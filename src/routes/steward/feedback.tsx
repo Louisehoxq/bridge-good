@@ -12,6 +12,7 @@ import { RoleBadge, STUDIO_ROLES } from "@/components/studio/role-badge"
 import { SyntheticBadge } from "@/components/synthetic-badge"
 import { GROUP_TYPES } from "@/content/carry-forward"
 import { getPracticeMoment } from "@/content/practice"
+import { typeNoun } from "@/lib/events/logic"
 import { RUBRIC } from "@/lib/evaluator/rubric"
 import { EFFECT_INFO, itemTitle, sourceLabel, targetLabel } from "@/lib/feedback/logic"
 import { useFieldNotes, useFramework, useInbox } from "@/lib/feedback/store"
@@ -133,6 +134,22 @@ function WhatWasSent({ item }: { item: FeedbackItem }) {
             <Row label="How they read your reply">
               With a reply code. BRIDGEGOOD has no name or email for them, so they see only what you write here.
             </Row>
+          </>
+        )}
+        {item.kind === "event-learning" && (
+          <>
+            <Row label="Event">
+              {item.target.type === "event" ? (
+                <Link to={`/events/${item.eventId}`} className="underline underline-offset-4">
+                  {item.target.title}
+                </Link>
+              ) : null}
+              {` (${typeNoun(item.eventType)}, ${item.chapter})`}
+            </Row>
+            <Row label="What they learned about the approach">{item.learned}</Row>
+            <Row label="What worked, or didn't, for access">{item.access}</Row>
+            <Row label="What BRIDGEGOOD should change">{item.change}</Row>
+            <Row label="About how many came">{item.attended === undefined ? "" : `${item.attended} (a number only, no names)`}</Row>
           </>
         )}
         {item.kind === "retrospective" && (

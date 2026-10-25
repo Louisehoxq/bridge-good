@@ -1,6 +1,7 @@
 import { useId, useState } from "react"
 import { Link, useSearchParams } from "react-router"
 import { PageHeader } from "@/components/app-shell"
+import { FeaturedEvents } from "@/components/events/event-lists"
 import { CommunityCard } from "@/components/feedback/community-card"
 import { OutsideBadge } from "@/components/feedback/outside-badge"
 import { KindTag, StatusTag, TargetTag } from "@/components/feedback/tags"
@@ -26,6 +27,7 @@ function tagsFor(item: FeedbackItem) {
   if (item.target.type === "prompt") tags.push("prompts")
   if (item.target.type === "practice") tags.push("practice")
   if (item.kind === "outside-community") tags.push("kit")
+  if (item.kind === "event-learning") tags.push("events")
   return tags
 }
 
@@ -50,8 +52,8 @@ export default function StewardInbox() {
     <>
       <PageHeader title="Inbox">
         Every piece of feedback on the Design for Social Good framework, in one place: local adaptations, &ldquo;this didn&apos;t
-        fit&rdquo; flags, disagreements with the AI, partner retrospectives, community feedback, and groups outside BRIDGEGOOD
-        that ran the carry-it-forward kit. You decide what changes, always with a reason, and the people who sent it see the
+        fit&rdquo; flags, disagreements with the AI, partner retrospectives, community feedback, groups outside BRIDGEGOOD that
+        ran the carry-it-forward kit, and what hosts learned from community events. You decide what changes, always with a reason, and the people who sent it see the
         outcome.
       </PageHeader>
 
@@ -111,6 +113,7 @@ export default function StewardInbox() {
                 <option value="prompts">Reflection prompts</option>
                 <option value="practice">Practice moments</option>
                 <option value="kit">The carry-it-forward kit</option>
+                <option value="events">Community events</option>
               </NativeSelect>
             </div>
           </fieldset>
@@ -135,6 +138,7 @@ export default function StewardInbox() {
           {community.map((c) => (
             <CommunityCard key={c.id} item={c} link />
           ))}
+          <FeaturedEvents />
           <section aria-labelledby={`${id}-how`} className="space-y-2 rounded-2xl bg-muted p-5">
             <h2 id={`${id}-how`} className="type-title-3">
               How decisions work

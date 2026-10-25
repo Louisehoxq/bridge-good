@@ -51,6 +51,20 @@ import {
   TriangleAlert,
   Users,
   X,
+  Baby,
+  Briefcase,
+  CalendarCheck,
+  CalendarPlus,
+  Captions,
+  Coffee,
+  Download,
+  Ear,
+  Footprints,
+  Languages,
+  Map as MapIcon,
+  Monitor,
+  Presentation,
+  Wallet,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -118,6 +132,22 @@ const ICONS = {
   printer: Printer,
   copy: Copy,
   "key-round": KeyRound,
+
+  // Community events: event types, the accessibility block, RSVP and the calendar file.
+  baby: Baby,
+  briefcase: Briefcase,
+  "calendar-check": CalendarCheck,
+  "calendar-plus": CalendarPlus,
+  captions: Captions,
+  coffee: Coffee,
+  download: Download,
+  ear: Ear,
+  footprints: Footprints,
+  languages: Languages,
+  map: MapIcon,
+  monitor: Monitor,
+  presentation: Presentation,
+  wallet: Wallet,
 } satisfies Record<string, LucideIcon>
 
 export type IconName = keyof typeof ICONS

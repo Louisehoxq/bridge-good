@@ -145,6 +145,7 @@ export const ROLE_INFO: Record<Role, RoleInfo> = {
           { label: "Public changelog", href: "/learn/changelog" },
         ],
       },
+      { label: "Community", items: [{ label: "Community events", href: "/events" }] },
     ],
   },
 }
@@ -178,6 +179,7 @@ export function accountFor(session: Session) {
 export const PUBLIC_NAV: NavItem[] = [
   { label: "Welcome", href: "/" },
   { label: "Library", href: "/learn" },
+  { label: "Events", href: "/events" },
   { label: "Chapters (concept)", href: "/chapters" },
 ]
 

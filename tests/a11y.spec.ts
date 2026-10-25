@@ -6,6 +6,7 @@ import { AUDIENCES } from "../src/content/training"
 import { GUIDE_SLUGS, TRACKS } from "../src/lib/library"
 import { PRACTICE_MOMENTS } from "../src/content/practice"
 import { SEED_FEEDBACK } from "../src/content/feedback-seed"
+import { SEED_EVENTS } from "../src/content/events"
 import { ALL_ROLES, type Role } from "../src/lib/roles"
 
 type RouteEntry = { path?: string; index?: boolean; file: string; children?: RouteEntry[] }
@@ -21,6 +22,8 @@ const PATH_PARAMS: Record<string, readonly string[]> = {
   "learn/practice/:slug": PRACTICE_MOMENTS.map((m) => m.slug),
   // Every seeded kind and status, plus an open AI disagreement group.
   "steward/feedback/:id": [...SEED_FEEDBACK.map((f) => f.id), "ai-responsible-ai"],
+  // Upcoming and past, in person and online.
+  "events/:id": SEED_EVENTS.map((e) => e.id),
 }
 
 /** Every page route in src/routes.ts. Resource routes and redirects (.ts files) have no page to test. */
@@ -46,7 +49,10 @@ function expand(path: string): string[] {
  */
 const KNOWN: Record<string, string[]> = {}
 
-const roleFor = (path: string) => ALL_ROLES.find((role) => path === `/${role}` || path.startsWith(`/${role}/`))
+/** Public pages that show their full form only to a signed-in role. */
+const LOGIN_FOR: Record<string, Role> = { "/events/host": "ambassador" }
+
+const roleFor = (path: string) => LOGIN_FOR[path] ?? ALL_ROLES.find((role) => path === `/${role}` || path.startsWith(`/${role}/`))
 
 /** Logs in through the demo login screen by submitting the chosen role's form. */
 async function logIn(page: Page, role: Role) {
