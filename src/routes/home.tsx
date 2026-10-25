@@ -73,7 +73,7 @@ export default function WelcomePage() {
           <div className="max-w-5xl space-y-6">
             <HeroTitle id="hero-title" />
             <p className="max-w-[60ch] type-body-lg">
-              How BRIDGEGOOD designs with communities, not for them, and how you can work this way too.
+              BridgeGoodX connects tech employees, early-career designers, and local nonprofits to create real UX solutions for the communities that need them.
             </p>
           </div>
 

@@ -12,6 +12,8 @@ The roles are: **apprentice** (BRIDGEGOOD's word for a student), **mentor**, **a
 
 ### The home title keeps cycling
 
+- **Everyone:** the line under the title now reads "BridgeGoodX connects tech employees, early-career designers, and local nonprofits to create real UX solutions for the communities that need them."
+
 - **Everyone:** the words after "Design for" now loop (2.2 seconds each) instead of playing once. A "Pause animation" button under the title stops it on "social good"; it never starts under reduced motion.
 
 ### Steward area and library: less disclaimer copy
