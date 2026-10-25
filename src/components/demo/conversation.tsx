@@ -87,7 +87,7 @@ export function Conversation({
         </Button>
       </form>
       <p className="px-4 pb-3 type-small text-muted-foreground">
-        Demo messaging, stored in this browser. Real messaging would follow BRIDGEGOOD&apos;s safeguarding policy. Messages marked &ldquo;Synthetic example&rdquo; are made up.
+        Messages here are saved in this browser only. Real messaging would follow BRIDGEGOOD&apos;s safeguarding policy.
       </p>
     </section>
   )

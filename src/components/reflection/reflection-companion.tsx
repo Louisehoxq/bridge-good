@@ -421,8 +421,7 @@ function OffState() {
     <div className="space-y-6">
       <Notice>
         <p>
-          The AI companion isn&apos;t switched on for this demo (no API key configured). You can still reflect on your own
-          with BRIDGEGOOD&apos;s questions below, and share any of them with your mentor.
+          The AI companion is off right now. You can still reflect on your own with BRIDGEGOOD&apos;s questions below, and share any of them with your mentor.
         </p>
       </Notice>
       <div className="rounded-2xl border bg-card p-5 lg:p-6">

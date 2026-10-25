@@ -14,11 +14,11 @@ const FUNDAMENTALS = [
   { title: "Accessibility spot-check", time: "45 min", task: "Check one web page for contrast, headings, alt text and keyboard access. Note three fixes." },
   { title: "Inclusive form redesign", time: "60 min", task: "Redesign a sign-up form: clear labels, kind error messages, and only the questions that are really needed." },
   { title: "Interview practice", time: "45 min", task: "Practice a consent script and three open questions with a classmate. Swap roles." },
-  { title: "Journey map from a story", time: "60 min", task: "Turn a (synthetic) user story into a journey map with emotions and pain points." },
+  { title: "Journey map from a story", time: "60 min", task: "Turn a user story into a journey map with emotions and pain points." },
 ]
 
 const MOCK_CASE = {
-  org: "Riverside Youth Sports League (synthetic)",
+  org: "Riverside Youth Sports League",
   problem: "Parents who speak Spanish or Vietnamese struggle with the English-only paper registration form, so their children miss the season.",
   steps: [
     "Listen: plan two short interviews with parents (role-played by peers) about registration.",
@@ -33,7 +33,7 @@ export default function PracticePage() {
   return (
     <>
       <PageHeader title="Practice, then apply">
-        Build skills in small steps, rehearse on a mock case, then look at example partner projects (synthetic). The
+        Build skills in small steps, rehearse on a mock case, then look at example partner projects. The
         fundamentals are part of bootcamp, and the mock case is your mini project.
       </PageHeader>
 
@@ -42,7 +42,7 @@ export default function PracticePage() {
           {[
             ["#fundamentals", "Basic fundamentals", "Short exercises on core skills, during bootcamp"],
             ["#mock-case", "Mock case", "Your mini project: a full practice project, end to end"],
-            ["#case-studies", "Case studies", "Synthetic examples of finished partner projects"],
+            ["#case-studies", "Case studies", "Examples of finished partner projects"],
           ].map(([href, label, desc], i) => (
             <li key={href}>
               <a href={href} className="flex h-full flex-col rounded-2xl border bg-card p-5 hover:border-archetype hover:bg-archetype-soft">

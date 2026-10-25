@@ -111,7 +111,7 @@ export function QuestionList({
           {saved.shared > 0 &&
             `${saved.shared === 1 ? "1 question" : `${saved.shared} questions`} shared with ${DEMO_MENTOR} (your mentor) as ${saved.shared === 1 ? "a conversation starter" : "conversation starters"}.`}
         </p>
-        <p className="mt-1 text-muted-foreground">Demo: saved in this browser only. You can stop sharing any question from the list on this page.</p>
+        <p className="mt-1 text-muted-foreground">You can stop sharing any question from the list on this page.</p>
         <Button type="button" variant="outline" className="mt-3" onClick={() => setSaved(null)}>
           Back to these questions
         </Button>

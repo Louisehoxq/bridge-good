@@ -50,8 +50,7 @@ export function HowThisWasMade({ review, modelLabel }: { review: StudentReview; 
         <dd>AI: {modelLabel}, reading your note and screenshots</dd>
         <dt className="font-bold">Rubric</dt>
         <dd>
-          BRIDGEGOOD Design for Social Good rubric, version {review.rubricVersion || RUBRIC_VERSION} (draft, owned by BRIDGEGOOD). No
-          local lens notes.
+          BRIDGEGOOD Design for Social Good rubric, version {review.rubricVersion || RUBRIC_VERSION}
         </dd>
         <dt className="font-bold">What&apos;s in it</dt>
         <dd>
