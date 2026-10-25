@@ -58,8 +58,8 @@ test("host a critique circle, RSVP, send what we learned, and the steward replie
   // 2. It's on the chapter's calendar, and on the chapter's entry at /chapters.
   await page.goto("/events?chapter=chicago")
   await expect(page.getByRole("link", { name: "Critique circle: the rent relief sign-up form" })).toBeVisible()
-  await page.goto("/chapters")
-  await expect(page.getByRole("link", { name: /^Chicago calendar/ })).toBeVisible()
+  await page.goto("/chapters/chicago")
+  await expect(page.getByRole("link", { name: "Critique circle: the rent relief sign-up form" })).toBeVisible()
 
   // 3. An apprentice RSVPs. It shows on their overview.
   await logInAs(page, "student", eventUrl)

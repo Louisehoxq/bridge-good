@@ -7,6 +7,7 @@ import { GUIDE_SLUGS, TRACKS } from "../src/lib/library"
 import { PRACTICE_MOMENTS } from "../src/content/practice"
 import { SEED_FEEDBACK } from "../src/content/feedback-seed"
 import { SEED_EVENTS } from "../src/content/events"
+import { CHAPTERS } from "../src/content/chapters"
 import { ALL_ROLES, type Role } from "../src/lib/roles"
 
 type RouteEntry = { path?: string; index?: boolean; file: string; children?: RouteEntry[] }
@@ -24,6 +25,7 @@ const PATH_PARAMS: Record<string, readonly string[]> = {
   "steward/feedback/:id": [...SEED_FEEDBACK.map((f) => f.id), "ai-responsible-ai"],
   // Upcoming and past, in person and online.
   "events/:id": SEED_EVENTS.map((e) => e.id),
+  "chapters/:id": CHAPTERS.map((c) => c.id),
 }
 
 /** Every page route in src/routes.ts. Resource routes and redirects (.ts files) have no page to test. */

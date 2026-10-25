@@ -10,6 +10,27 @@ The roles are: **apprentice** (BRIDGEGOOD's word for a student), **mentor**, **a
 
 ## Unreleased
 
+### A real chapter map
+
+Stacked on community events. `/chapters` now has an interactive map of a larger, still synthetic, proposed chapter model, and every chapter has its own page.
+
+**For everyone (no login)**
+- An **interactive map** of 15 synthetic chapters: 10 in US cities, plus Toronto, Mexico City, London, Singapore and Melbourne. Pins are buttons you can reach by keyboard. Each opens a popup with the chapter lead, focus and next event. It opens on the Americas, so pins don't overlap; zoom out or choose a region for the rest.
+- **Filters** for region, focus and "has upcoming events", plus search. They change the map and the list together, and say how many chapters match.
+- The **chapter list** stays the full alternative to the map: every detail, "Show on the map" (moves the map without taking focus), and a link to the chapter page. If the map can't load, the page says so and the list keeps working.
+- A **chapter page** at `/chapters/:id`: region, chapter lead, focus, how often it meets, member count, company hosts, community partners, a shared chapter inbox (never a personal address), upcoming events from the chapter calendar, and the chapter's field notes (local adaptations BRIDGEGOOD recognized). Everything is labelled "Synthetic example" and "Proposed chapter model (concept)". Locations are a city only.
+
+**Chapter leads, company hosts, community partners and mentors**
+- **Host an event here** on a chapter page opens the host form on that chapter's calendar. Logged out, "Log in to host" brings you back to it.
+
+**Technical**
+- MapLibre GL JS 6.12.0 (pinned exactly) with OpenFreeMap's positron and dark styles: no API key, attribution always visible. It's imported in an effect, so it never runs on the server, and switches basemap with the color scheme.
+- The build bundles MapLibre's worker with Vite (`?worker&url`, `worker.format: "es"`). In dev, a small plugin in `vite.config.ts` serves MapLibre's own worker files, because Vite's dev transform adds its client to them, which can't run in a worker.
+- Accessibility: pins are `<button>`s in list order, labelled with the city and upcoming events. Enter opens the popup and moves focus into it; Escape closes it and returns focus to the pin. Zoom buttons are 48px and stay focusable at the zoom limit (`aria-disabled` instead of `disabled`). Scrolling the page never zooms the map (cooperative gestures).
+- `Chapter` now has `lead`, `leadOrg`, a `focus` list from `FOCUS_AREAS`, `members`, `companyHosts`, `communityPartners`, a shared `inbox`, and finer regions. `chapterLabel()` matches field notes.
+- Login follows `next` back to `/chapters` pages and to `/events/host?chapter=…`.
+- Tests: `tests/chapters-map.spec.ts` (keyboard pins, filters, the list without the map, hosting from a chapter page). The axe and layout checks cover every chapter page.
+
 ### Community events
 
 Small, Luma-style chapter calendars: each event is a simple page with an RSVP, and access details are required up front. Deliberately not a ticketing platform: no payments, waitlists, reminders, calendar sync, recurring series or check-in. Every event, host and place is synthetic, and places are an area only, never an address.
