@@ -33,6 +33,22 @@ Any server with an OpenAI-compatible `/v1` API works, because `gemma-local` only
 
 What fits on 16 GB: Gemma 4 E4B (about 4.5 GB at 4-bit) and 12B (about 6.7 GB) fit alongside the browser and the app. The 26B (about 14 GB) and 31B (about 17.5 GB) don't. Expect roughly 40 seconds to 2 minutes per review, which is our estimate, not a measurement: fine for development and a recording, slow for a live demo. Check that the model you pull accepts images, since sources disagree on which sizes do. A model is 3 to 8 GB of disk.
 
+### Testing with an Anthropic key (the fallback)
+
+1. **Get a key** at console.anthropic.com. The API is pay as you go, so add a little credit; testing costs very little.
+2. **Save it and switch the companion to Claude:** `npm run keys -- setup claude` asks for the key with hidden input, writes `.env.local` (owner-only) and sets `EVALUATOR_PROVIDER=claude`. `npm run keys -- status` should then show `claude` as ready and active. If `.env.local` says `EVALUATOR_PROVIDER=gemma-google`, the companion uses Gemma even with a Claude key; `setup claude` changes that.
+3. **One quick call, no server needed:** this sends the synthetic pre-ticked-consent item straight to Claude and prints whether its checks passed.
+
+   ```bash
+   node --env-file-if-exists=.env.local --experimental-strip-types --no-warnings --import ./src/lib/evaluator/test/register.mjs \
+     scripts/compare-evaluators.ts --providers claude --only consent --runs 1
+   ```
+
+4. **Try it in the app:** run `npm run build && npm start`, open `http://localhost:3000`, log in as **Apprentice** and open **Reflection companion**. Attach `src/content/evaluator-goldens/images/consent.png`, paste its note ("Synthetic test. Sign-up screen for a free after-school homework club. I wanted parents to sign up in one step.") and send it. The review should mention the pre-ticked consent box, and "How this was made" should say **Claude Sonnet 5.5 (Anthropic)**. The same key turns on the partner scoping assistant at **Community partner → Submit a problem**.
+5. **The full run:** with the server still running, `--live` runs all six goldens through the real route (see [A live check against a production build](#checking-it) below).
+
+To go back to Gemma, run `npm run keys -- use gemma-google` and restart the server. To keep Gemma as the default and run Claude beside it, as the demo's fallback tab does, leave `.env.local` on Gemma and start a second server with `EVALUATOR_PROVIDER=claude PORT=3001 npm start`: a variable set on the command line wins over `.env.local`.
+
 ### Checking it
 
 **Offline contract tests** (no keys, part of `npm run test:unit`): `src/lib/evaluator/test/providers.test.ts` runs the companion's real pipeline against a fake host for `gemma-google`, `gemma-openrouter` and `gemma-local`. They check the request each host gets (endpoint, key, where the rules go, the screenshot, the JSON schema), that a review comes back readable (including one wrapped in a ```json fence), that a reply with a score or without "what I can't judge" is rejected, that a host error surfaces, and that no email address or phone number is sent. They can't tell you whether a real host accepts the schema, or how good Gemma's reviews are.
