@@ -40,7 +40,8 @@ export function Conversation({
       <H id="conversation-title" className="border-b p-4 text-lg font-bold">
         {title}
       </H>
-      <ol className="flex-1 space-y-3 overflow-y-auto p-4" role="log" aria-label="Messages">
+      <div className="flex-1 overflow-y-auto p-4" role="log" aria-label="Messages">
+      <ol className="space-y-3">
         {items.length === 0 && <li className="text-muted-foreground">No messages yet. Say hello.</li>}
         {items.map((m) => {
           const mine = m.from === as
@@ -57,6 +58,7 @@ export function Conversation({
           )
         })}
       </ol>
+      </div>
       <form onSubmit={send} className="flex items-end gap-2 border-t p-4">
         <div className="flex-1">
           <Label htmlFor={`msg-${thread}`} className="sr-only">

@@ -68,6 +68,14 @@ axe checked all 31 page routes in light and dark (October 2026). It found violat
 
 **How to confirm a fix.** These are listed as `KNOWN` in `tests/a11y.spec.ts`. After fixing a page, run `npm run test:a11y`. The test fails until you remove that page from `KNOWN`, so the list can't go out of date.
 
+**Resolved when milestone 2 was combined.** Both list fixes above are done, `KNOWN` is empty, and the messages pages have moved to `/student/mentor` and `/mentor/mentee`. Combining the branches also exposed and fixed:
+- a duplicate unnamed `<aside>` in the role shell (`landmark-unique`)
+- a table region on the inclusive-language guide that shared its section's name
+- a skipped heading level in the reflection companion's question list
+- the test's demo login, which now picks the first of the two ambassador accounts
+
+`npm run test:a11y` passes on all 47 pages, in light and dark.
+
 **Not covered by axe yet.** These manual checks from `DESIGN.md` §8 haven't been done on the pages:
 
 - 200% zoom

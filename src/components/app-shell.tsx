@@ -31,7 +31,7 @@ export function RoleShell({ role, children }: { role: Role; children: ReactNode 
     <div data-archetype={role} className="flex min-h-full flex-col">
       <SiteHeader role={role} />
       <div className="mx-auto w-full max-w-7xl flex-1 lg:grid lg:grid-cols-[16rem_1fr] lg:gap-10 lg:px-8">
-        <aside className="hidden lg:block">
+        <div className="hidden lg:block">
           <nav aria-label={`${info.label} area`} className="sticky top-16 space-y-6 py-8">
             <p className="px-3 text-sm font-bold tracking-wide text-archetype uppercase">{label} area</p>
             {info.sidebar.map((group, i) => (
@@ -53,7 +53,7 @@ export function RoleShell({ role, children }: { role: Role; children: ReactNode 
               </div>
             ))}
           </nav>
-        </aside>
+        </div>
 
         <nav aria-label={`${info.label} area`} className="border-b px-4 sm:px-6 lg:hidden">
           <ul className="-mb-px flex overflow-x-auto">

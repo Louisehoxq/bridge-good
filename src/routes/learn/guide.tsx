@@ -259,7 +259,7 @@ function Language() {
         <h2 id="terms-title" className="mb-4 text-2xl font-bold">
           Words to avoid, and what to say instead
         </h2>
-        <div className="overflow-x-auto rounded-xl border" role="region" aria-labelledby="terms-title" tabIndex={0}>
+        <div className="overflow-x-auto rounded-xl border" role="region" aria-label="Table: words to avoid and what to say instead" tabIndex={0}>
           <table className="w-full min-w-[36rem] border-collapse text-left">
             <thead className="bg-muted">
               <tr>

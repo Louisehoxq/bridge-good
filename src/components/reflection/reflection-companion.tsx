@@ -411,6 +411,7 @@ function OffState() {
           items={items}
           stage="Before you submit"
           heading="Questions to reflect on"
+          headingLevel={2}
           intro={<p>Answer in your own words. Nothing is scored.</p>}
         />
       </div>

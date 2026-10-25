@@ -24,7 +24,20 @@ type ItemState = { question: string; answer: string; keep: boolean; share: boole
  * The apprentice's side of a review: every question is theirs to reword, answer, keep or share.
  * Nothing is kept or shared unless they tick it. Saving writes to the demo store only.
  */
-export function QuestionList({ items, stage, heading, intro }: { items: DraftQuestion[]; stage: string; heading: string; intro: ReactNode }) {
+export function QuestionList({
+  items,
+  stage,
+  heading,
+  intro,
+  headingLevel = 3,
+}: {
+  items: DraftQuestion[]
+  stage: string
+  heading: string
+  intro: ReactNode
+  headingLevel?: 2 | 3
+}) {
+  const Heading = headingLevel === 2 ? "h2" : "h3"
   const id = useId()
   const [, setReflections] = useReflections()
   const [, setStarters] = useConversationStarters()
@@ -87,9 +100,9 @@ export function QuestionList({ items, stage, heading, intro }: { items: DraftQue
   if (saved) {
     return (
       <div className="rounded-2xl border-2 border-primary p-5">
-        <h3 ref={savedRef} tabIndex={-1} className="text-lg font-bold">
+        <Heading ref={savedRef} tabIndex={-1} className="text-lg font-bold">
           Saved your choices
-        </h3>
+        </Heading>
         <p role="status" className="mt-1">
           {saved.kept > 0 && `${saved.kept} ${saved.kept === 1 ? "question" : "questions"} kept in your reflections. `}
           {saved.shared > 0 &&
@@ -106,9 +119,9 @@ export function QuestionList({ items, stage, heading, intro }: { items: DraftQue
   return (
     <form onSubmit={save} noValidate aria-labelledby={`${id}-title`} className="space-y-4">
       <div>
-        <h3 id={`${id}-title`} className="text-lg font-bold">
+        <Heading id={`${id}-title`} className="text-lg font-bold">
           {heading}
-        </h3>
+        </Heading>
         <div className="text-sm text-muted-foreground">{intro}</div>
       </div>
       <ol className="space-y-4">
