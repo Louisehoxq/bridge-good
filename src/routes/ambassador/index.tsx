@@ -1,5 +1,6 @@
 import { Link } from "react-router"
 import { PageHeader } from "@/components/app-shell"
+import { YourUpcomingEvents } from "@/components/events/event-lists"
 import { ImpactLoop } from "@/components/impact-loop"
 import { useInterests, useMatches } from "@/components/demo/journey-data"
 import { PathStepper } from "@/components/path/path-stepper"
@@ -29,6 +30,8 @@ export default function AmbassadorHome() {
         <PathStepper pathKey={kind} variant="compact" />
         {kind === "chapter-lead" ? <ChapterLeadOverview /> : <CompanyHostOverview />}
       </div>
+      <YourUpcomingEvents />
+
       <section aria-labelledby="loop-title" className="mt-12">
         <h2 id="loop-title" className="mb-6 type-title-2">
           Where you fit

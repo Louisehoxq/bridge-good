@@ -1,4 +1,5 @@
 import { PageHeader } from "@/components/app-shell"
+import { YourUpcomingEvents } from "@/components/events/event-lists"
 import { ImpactLoop } from "@/components/impact-loop"
 import { MentorSnapshot } from "@/components/demo/snapshots"
 import { PathStepper } from "@/components/path/path-stepper"
@@ -18,6 +19,8 @@ export default function MentorHome() {
         <PathStepper pathKey="mentor" variant="compact" />
         <MentorSnapshot />
       </div>
+      <YourUpcomingEvents />
+
       <section aria-labelledby="loop-title" className="mt-12">
         <h2 id="loop-title" className="mb-6 type-title-2">
           Where you fit

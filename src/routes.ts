@@ -12,6 +12,10 @@ export default [
   route("login", "routes/login.tsx"),
   route("logout", "routes/logout.ts"),
   route("chapters", "routes/chapters.tsx"),
+  // Community events: chapter calendars, event pages with an RSVP, and a form to host one.
+  route("events", "routes/events/index.tsx"),
+  route("events/host", "routes/events/host.tsx"),
+  route("events/:id", "routes/events/event.tsx"),
   route("api/scope", "routes/api.scope.ts"),
   route("api/reflect", "routes/api.reflect.ts"),
   route("design", "routes/design.tsx"),

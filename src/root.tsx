@@ -31,7 +31,8 @@ export const headers: Route.HeadersFunction = () => ({
 })
 
 export async function loader({ request }: Route.LoaderArgs) {
-  return { session: await getSession(request) }
+  // `now` keeps event dates the same on the server and in the browser (see useServerNow).
+  return { session: await getSession(request), now: Date.now() }
 }
 
 export function Layout({ children }: { children: ReactNode }) {

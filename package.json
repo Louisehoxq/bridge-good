@@ -9,7 +9,7 @@
     "typecheck": "react-router typegen && tsc",
     "lint": "eslint .",
     "check:contrast": "node scripts/check-contrast.mjs",
-    "test:unit": "node --experimental-strip-types --no-warnings --import ./src/lib/evaluator/test/register.mjs --test \"src/lib/evaluator/test/*.test.ts\" \"src/lib/feedback/test/*.test.ts\"",
+    "test:unit": "node --experimental-strip-types --no-warnings --import ./src/lib/evaluator/test/register.mjs --test \"src/lib/evaluator/test/*.test.ts\" \"src/lib/feedback/test/*.test.ts\" \"src/lib/events/test/*.test.ts\"",
     "test:a11y": "playwright test -c tests/playwright.config.ts"
   },
   "dependencies": {

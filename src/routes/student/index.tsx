@@ -1,5 +1,6 @@
 import { Link } from "react-router"
 import { PageHeader } from "@/components/app-shell"
+import { YourUpcomingEvents } from "@/components/events/event-lists"
 import { ImpactLoop } from "@/components/impact-loop"
 import { StudentSnapshot } from "@/components/demo/snapshots"
 import { useMatches } from "@/components/demo/journey-data"
@@ -40,6 +41,8 @@ export default function StudentHome() {
       </section>
 
       <StudentSnapshot />
+
+      <YourUpcomingEvents />
 
       <section aria-labelledby="path-title" className="mt-12">
         <h2 id="path-title" className="mb-4 type-title-2">
