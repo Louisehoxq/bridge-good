@@ -1,6 +1,6 @@
 # BridgeGoodx demo video: recording plan
 
-> **Status: plan, 2026-10-25. Nothing recorded yet.** Script: [video-script.md](video-script.md). Goal: seven clips recorded **in parallel by seven agents**, all identical in format, then joined into a 2:00 video. No human screen recording.
+> **Status: recorded, 2026-10-25.** All seven scenes exist and `docs/demo/bridgegoodx-demo.mp4` is 1:55. Scenes 3 and 4 use hand-written synthetic sample responses (labelled on screen as a recorded sample), because no live model was available: see [Recording AI scenes](#recording-ai-scenes). The rest of this page is the original plan. Script: [video-script.md](video-script.md). Goal: seven clips recorded **in parallel by seven agents**, all identical in format, then joined into a 2:00 video. No human screen recording.
 
 ## How parallel recording stays standard
 
@@ -105,3 +105,18 @@ Scene-specific notes:
 - **Voice-over:** captions only for the first cut, or add text-to-speech from the narration lines?
 - **Live vs saved AI:** the plan records live and keeps a saved response as a fallback. Say if you want saved-only for stable re-takes.
 - **Extra output:** per-scene clips are kept in `docs/demo/clips/` for README or pitch snippets.
+
+## Recording AI scenes
+
+Neither live model worked on 2026-10-25 (the Anthropic key was rejected or had no credit, and Gemma's replies were unreadable to the app after about a minute: see the backlog). Scenes 3 and 4 therefore intercept only `POST /api/reflect` and `POST /api/scope` in the browser and answer with the samples in `scripts/demo/samples/`, shaped like the real stream. The page, loader and forms are the real app, and a badge or caption on screen says "Recorded sample response, not a live model call". When a live model works, re-record just those scenes with the interception removed.
+
+## Re-recording one scene
+
+```bash
+npm run build && PORT=4400 npm start        # once
+node scripts/demo/prepare-state.mjs          # once; writes docs/demo/state
+node scripts/demo/run-scene.mjs 03-companion # one scene
+scripts/demo/assemble.sh                     # rebuild docs/demo/bridgegoodx-demo.mp4
+```
+
+The first page load of a clip is trimmed so a clip starts on the page, not a blank screen.

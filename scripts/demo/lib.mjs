@@ -105,6 +105,7 @@ export async function recordScene(scene) {
   const captions = []
   let current = null
   let cursor = { x: 960, y: 540 }
+  let firstReady = null
 
   const endCurrentCaption = () => {
     if (current) {
@@ -120,6 +121,8 @@ export async function recordScene(scene) {
     async goto(path) {
       await page.goto(path, { waitUntil: "load" })
       await page.evaluate(() => document.fonts.ready).catch(() => {})
+      // The first load shows a blank page; remember when it finished so the clip can start there.
+      if (firstReady === null) firstReady = now()
     },
     pause: (ms) => sleep(ms),
     hold: (ms) => sleep(ms),
@@ -219,11 +222,15 @@ export async function recordScene(scene) {
 
   // Normalize: 30 fps, 1920x1080, H.264, silent stereo track, fades; pad with the last frame or trim to the budget.
   const out = join(CLIP_DIR, `${id}.mp4`)
-  const pad = Math.max(0, budgetSeconds - elapsed)
+  // Start the clip when the first page finished loading (not before), keeping a short lead-in.
+  const trim = firstReady !== null && firstReady > 0.5 ? firstReady - 0.15 : 0
+  const content = elapsed - trim
+  const pad = Math.max(0, budgetSeconds - content)
   execFileSync(
     "ffmpeg",
     [
       "-y", "-loglevel", "error",
+      ...(trim > 0 ? ["-ss", trim.toFixed(2)] : []),
       "-i", raw,
       "-f", "lavfi", "-i", "anullsrc=channel_layout=stereo:sample_rate=48000",
       "-vf", `fps=${FPS},scale=${SIZE.width}:${SIZE.height}:flags=lanczos,format=yuv420p,tpad=stop_mode=clone:stop_duration=${pad.toFixed(2)},fade=t=in:st=0:d=0.3,fade=t=out:st=${(budgetSeconds - 0.3).toFixed(2)}:d=0.3`,
@@ -236,13 +243,14 @@ export async function recordScene(scene) {
   )
   renameSync(raw, join(tmp, "raw.webm"))
 
-  const srt = captions
-    .filter((c) => c.end !== null && c.end > c.start)
-    .map((c, i) => `${i + 1}\n${srtTime(c.start)} --> ${srtTime(c.end)}\n${c.text}\n`)
-    .join("\n")
+  const shifted = captions
+    .filter((c) => c.end !== null)
+    .map((c) => ({ ...c, start: Math.max(0, c.start - trim), end: Math.min(budgetSeconds, c.end - trim) }))
+    .filter((c) => c.end > c.start)
+  const srt = shifted.map((c, i) => `${i + 1}\n${srtTime(c.start)} --> ${srtTime(c.end)}\n${c.text}\n`).join("\n")
   writeFileSync(join(CLIP_DIR, `${id}.srt`), srt)
 
-  const over = elapsed - budgetSeconds
+  const over = content - budgetSeconds
   console.log(`scene ${id}: recorded ${elapsed.toFixed(1)}s, budget ${budgetSeconds}s -> ${out}`)
   if (over > OVERRUN_TOLERANCE_S) {
     throw new Error(`scene ${id} overran its ${budgetSeconds}s budget by ${over.toFixed(1)}s: shorten pauses or captions`)
