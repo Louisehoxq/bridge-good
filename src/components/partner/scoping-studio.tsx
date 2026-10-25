@@ -221,8 +221,7 @@ export function ScopingStudio({ aiEnabled }: { aiEnabled: boolean }) {
         {!aiEnabled ? (
           <Notice className="m-4">
             <p>
-              The AI assistant isn&apos;t switched on for this demo (no API key configured). You can still fill in the brief
-              yourself.
+              The AI assistant is off right now. You can still write the brief yourself.
             </p>
           </Notice>
         ) : (
@@ -384,7 +383,7 @@ function BriefEditor({ aiBrief, onStartOver }: { aiBrief: Brief; onStartOver: ()
           &ldquo;{submitted}&rdquo; is with BRIDGEGOOD. In the real service, a person would review it, follow up with
           questions, and look for an ambassador and apprentice team.
         </p>
-        <p className="mt-2 text-muted-foreground">Demo: saved in this browser only. It now appears on your overview and on My project and team.</p>
+        <p className="mt-2 text-muted-foreground">Saved in this browser. It now appears on your overview and on My project and team.</p>
         <Button
           variant="outline"
           className="mt-4"
@@ -412,8 +411,8 @@ function BriefEditor({ aiBrief, onStartOver }: { aiBrief: Brief; onStartOver: ()
           Project brief (draft)
         </h2>
         <p className="text-muted-foreground">
-          Fills in as you chat. Anything the assistant writes sits in a dashed frame marked &ldquo;AI draft&rdquo;. Edit it, or
-          accept it as written, and it becomes yours. Your changes always take priority.
+          Fills in as you chat. Edit what the assistant writes, or accept it as written, and it becomes yours. Your changes
+          always take priority.
         </p>
         <RoleBadge role="steward">Reviewed by BRIDGEGOOD before matching</RoleBadge>
       </div>

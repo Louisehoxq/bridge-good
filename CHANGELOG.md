@@ -10,6 +10,14 @@ The roles are: **apprentice** (BRIDGEGOOD's word for a student), **mentor**, **a
 
 ## Unreleased
 
+### Partner area: less disclaimer copy
+
+- **For community partners:** the example projects page, the project page, the scoping studio and the toolkit say "synthetic", "draft estimate" and "demo" once instead of repeatedly. The AI assistant's off message reads "The AI assistant is off right now. You can still write the brief yourself.", and the toolkit shows "Draft: BRIDGEGOOD will confirm" on its first draft answer only. The AI label and every `DraftFrame` stay.
+
+### Ambassador area: less disclaimer copy
+
+- **For ambassadors:** the playbook, the ambassador track and the "Chapter" glossary entry no longer say "proposed chapter model (concept)". The dashboard drops its synthetic-counts note and the toolkits page its placeholder-downloads line.
+
 ### Student and mentor areas: less disclaimer copy
 
 - **For students:** the home, mentor and practice pages keep one synthetic label each instead of several. The reflection page drops the repeated "the companion is AI" and "never scores" lines (the title says it), the rubric line is just "BRIDGEGOOD rubric, version X", and the companion's off state reads "The AI companion is off right now. You can still reflect on your own".

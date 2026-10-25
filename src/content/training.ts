@@ -192,7 +192,7 @@ export const TRAINING: Record<Audience, TrainingTrack> = {
     label: "For ambassadors",
     tagline: "Start a chapter in your city or organization, and send what you learn back to BRIDGEGOOD.",
     intro:
-      "Ambassadors are vetted by BRIDGEGOOD. This track is part of the proposed chapter model (concept). It prepares you to start a chapter, adapt the philosophy locally, and gather support.",
+      "Ambassadors are vetted by BRIDGEGOOD. It prepares you to start a chapter, adapt the philosophy locally, and gather support.",
     modules: [
       {
         title: "The philosophy in depth",

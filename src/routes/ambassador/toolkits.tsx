@@ -9,8 +9,7 @@ export default function AmbassadorToolkits() {
   return (
     <>
       <PageHeader title="Tools to grow your chapter">
-        Templates and guides for working with problem owners and partner organizations. Downloads are placeholders for
-        now.
+        Templates and guides for working with problem owners and partner organizations.
       </PageHeader>
       <section aria-labelledby="po-title" className="mb-14">
         <h2 id="po-title" className="type-title-2">
