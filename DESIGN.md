@@ -1,6 +1,6 @@
 # Bridge Studio: the BridgeGoodx design system
 
-> **Status:** chosen direction, not yet built. The app still uses the Material 3 tokens described in [`docs/design-system.md`](docs/design-system.md). This file is the target for the milestone 2 design-system workstream. See the example UI in [`docs/design/examples.html`](docs/design/examples.html) (open it in a browser).
+> **Status:** implemented in the app (October 2026). Tokens, type, icons, primitives and signature components are built. See [`docs/design-system.md`](docs/design-system.md) for implementation notes, the `/design` page for every component, and [`docs/design-followups.md`](docs/design-followups.md) for page-level work still open. The original example UI is in [`docs/design/examples.html`](docs/design/examples.html).
 
 Bridge Studio combines two ideas:
 
@@ -221,7 +221,9 @@ These follow BRIDGEGOOD's tone guide (bridgegood.com/design): supportive, direct
 
 ---
 
-## 10. Migrating from the current Material 3 tokens
+## 10. Migrating from the Material 3 tokens
+
+Steps 1–5 and 7 are done. Step 6, and putting the signature components on real pages, are tracked in `docs/design-followups.md`. Once pages use the `type-*` scale, remove the Material 3 compatibility aliases from `src/app.css`.
 
 1. In `src/app.css`, replace the Material 3 role values with the tokens above, and keep the semantic names components already use (`bg-card` → `--surface`, `text-muted-foreground` → `--ink-muted`, `border-input` → `--line-strong`, and so on).
 2. Swap the fonts in `src/root.tsx` (Google Sans → Atkinson Hyperlegible Next and Bricolage Grotesque).

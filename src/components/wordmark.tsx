@@ -1,6 +1,6 @@
 /**
  * PLACEHOLDER wordmark. Replace with the official BRIDGEGOOD logo from the
- * Design System (put the files in public/brand/ and use next/image).
+ * Design System (put the files in public/brand/ and render them with <img>).
  * Don't redraw or alter the official logo.
  */
 export function Wordmark() {

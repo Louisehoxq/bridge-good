@@ -27,6 +27,7 @@ A **desktop-first web app**, following the team's wireframe. One public library 
 | Self-check | `/learn/self-check` | "Is this a good fit for you right now?" No form, nothing stored, links to the official criteria |
 | Chapters (concept) | `/chapters` | Proposed chapter model: illustrative map and list |
 | Log in | `/login` | Five synthetic demo accounts |
+| Design system | `/design` | Bridge Studio tokens and signature components, for the team |
 
 Every library page has a stable URL, breadcrumbs and previous/next links. Signed in, it also shows a strip such as "Part of step 1 of your path: Bootcamp · Back to your path". Old `/training/*` URLs redirect to the library.
 
@@ -48,15 +49,21 @@ Everything connects through one loop: **a community partner shares a problem →
 
 ```bash
 npm install
-cp .env.example .env.local   # optional: add ANTHROPIC_API_KEY to switch on the partner AI assistant
+cp .env.example .env.local   # optional: add an API key to switch on the AI scoping assistant and Reflection Companion
 npm run dev
 ```
 
 Open http://localhost:5173, choose **Log in**, and pick a demo account.
 
-- `npm run build` creates a production build and `npm start` serves it. `npm run typecheck` generates route types and type-checks, and `npm run lint` lints.
-- Everything runs locally. The only outside call is to Claude (Anthropic) when the partner assistant is switched on.
-- Without an API key, the partner page explains that the assistant is off, and the brief can still be filled in by hand.
+- `npm run build` creates a production build and `npm start` serves it.
+- Checks, which CI also runs on every pull request:
+  - `npm run typecheck`
+  - `npm run lint`
+  - `npm run check:contrast` (every design token pair, light and dark)
+  - `npm run test:unit` (the evaluator)
+  - `npm run test:a11y` (axe plus WCAG reflow, zoom and text-spacing checks on every page, light and dark)
+- Everything runs locally. The only outside calls are to the AI model when an assistant is switched on, and to Google Fonts.
+- Without an API key, the AI features say they're off: partners fill in the brief by hand, and apprentices reflect with BRIDGEGOOD's questions without AI.
 
 ### Demo walkthrough (cross-role)
 1. Log in as **Apprentice** (Ari). Open **Your path**: you're on step 2, the mini project. Submit a mock case with your self-assessment. Then go to **Choose a project** and tell your chapter lead why you'd like the tenant-rights brief.
@@ -70,21 +77,27 @@ Demo data lives in this browser's localStorage. Use **Reset demo data** in the f
 
 ## How it works
 
-- **Stack:** React Router 7 in framework mode on Vite, React 19, TanStack Query, Tailwind 4 and shadcn/ui on Base UI, styled with the BRIDGEGOOD Design System (Material 3 tokens, Google Sans, Material Symbols, light and dark themes). This is close to [BRIDGEGOOD's own stack](https://bridgegood.com/stack) but without a database.
+- **Stack:** React Router 7 in framework mode on Vite, React 19, TanStack Query, Tailwind 4 and shadcn/ui on Base UI. This is close to [BRIDGEGOOD's own stack](https://bridgegood.com/stack) but without a database.
+- **Design system: Bridge Studio** ([DESIGN.md](DESIGN.md)). Warm paper and navy ink, with body text at AAA contrast, in light and dark. Atkinson Hyperlegible Next and Bricolage Grotesque, Lucide icons, and signature components in `src/components/studio/`: AI draft frame, people and paths, pinned notes, highlighter and role badges. It keeps BRIDGEGOOD's logo, navy and gold lineage, and tone.
 - **Demo login:** the `/login` action sets an httpOnly `bgx-session` cookie holding the role, plus the ambassador kind for chapter leads and company hosts (`src/lib/session.server.ts`). Each role area's layout `loader` checks it and redirects to `/login` otherwise. **Not real authentication.**
 - **Desktop-first layout:** a full top navigation bar and, inside role areas, a sticky left sidebar beside a wide content column (`src/components/app-shell.tsx`). Below `lg` the sidebar becomes a tab strip, and below `md` the top nav becomes a sheet menu.
 - **Demo store:** `src/lib/demo-store.ts` keeps collections in localStorage, seeded from `src/content/seed.ts`. All roles share it, so flows connect across roles.
 - **AI scoping:** the resource route `src/routes/api.scope.ts` uses the AI SDK (`streamText`, Claude Sonnet 5.5) with an `updateBrief` tool. It requires the partner session, validates the conversation, accepts only user and assistant turns, and caps message length and screenshots (shrunk in the browser first). The client (`src/components/partner/scoping-studio.tsx`) merges tool calls into an editable brief. Human judgment stays central: the brief is labelled a draft, it's always editable, BRIDGEGOOD reviews it, and the assistant never asks for personal details.
+- **Reflection Companion:** `src/routes/api.reflect.ts` and `src/lib/evaluator/`. It asks apprentices questions tied to the pillars and prompts, says what it can't judge, never scores, and lets them share questions with their mentor. A Gemma 4 prototype sits behind `EVALUATOR_PROVIDER` ([docs/gemma-prototype.md](docs/gemma-prototype.md)).
 - **Content:** editable copy and data live in `src/content/`. Every person, organization, chapter and project is a **synthetic example** and labelled as one.
 
 ## Repository layout
 
 ```
-docs/                    challenge brief, design system, evaluation and concept notes
+DESIGN.md                Bridge Studio design system spec
+docs/                    challenge brief, evaluations, design notes, AI evaluator design, concept notes
+scripts/                 contrast check, evaluator comparison
+tests/                   Playwright accessibility tests
+.github/workflows/       CI
 src/
   root.tsx               HTML shell, fonts, session loader, error page
   routes.ts              route table
-  app.css                BRIDGEGOOD Material 3 tokens, type scale, base styles
+  app.css                Bridge Studio tokens (light and dark), type scale, base styles
   routes/
     home.tsx             Welcome
     learn/               public library: index, pillars, prompts, role tracks, guides, self-check
@@ -92,13 +105,19 @@ src/
     legacy-redirect.ts redirects.ts   old URLs (/training/*, merged role pages)
     student/ mentor/ ambassador/ partner/   role areas (layout.tsx guards the role and renders RoleShell)
     api.scope.ts         AI scoping assistant (resource route)
+    api.reflect.ts       Reflection Companion (resource route)
+    design.tsx           design system page
   components/            shell, nav, impact loop, principles, problem board, training, toolkits
   components/demo/       messages, office hours, submissions & growth conversations, matching data, milestones, community, snapshots
   components/library/    library page frame, breadcrumbs, prompt list, pillar chip
   components/path/       role path stepper and the "your path" strip on library pages
   components/partner/    scoping studio, submitted briefs
+  components/reflection/ Reflection Companion UI
+  components/studio/     Bridge Studio signature components
+  components/ui/         Bridge Studio primitives (button, fields, sheet)
   content/               framework, guides, eligibility, training, principles, glossary, problems, chapters, toolkits, journey and seed data
   lib/                   roles, session (cookie + guard), library index, role paths, demo store, brief schema, AI config
+  lib/evaluator/         evaluator schema, prompts, checks, providers, tests
 ```
 
 ## Guardrails we're holding ourselves to
@@ -110,8 +129,16 @@ src/
 - We use only synthetic, aggregated, anonymized, or explicitly consented participant information.
 - Content follows inclusive-language and accessibility (WCAG 2.2 AA) standards.
 
-## Still to come
-- The official BRIDGEGOOD logo files (tokens, type and icons are in; the wordmark is still a placeholder)
-- Details for the AI Reflection Companion
-- Real training assets and templates
-- The P1 funding & legal templates
+## Where it stands and what's next
+
+See [docs/evaluation-milestone-2.md](docs/evaluation-milestone-2.md) for the full review.
+
+- **Done:** the React Router migration, Bridge Studio tokens and components, the public library with role paths, the new roles, growth conversations, and Reflection Companion phase 1.
+- **Next (milestone 2.5):** apply Bridge Studio across pages (`docs/design-followups.md`): the type scale, no all caps, the draft frame on AI output, people and paths on team views. Then the manual accessibility checks, and a content-organization pass.
+- **Milestone 3:** the feedback loop. A BRIDGEGOOD steward inbox, local adaptations, "this didn't fit" flags, mentor–AI disagreement records, and a versioned framework with a public changelog.
+- **Needs an API key:** a live check of the scoping assistant, the Reflection Companion and the Gemma comparison.
+- **Needs BRIDGEGOOD:**
+  - official logo files
+  - approval of the framework wording and of BridgeGoodx having its own visual style
+  - real training assets
+  - the funding and legal templates

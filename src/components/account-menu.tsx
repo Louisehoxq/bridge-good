@@ -20,10 +20,13 @@ export function AccountMenu() {
 
   if (!session) {
     return (
-      <Link to="/login" className={buttonVariants({ size: "default", className: "hidden md:inline-flex" })}>
-        <Icon name="login" />
-        Log in
-      </Link>
+      // The button's own inline-flex would override `hidden`, so the breakpoint lives on a wrapper.
+      <span className="hidden md:inline-flex">
+        <Link to="/login" className={buttonVariants({ size: "default" })}>
+          <Icon name="login" />
+          Log in
+        </Link>
+      </span>
     )
   }
 
@@ -40,9 +43,11 @@ export function AccountMenu() {
       >
         {account.name.charAt(0)}
       </span>
-      <Link to="/login" className={buttonVariants({ variant: "ghost", size: "sm", className: "hidden xl:inline-flex" })}>
-        Switch role
-      </Link>
+      <span className="hidden xl:inline-flex">
+        <Link to="/login" className={buttonVariants({ variant: "ghost", size: "sm" })}>
+          Switch role
+        </Link>
+      </span>
       <Form method="post" action="/logout">
         <Button type="submit" variant="outline" size="sm">
           Log out
