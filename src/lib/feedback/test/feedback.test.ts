@@ -9,14 +9,19 @@ import {
   changeWording,
   compareVersions,
   currentVersion,
+  canReply,
   decide,
   DecisionError,
+  findByReplyCode,
+  newReplyCode,
   nextVersion,
+  normalizeReplyCode,
   officialWording,
   openDisagreementGroups,
   type DecisionContext,
 } from "../logic"
-import type { AdaptationFeedback, DidntFitFeedback, FeedbackItem, WordingVersion } from "../types"
+import { PRACTICE_MOMENTS } from "../../../content/practice"
+import type { AdaptationFeedback, DidntFitFeedback, FeedbackItem, OutsideCommunityFeedback, WordingVersion } from "../types"
 
 // Synthetic examples only: no real participants.
 let n = 0
@@ -137,6 +142,63 @@ describe("decisions", () => {
     const replied = addReply(adaptation(), { id: "r", from: "steward", text: "Which languages?", at: "now" })
     assert.equal(replied.status, "in-conversation")
     assert.equal(replied.replies.length, 1)
+  })
+})
+
+describe("practice moments", () => {
+  it("never score: three choices each, every one with a cost, synthetic shares adding up to 100", () => {
+    for (const m of PRACTICE_MOMENTS) {
+      assert.equal(m.choices.length, 3, m.slug)
+      assert.ok(m.choices.every((c) => c.cost && c.protects), m.slug)
+      assert.equal(m.choices.reduce((sum, c) => sum + c.others, 0), 100, m.slug)
+      assert.ok(m.reasoning.promptIds.length > 0 && m.pillarIds.length > 0, m.slug)
+      assert.doesNotMatch(JSON.stringify(m), /\b(score|correct answer|points)\b/i, m.slug)
+    }
+  })
+
+  it("turns an accepted “plays out differently” into a field note on the practice moment, not a pillar", () => {
+    const item = adaptation({ target: { type: "practice", id: "skip-the-interviews" }, chapter: "Houston chapter" })
+    assert.deepEqual(allowedEffects(item), ["field-note", "noted"])
+    const result = decide(item, { outcome: "accepted", reason: "Fits.", effect: "field-note", text: "We call families." }, ctx())
+    assert.equal(result.fieldNote?.practice, "skip-the-interviews")
+    assert.equal(result.fieldNote?.pillarId, undefined)
+    assert.equal(result.changelog?.target?.type, "practice")
+    assert.match(result.changelog?.title ?? "", /skip the interviews/)
+  })
+})
+
+describe("outside communities", () => {
+  const outside = SEED_FEEDBACK.find((f) => f.kind === "outside-community") as OutsideCommunityFeedback
+
+  it("makes readable reply codes and finds them however they're typed", () => {
+    const code = newReplyCode()
+    assert.match(code, /^BG-[A-Z2-9]{4}-[A-Z2-9]{4}$/)
+    assert.doesNotMatch(code.slice(3), /[01OIL5S]/)
+    assert.equal(normalizeReplyCode("bg demo 7q4x"), "BG-DEMO-7Q4X")
+    assert.equal(normalizeReplyCode("DEMO7Q4X"), "BG-DEMO-7Q4X")
+    assert.equal(normalizeReplyCode("BG-123"), "")
+    assert.equal(findByReplyCode(SEED_FEEDBACK, " bg-demo-7q4x ")?.id, outside.id)
+    assert.equal(findByReplyCode(SEED_FEEDBACK, "BG-NOPE-NOPE"), undefined)
+  })
+
+  it("has no name or contact, and the steward can still reply", () => {
+    assert.deepEqual(outside.from, {})
+    assert.ok(canReply(outside))
+    assert.deepEqual(allowedEffects(outside), ["noted"])
+  })
+
+  it("names the group in public only with consent", () => {
+    const anonymous = decide(outside, { outcome: "accepted", reason: "Useful.", effect: "noted", summary: "Offer a two-part version." }, ctx())
+    assert.equal(anonymous.changelog?.credit, undefined)
+    assert.equal(anonymous.changelog?.source, "A youth or library program that ran the carry-it-forward kit")
+    const credited = decide({ ...outside, credit: { consent: true, as: "Eastside Teen Lab" } }, { outcome: "accepted", reason: "Useful.", effect: "noted", summary: "Two parts." }, ctx())
+    assert.equal(credited.changelog?.credit, "Eastside Teen Lab")
+  })
+
+  it("can become a field note when it's about a pillar", () => {
+    const onPillar: OutsideCommunityFeedback = { ...outside, target: { type: "pillar", id: "design-for-good" }, pillarIds: ["design-for-good"] }
+    const result = decide(onPillar, { outcome: "accepted", reason: "Fits.", effect: "field-note", text: "Ask the owner a question." }, ctx())
+    assert.equal(result.fieldNote?.chapter, "a youth or library program outside BRIDGEGOOD")
   })
 })
 

@@ -37,7 +37,10 @@ export const PATHS: Record<PathKey, { title: string; home: string; stages: PathS
         title: "Mini project",
         summary: "Run a mock case end to end, with peers playing community members, and submit it for a growth conversation.",
         href: "/student/practice#mock-case",
-        learn: [{ label: "The 12 reflection prompts", href: "/learn/prompts" }],
+        learn: [
+          { label: "The 12 reflection prompts", href: "/learn/prompts" },
+          { label: "Practice moments", href: "/learn/practice" },
+        ],
       },
       {
         id: "choose-project",

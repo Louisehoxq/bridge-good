@@ -10,12 +10,14 @@ const ORIGIN_LABEL: Record<KeptQuestion["origin"], string> = {
   ai: "From the companion (AI)",
   "ai-edited": "From the companion (AI), reworded by you",
   prompt: "Reflection prompt",
+  practice: "From a practice moment",
 }
 
 const MENTOR_ORIGIN_LABEL: Record<KeptQuestion["origin"], string> = {
   ai: "AI companion's question",
   "ai-edited": "AI companion's question, reworded by the apprentice",
   prompt: "Reflection prompt",
+  practice: "From a practice moment the apprentice worked through",
 }
 
 /** Student side: what they've shared with their mentor, with a way to take it back. */
@@ -138,7 +140,7 @@ export function MentorConversationStarters() {
           Conversation starters from your apprentices
         </h2>
         <p className="text-muted-foreground">
-          Questions an apprentice chose to share after reflecting with the AI companion. Start from their words. These aren&apos;t a grade
+          Questions an apprentice chose to share after reflecting with the AI companion or working through a practice moment. Start from their words. These aren&apos;t a grade
           or a to-do list.
         </p>
       </div>

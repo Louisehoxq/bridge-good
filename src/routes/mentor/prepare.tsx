@@ -1,7 +1,9 @@
 import { Link } from "react-router"
 import { PageHeader } from "@/components/app-shell"
 import { PathStepper } from "@/components/path/path-stepper"
+import { PracticeEmbed } from "@/components/practice/practice-embed"
 import { PrinciplesInPractice } from "@/components/principles-in-practice"
+import { PRACTICE_EMBEDS } from "@/content/practice"
 import { pageMeta } from "@/lib/meta"
 
 export const meta = () => pageMeta("Prepare")
@@ -13,6 +15,7 @@ const READING = [
   { href: "/learn/guides/real-case", title: "How to support a real case", why: "Week by week through a four-week partner project." },
   { href: "/learn/pillars/design-for-good", title: "The five pillars", why: "What apprentices learn. Your feedback is organized by pillar." },
   { href: "/learn/guides/ai-and-social-good", title: "Teaching AI and social good", why: "Questions for a 30-minute conversation about AI with your mentee." },
+  { href: "/learn/practice", title: "Practice moments", why: "Short dilemmas to work through with your mentee. Ask what each option costs." },
 ]
 
 export default function MentorPrepare() {
@@ -39,6 +42,12 @@ export default function MentorPrepare() {
             ))}
           </ul>
         </aside>
+      </div>
+      <div className="mt-14">
+        <PracticeEmbed slug={PRACTICE_EMBEDS.mentorPrepare}>
+          Try it yourself before you use it with a mentee. In a growth conversation, ask which option they&apos;d pick and what it would
+          cost, before sharing BRIDGEGOOD&apos;s reasoning.
+        </PracticeEmbed>
       </div>
       <section aria-labelledby="principles-title" className="mt-14">
         <h2 id="principles-title" className="mb-6 type-title-2">

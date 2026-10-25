@@ -55,6 +55,26 @@ export default function WelcomePage() {
                 </li>
               ))}
             </ul>
+            <ul className="mt-4 grid gap-4 md:grid-cols-2">
+              <li>
+                <Link to="/learn/practice" className="group flex h-full items-start gap-3 rounded-xl border border-dashed border-input bg-card p-4 hover:bg-muted">
+                  <Icon name="scale" className="mt-0.5 text-primary" />
+                  <span>
+                    <span className="block font-bold">Practice moments</span>
+                    <span className="block text-muted-foreground">Any role: make a call in a short dilemma, then see how BRIDGEGOOD reasons. Never scored.</span>
+                  </span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/learn/carry-it-forward" className="group flex h-full items-start gap-3 rounded-xl border border-dashed border-input bg-card p-4 hover:bg-muted">
+                  <Icon name="globe" className="mt-0.5 text-primary" />
+                  <span>
+                    <span className="block font-bold">Outside BRIDGEGOOD? Carry it forward</span>
+                    <span className="block text-muted-foreground">Teachers and organizers: run a critique circle in your community, and tell BRIDGEGOOD what you changed.</span>
+                  </span>
+                </Link>
+              </li>
+            </ul>
             <p className="mt-4">
               Already taking part?{" "}
               <Link to="/login" className="font-semibold text-primary underline underline-offset-4">
@@ -170,9 +190,14 @@ export default function WelcomePage() {
               <li>Communities can adapt it locally while keeping its core commitments.</li>
               <li>Technology on this site supports the relationships behind it. It doesn&apos;t replace them.</li>
             </ul>
-            <Link to="/learn/guides/adapt-locally" className={buttonVariants({ variant: "outline", className: "mt-4" })}>
-              How local adaptation works
-            </Link>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <Link to="/learn/guides/adapt-locally" className={buttonVariants({ variant: "outline" })}>
+                How local adaptation works
+              </Link>
+              <Link to="/learn/carry-it-forward" className="inline-flex min-h-12 items-center font-semibold text-primary underline underline-offset-4">
+                Run a session in your community
+              </Link>
+            </div>
           </div>
         </section>
       </div>

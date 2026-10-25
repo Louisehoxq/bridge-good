@@ -7,7 +7,7 @@ import { libraryEntry, libraryNeighbors, sectionLabel } from "@/lib/library"
 
 export function Breadcrumbs({ items }: { items: { label: string; href?: string }[] }) {
   return (
-    <nav aria-label="Breadcrumb" className="mb-6">
+    <nav aria-label="Breadcrumb" className="mb-6 print:hidden">
       <ol className="flex flex-wrap items-center gap-1">
         {items.map((item, i) => (
           <li key={item.label} className="flex items-center gap-1">
@@ -51,7 +51,7 @@ export function LibraryPage({ href, title, intro, children }: { href: string; ti
         {intro && <div className="type-body-lg max-w-[70ch] text-muted-foreground">{intro}</div>}
       </header>
       {children}
-      <nav aria-label="Library pages" className="mt-16 grid gap-4 border-t pt-8 sm:grid-cols-2">
+      <nav aria-label="Library pages" className="mt-16 grid gap-4 border-t pt-8 sm:grid-cols-2 print:hidden">
         {previous ? (
           <Link to={previous.href} className="group flex flex-col rounded-xl border bg-card p-4 hover:bg-muted">
             <span className="type-small text-muted-foreground">Previous</span>

@@ -1,7 +1,9 @@
 import { Icon } from "@/components/icon"
 import { PageHeader } from "@/components/app-shell"
 import { LEGAL_TEMPLATES, PARTNER_FAQS, PROBLEM_OWNER_TOOLKIT } from "@/content/toolkits"
+import { PracticeEmbed } from "@/components/practice/practice-embed"
 import { ToolkitList } from "@/components/toolkit-list"
+import { PRACTICE_EMBEDS } from "@/content/practice"
 import { pageMeta } from "@/lib/meta"
 
 export const meta = () => pageMeta("Toolkit & FAQs")
@@ -18,6 +20,12 @@ export default function PartnerToolkit() {
         </h2>
         <ToolkitList sections={PROBLEM_OWNER_TOOLKIT} />
       </section>
+
+      <div className="mb-14">
+        <PracticeEmbed slug={PRACTICE_EMBEDS.partnerToolkit}>
+          Partners face this one often. See how BRIDGEGOOD weighs a tight deadline against hearing from the people you serve.
+        </PracticeEmbed>
+      </div>
 
       <section id="legal" aria-labelledby="legal-title" className="mb-14 max-w-4xl scroll-mt-24">
         <h2 id="legal-title" className="type-title-2">

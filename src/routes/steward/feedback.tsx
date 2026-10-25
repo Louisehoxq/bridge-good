@@ -3,12 +3,15 @@ import { Link } from "react-router"
 import type { Route } from "./+types/feedback"
 import { PageHeader } from "@/components/app-shell"
 import { CommunityCard } from "@/components/feedback/community-card"
+import { OutsideBadge } from "@/components/feedback/outside-badge"
 import { DecisionForm } from "@/components/feedback/decision-form"
 import { KindTag, StatusTag, TargetTag } from "@/components/feedback/tags"
 import { Replies } from "@/components/feedback/your-feedback"
 import { Icon } from "@/components/icon"
 import { RoleBadge, STUDIO_ROLES } from "@/components/studio/role-badge"
 import { SyntheticBadge } from "@/components/synthetic-badge"
+import { GROUP_TYPES } from "@/content/carry-forward"
+import { getPracticeMoment } from "@/content/practice"
 import { RUBRIC } from "@/lib/evaluator/rubric"
 import { EFFECT_INFO, itemTitle, sourceLabel, targetLabel } from "@/lib/feedback/logic"
 import { useFieldNotes, useFramework, useInbox } from "@/lib/feedback/store"
@@ -99,6 +102,8 @@ function WhatWasSent({ item }: { item: FeedbackItem }) {
             {STUDIO_ROLES[item.from.role].label}
             {item.from.group && item.from.group !== item.from.name ? `, ${item.from.group}` : ""}
           </RoleBadge>
+        ) : item.kind === "outside-community" ? (
+          <OutsideBadge item={item} />
         ) : (
           <span className="text-muted-foreground">Counts only, with no names</span>
         )}
@@ -110,7 +115,7 @@ function WhatWasSent({ item }: { item: FeedbackItem }) {
             <Row label="What they changed">{item.changed}</Row>
             <Row label="Why it fits their community">{item.why}</Row>
             <Row label="Core commitments they kept">{item.kept}</Row>
-            <Row label="What happened">{item.happened}</Row>
+            {item.target.type !== "practice" && <Row label="What happened">{item.happened}</Row>}
             <Row label="What they're asking for">{item.ask === "core" ? "Consider changing BRIDGEGOOD's official wording" : "Recognize it as a local variant"}</Row>
           </>
         )}
@@ -118,6 +123,16 @@ function WhatWasSent({ item }: { item: FeedbackItem }) {
           <>
             <Row label="About">{targetLabel(item.target)}</Row>
             <Row label="Their note">{item.note}</Row>
+          </>
+        )}
+        {item.kind === "outside-community" && (
+          <>
+            <Row label="Kind of group">{GROUP_TYPES[item.groupType].label}</Row>
+            <Row label="What they changed about the session">{item.changed}</Row>
+            <Row label="What didn't fit their community">{item.didntFit}</Row>
+            <Row label="How they read your reply">
+              With a reply code. BRIDGEGOOD has no name or email for them, so they see only what you write here.
+            </Row>
           </>
         )}
         {item.kind === "retrospective" && (
@@ -178,6 +193,10 @@ function Disagreements({ item }: { item: Extract<FeedbackItem, { kind: "ai-disag
 function Context({ item }: { item: FeedbackItem }) {
   const { wording, version } = useFramework()
   const [notes] = useFieldNotes()
+  if (item.target.type === "practice") {
+    const slug = item.target.id
+    return <PracticeContext slug={slug} count={notes.filter((n) => n.practice === slug).length} />
+  }
   if (item.target.type !== "pillar") return null
   const pillarId = item.target.id
   const current = wording(pillarId)
@@ -209,6 +228,33 @@ function Context({ item }: { item: FeedbackItem }) {
           <p className="mt-2 type-small text-muted-foreground">Only people judge: {rubric.humanOnly.join("; ")}.</p>
         </div>
       )}
+    </section>
+  )
+}
+
+/** For an adaptation on a practice moment: BRIDGEGOOD's current reasoning, which the field note would sit beneath. */
+function PracticeContext({ slug, count }: { slug: string; count: number }) {
+  const moment = getPracticeMoment(slug)
+  if (!moment) return null
+  return (
+    <section aria-labelledby="context-title" className="space-y-4 rounded-2xl bg-muted p-6">
+      <h2 id="context-title" className="type-title-2">
+        The practice moment today
+      </h2>
+      <div className="space-y-2">
+        <h3 className="type-title-3">{moment.title}</h3>
+        <p>{moment.context}</p>
+        <h4 className="font-semibold">BRIDGEGOOD&apos;s reasoning (draft)</h4>
+        {moment.reasoning.paragraphs.map((p) => (
+          <p key={p}>{p}</p>
+        ))}
+        <p className="type-small text-muted-foreground">
+          {count} {count === 1 ? "field note" : "field notes"} on this practice moment.{" "}
+          <Link to={`/learn/practice/${slug}`} className="underline underline-offset-4">
+            Open the practice moment
+          </Link>
+        </p>
+      </div>
     </section>
   )
 }

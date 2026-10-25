@@ -14,11 +14,13 @@ import {
   CirclePlay,
   ClipboardList,
   Clock,
+  Copy,
   ExternalLink,
   FilePlus,
   FileText,
   Flag,
   FolderOpen,
+  Globe,
   History,
   Inbox,
   Reply,
@@ -27,6 +29,7 @@ import {
   House,
   ImagePlus,
   Info,
+  KeyRound,
   LayoutGrid,
   LogIn,
   Mail,
@@ -37,7 +40,9 @@ import {
   Pencil,
   PencilRuler,
   Plus,
+  Printer,
   Route,
+  Scale,
   ScrollText,
   Send,
   Sparkles,
@@ -106,6 +111,13 @@ const ICONS = {
   inbox: Inbox,
   reply: Reply,
   history: History,
+
+  // Practice moments and the carry-it-forward kit.
+  scale: Scale,
+  globe: Globe,
+  printer: Printer,
+  copy: Copy,
+  "key-round": KeyRound,
 } satisfies Record<string, LucideIcon>
 
 export type IconName = keyof typeof ICONS

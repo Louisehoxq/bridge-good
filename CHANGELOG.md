@@ -10,6 +10,35 @@ The roles are: **apprentice** (BRIDGEGOOD's word for a student), **mentor**, **a
 
 ## Unreleased
 
+### Practice moments and the carry-it-forward kit
+
+Two answers to the weakest criteria in the [milestone 3 evaluation](docs/evaluation-milestone-3.md): outside communities can now run a session without BRIDGEGOOD, and people practice judgment instead of taking a module.
+
+**For everyone (no login)**
+- **Practice moments** at `/learn/practice`: four synthetic dilemmas (skip the interviews, the AI-written persona, the pre-ticked consent box, polish or fix), filterable by pillar and role. You make a call, then see BRIDGEGOOD's draft reasoning, the prompts that matter, what each option protects and costs, and synthetic "what others chose" numbers. Never a score; the choice isn't saved unless you share it.
+- **Carry-it-forward kit** at `/learn/carry-it-forward`: who it's for, a 60-minute five-step critique circle, what to keep and what to adapt, all 12 prompt cards, and a credit line with the current framework version and a copy button. It prints cleanly, without navigation or forms.
+- "Tell BRIDGEGOOD what you changed" asks for no name or email. The group gets a reply code and reads the steward's answer at `/learn/carry-it-forward/reply`. Credit by name only if they tick the box.
+- The welcome page and the library index link to both.
+
+**Apprentices**
+- "Talk it over with my mentor" saves a practice moment as a conversation starter, the same way the Reflection Companion shares questions. Your choice is included only if you tick it.
+- A practice moment sits in the mini project step on the Practice page.
+
+**Mentors and community partners**
+- A practice moment on the mentor's Prepare page and in the partner toolkit. Mentors see apprentices' practice starters on Growth conversations.
+
+**Everyone signed in**
+- "This would play out differently in my community" sends a local adaptation on that moment to the steward. Accepted ones show as field notes on the moment.
+
+**BRIDGEGOOD stewards**
+- A new inbox type, **Outside community**, and filters for practice moments and the kit. You can reply to an outside group without knowing who they are, and accept a practice adaptation as a field note on the moment.
+
+**Technical**
+- Content in `src/content/practice.ts` and `src/content/carry-forward.ts`; components in `src/components/practice/`.
+- Feedback types: the `outside-community` kind, `practice` and `kit` targets, and field notes that can belong to a practice moment instead of a pillar. Reply codes avoid look-alike characters, accept loose typing, and never go in a URL.
+- Unit tests for the new decision rules and reply codes, and an end-to-end spec (`tests/practice-and-kit.spec.ts`) for both flows. The axe and layout checks cover the new pages automatically.
+- A print stylesheet: the light palette on white, and the header, footer and path strip hidden.
+
 ### Docs housekeeping
 
 - Added this changelog and a single prioritized backlog, [docs/BACKLOG.md](docs/BACKLOG.md).

@@ -12,8 +12,8 @@ export type KeptQuestion = {
   promptIds: number[]
   question: string
   answer: string
-  /** Where it came from: the companion (AI), the companion edited by the apprentice, or the standard prompts. */
-  origin: "ai" | "ai-edited" | "prompt"
+  /** Where it came from: the companion (AI), the companion edited by the apprentice, the standard prompts, or a practice moment. */
+  origin: "ai" | "ai-edited" | "prompt" | "practice"
 }
 
 export type SavedReflection = {

@@ -1,8 +1,10 @@
 import { Link } from "react-router"
 import { PageHeader } from "@/components/app-shell"
+import { PracticeEmbed } from "@/components/practice/practice-embed"
 import { ProblemBoard } from "@/components/problem-board"
 import { SyntheticBadge } from "@/components/synthetic-badge"
 import { buttonVariants } from "@/components/ui/button"
+import { PRACTICE_EMBEDS } from "@/content/practice"
 import { pageMeta } from "@/lib/meta"
 
 export const meta = () => pageMeta("Practice")
@@ -94,6 +96,15 @@ export default function PracticePage() {
           ))}
         </ol>
       </section>
+
+      <div id="mini-project-practice" className="mb-14 scroll-mt-24">
+        <PracticeEmbed slug={PRACTICE_EMBEDS.miniProject}>
+          A decision like this comes up in sign-up forms like your mock case. Make your call before you design yours.{" "}
+          <Link to="/learn/practice" className="underline underline-offset-4">
+            More practice moments
+          </Link>
+        </PracticeEmbed>
+      </div>
 
       <section id="case-studies" aria-labelledby="cases-title" className="scroll-mt-24">
         <h2 id="cases-title" className="mb-4 type-title-2">
