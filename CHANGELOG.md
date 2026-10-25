@@ -10,6 +10,11 @@ The roles are: **apprentice** (BRIDGEGOOD's word for a student), **mentor**, **a
 
 ## Unreleased
 
+### Student and mentor areas: less disclaimer copy
+
+- **For students:** the home, mentor and practice pages keep one synthetic label each instead of several. The reflection page drops the repeated "the companion is AI" and "never scores" lines (the title says it), the rubric line is just "BRIDGEGOOD rubric, version X", and the companion's off state reads "The AI companion is off right now. You can still reflect on your own".
+- **For mentors:** the home and mentee pages lose the repeated "(synthetic example)" lines. Messaging reads "Messages here are saved in this browser only. Real messaging would follow BRIDGEGOOD's safeguarding policy."; "Demo:" is gone from the saved-question notes.
+
 ### Less disclaimer copy, and the chapter map renders in dev
 
 - **Everyone:** the nav says "Chapters" instead of "Chapters (concept)". The welcome page loses "Draft wording, for BRIDGEGOOD to review." and the tuition sentence under "Who this philosophy belongs to". `/learn` loses the "Drafted by the hackathon team" note, `/events` its synthetic-events note, and `/chapters` and `/chapters/:id` the "Proposed chapter model (concept)" pill and the made-up-chapters paragraph.

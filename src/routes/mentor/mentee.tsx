@@ -33,8 +33,8 @@ export default function MyMentee() {
         </h2>
         <p className="mb-6 text-muted-foreground">
           {team && project
-            ? "Everyone working on this partner project. Everyone shown is a synthetic example."
-            : `Not on a partner project yet. Their chapter lead forms teams on Matching & milestones. Everyone shown is a synthetic example.`}
+            ? "Everyone working on this partner project."
+            : `Not on a partner project yet. Their chapter lead forms teams on Matching & milestones.`}
         </p>
         <TeamView label={team ? "Your project team" : "You, your mentee and their chapter lead"} members={team ? teamFor(team, DEMO_MENTOR) : mentoringPair("mentor")} />
       </section>
