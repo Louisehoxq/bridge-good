@@ -10,6 +10,10 @@ The roles are: **apprentice** (BRIDGEGOOD's word for a student), **mentor**, **a
 
 ## Unreleased
 
+### Dev server reachable on the local network
+
+- Technical: `npm run dev` now listens on `0.0.0.0` (`server.host` in `vite.config.ts`), so other devices on the same Wi-Fi can open `http://<your-ip>:5173`. Set `HOST=127.0.0.1` to keep it local only. For `npm start`, set `HOST=0.0.0.0` (port 3000).
+
 ### Reflection Companion: first live run on Google Gemma
 
 **For students:** with a free Google AI Studio key the companion now returns a review (about a minute, because the model thinks first).

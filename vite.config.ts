@@ -29,6 +29,9 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [tailwindcss(), reactRouter(), maplibreWorker()],
     resolve: { tsconfigPaths: true },
+    // Listen on all interfaces so other devices on the same Wi-Fi can open the dev server.
+    // Set HOST=127.0.0.1 to keep it local only.
+    server: { host: process.env.HOST ?? "0.0.0.0" },
     // MapLibre's worker is an ES module that imports a shared chunk.
     worker: { format: "es" as const },
   }
