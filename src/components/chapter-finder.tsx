@@ -1,7 +1,5 @@
-"use client"
-
 import { useState } from "react"
-import { MailIcon, MapPinIcon, CalendarIcon } from "lucide-react"
+import { Icon } from "@/components/icon"
 import { CHAPTERS, REGIONS } from "@/content/chapters"
 import { SyntheticBadge } from "@/components/synthetic-badge"
 import { cn } from "@/lib/utils"
@@ -82,7 +80,7 @@ export function ChapterFinder() {
                   aria-pressed={region === r}
                   onClick={() => setRegion(r)}
                   className={cn(
-                    "min-h-11 rounded-lg border px-3 text-sm font-semibold",
+                    "min-h-12 rounded-lg border border-input px-3 text-sm font-semibold",
                     region === r ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted"
                   )}
                 >
@@ -98,7 +96,7 @@ export function ChapterFinder() {
           {visible.length} {visible.length === 1 ? "chapter" : "chapters"} found
         </p>
 
-        <ul className="max-h-[38rem] space-y-3 overflow-y-auto pr-1">
+        <ul className="max-h-[38rem] space-y-3 overflow-y-auto pr-1" role="region" aria-label="Chapter list" tabIndex={0}>
           {visible.map((c) => (
             <li
               key={c.id}
@@ -120,17 +118,17 @@ export function ChapterFinder() {
                 </p>
                 <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
                   <li className="flex items-center gap-2">
-                    <CalendarIcon className="size-4" aria-hidden="true" /> Meets: {c.meets}
+                    <Icon name="calendar_today" className="text-base" /> Meets: {c.meets}
                   </li>
                   <li className="flex items-center gap-2">
-                    <MapPinIcon className="size-4" aria-hidden="true" /> Focus: {c.focus}
+                    <Icon name="location_on" className="text-base" /> Focus: {c.focus}
                   </li>
                 </ul>
                 <a
                   href={`mailto:${c.email}`}
-                  className="mt-3 inline-flex min-h-11 items-center gap-2 font-semibold text-primary underline underline-offset-4"
+                  className="mt-3 inline-flex min-h-12 items-center gap-2 font-semibold text-primary underline underline-offset-4"
                 >
-                  <MailIcon className="size-4" aria-hidden="true" />
+                  <Icon name="mail" className="text-base" />
                   {c.email}
                 </a>
               </article>

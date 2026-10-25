@@ -1,4 +1,4 @@
-import Link from "next/link"
+import { Link } from "react-router"
 import { PUBLIC_NAV } from "@/lib/roles"
 import { ResetDemoButton } from "@/components/reset-demo-button"
 
@@ -20,13 +20,13 @@ export function SiteFooter() {
           <ul className="space-y-1">
             {PUBLIC_NAV.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className="inline-flex min-h-11 items-center underline underline-offset-4">
+                <Link to={item.href} className="inline-flex min-h-12 items-center underline underline-offset-4">
                   {item.label}
                 </Link>
               </li>
             ))}
             <li>
-              <Link href="/login" className="inline-flex min-h-11 items-center underline underline-offset-4">
+              <Link to="/login" className="inline-flex min-h-12 items-center underline underline-offset-4">
                 Log in
               </Link>
             </li>

@@ -1,6 +1,4 @@
-"use client"
-
-import { useState, type FormEvent } from "react"
+import { useRef, useState, type FormEvent } from "react"
 import { newId, nowLabel, useCollection } from "@/lib/demo-store"
 import {
   DEMO_MENTOR,
@@ -19,6 +17,15 @@ import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
 
 export const ACTIVITY_TYPES = ["Basic fundamentals", "Mock case", "Case study", "Capstone project"] as const
+
+/** Only open http(s) links that students submit, never javascript: or other schemes. */
+function isWebLink(value: string) {
+  try {
+    return ["http:", "https:"].includes(new URL(value).protocol)
+  } catch {
+    return false
+  }
+}
 
 function useSubmissionData() {
   const [submissions, setSubmissions] = useCollection<Submission>("submissions", SEED_SUBMISSIONS)
@@ -57,8 +64,10 @@ export function EvaluationView({ evaluation }: { evaluation: Evaluation }) {
 
 export function StudentSubmissions() {
   const { submissions, setSubmissions, evaluationFor } = useSubmissionData()
-  const [errors, setErrors] = useState<string[]>([])
+  const [errors, setErrors] = useState<{ field: string; message: string }[]>([])
   const [justSubmitted, setJustSubmitted] = useState(false)
+  const summaryRef = useRef<HTMLDivElement>(null)
+  const has = (field: string) => errors.some((er) => er.field === field)
   const mine = submissions.filter((s) => s.studentName === DEMO_STUDENT).toReversed()
 
   function submit(e: FormEvent<HTMLFormElement>) {
@@ -67,12 +76,16 @@ export function StudentSubmissions() {
     const data = new FormData(form)
     const get = (k: string) => String(data.get(k) ?? "").trim()
     const missing = [
-      !get("title") && "Give your project a title",
-      !get("summary") && "Describe what you did",
-      !get("reflection") && "Add a short reflection",
-    ].filter(Boolean) as string[]
+      !get("title") && { field: "sub-title", message: "Give your project a title" },
+      get("link") && !isWebLink(get("link")) && { field: "sub-link", message: "Use a full web address starting with https://" },
+      !get("summary") && { field: "sub-summary", message: "Describe what you did" },
+      !get("reflection") && { field: "sub-reflection", message: "Add a short reflection" },
+    ].filter(Boolean) as { field: string; message: string }[]
     setErrors(missing)
-    if (missing.length) return
+    if (missing.length) {
+      requestAnimationFrame(() => summaryRef.current?.focus())
+      return
+    }
     setSubmissions((prev) => [
       ...prev,
       {
@@ -97,11 +110,15 @@ export function StudentSubmissions() {
           Submit a project
         </h2>
         {errors.length > 0 && (
-          <div role="alert" className="rounded-lg border-2 border-destructive p-3">
+          <div ref={summaryRef} tabIndex={-1} role="alert" className="rounded-lg border-2 border-destructive p-3">
             <p className="font-bold">Please fix the following:</p>
-            <ul className="list-disc pl-5 text-destructive">
+            <ul className="list-disc pl-5">
               {errors.map((er) => (
-                <li key={er}>{er}</li>
+                <li key={er.field}>
+                  <a href={`#${er.field}`} className="font-medium text-destructive underline underline-offset-4">
+                    {er.message}
+                  </a>
+                </li>
               ))}
             </ul>
           </div>
@@ -115,13 +132,13 @@ export function StudentSubmissions() {
           <Label htmlFor="sub-title" className="font-bold">
             Title
           </Label>
-          <Input id="sub-title" name="title" aria-invalid={errors.includes("Give your project a title") || undefined} />
+          <Input id="sub-title" name="title" aria-invalid={has("sub-title") || undefined} />
         </div>
         <div className="space-y-1">
           <Label htmlFor="sub-activity" className="font-bold">
             Activity type
           </Label>
-          <select id="sub-activity" name="activity" className="h-11 w-full rounded-lg border border-input bg-background px-3">
+          <select id="sub-activity" name="activity" className="min-h-12 w-full rounded-xs border border-input bg-transparent px-4">
             {ACTIVITY_TYPES.map((a) => (
               <option key={a}>{a}</option>
             ))}
@@ -131,21 +148,21 @@ export function StudentSubmissions() {
           <Label htmlFor="sub-link" className="font-bold">
             Link to your work <span className="font-normal text-muted-foreground">(optional)</span>
           </Label>
-          <Input id="sub-link" name="link" type="url" placeholder="https://" />
+          <Input id="sub-link" name="link" type="url" placeholder="https://" aria-invalid={has("sub-link") || undefined} />
         </div>
         <div className="space-y-1">
           <Label htmlFor="sub-summary" className="font-bold">
             What did you do, and for whom?
           </Label>
-          <Textarea id="sub-summary" name="summary" aria-invalid={errors.includes("Describe what you did") || undefined} />
+          <Textarea id="sub-summary" name="summary" aria-invalid={has("sub-summary") || undefined} />
         </div>
         <div className="space-y-1">
           <Label htmlFor="sub-reflection" className="font-bold">
             Reflection: what did you learn?
           </Label>
-          <Textarea id="sub-reflection" name="reflection" aria-invalid={errors.includes("Add a short reflection") || undefined} />
+          <Textarea id="sub-reflection" name="reflection" aria-invalid={has("sub-reflection") || undefined} />
         </div>
-        <Button type="submit" size="lg" className="bg-archetype text-white hover:bg-archetype/90">
+        <Button type="submit" size="lg" className="bg-archetype text-on-archetype hover:bg-archetype/90">
           Submit for feedback
         </Button>
       </form>
@@ -169,7 +186,7 @@ export function StudentSubmissions() {
                   <span
                     className={cn(
                       "rounded-full px-3 py-1 text-sm font-bold",
-                      ev ? "bg-archetype text-white" : "bg-muted text-foreground"
+                      ev ? "bg-archetype text-on-archetype" : "bg-muted text-foreground"
                     )}
                   >
                     {ev ? "Feedback ready" : "Awaiting review"}
@@ -294,9 +311,14 @@ function ReviewPanel({
           <div>
             <dt className="font-bold">Link</dt>
             <dd>
-              <a href={submission.link} className="break-all underline underline-offset-4">
-                {submission.link}
-              </a>
+              {isWebLink(submission.link) ? (
+                <a href={submission.link} target="_blank" rel="noopener noreferrer" className="break-all underline underline-offset-4">
+                  {submission.link}
+                  <span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              ) : (
+                <span className="break-all">{submission.link}</span>
+              )}
             </dd>
           </div>
         )}
@@ -315,7 +337,7 @@ function ReviewPanel({
                   <label
                     key={level}
                     htmlFor={id}
-                    className="flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border px-3 has-checked:border-archetype has-checked:bg-archetype-soft has-checked:font-bold"
+                    className="flex min-h-12 cursor-pointer items-center gap-2 rounded-lg border px-3 has-checked:border-archetype has-checked:bg-archetype-soft has-checked:font-bold"
                   >
                     <input
                       id={id}
@@ -356,7 +378,7 @@ function ReviewPanel({
             Feedback saved. {submission.studentName} will see it on their submissions page.
           </p>
         )}
-        <Button type="submit" size="lg" className="bg-archetype text-white hover:bg-archetype/90">
+        <Button type="submit" size="lg" className="bg-archetype text-on-archetype hover:bg-archetype/90">
           {existing ? "Update feedback" : "Send feedback"}
         </Button>
       </form>

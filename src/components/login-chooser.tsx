@@ -1,14 +1,12 @@
-"use client"
-
-import { useSearchParams } from "next/navigation"
-import { ArrowRightIcon } from "lucide-react"
-import { loginAs } from "@/app/actions"
+import { Form, useSearchParams } from "react-router"
+import { Icon } from "@/components/icon"
 import { isRole, ROLE_INFO, ROLES } from "@/lib/roles"
 import { useSessionRole } from "@/lib/session"
 import { SyntheticBadge } from "@/components/synthetic-badge"
 
 export function LoginChooser() {
-  const next = useSearchParams().get("next") ?? ""
+  const [searchParams] = useSearchParams()
+  const next = searchParams.get("next") ?? ""
   const current = useSessionRole()
   const wanted = next.split("/")[1]
 
@@ -27,7 +25,7 @@ export function LoginChooser() {
           const isCurrent = role === current
           return (
             <li key={role} data-archetype={role}>
-              <form action={loginAs} className="h-full">
+              <Form method="post" action="/login" className="h-full">
                 <input type="hidden" name="role" value={role} />
                 <input type="hidden" name="next" value={next} />
                 <button
@@ -40,7 +38,7 @@ export function LoginChooser() {
                   </span>
                   <span className="flex items-center gap-3">
                     <span
-                      className="flex size-12 shrink-0 items-center justify-center rounded-full bg-archetype text-lg font-bold text-white"
+                      className="flex size-12 shrink-0 items-center justify-center rounded-full bg-archetype text-lg font-bold text-on-archetype"
                       aria-hidden="true"
                     >
                       {info.demoAccount.name.charAt(0)}
@@ -53,10 +51,10 @@ export function LoginChooser() {
                   <span className="text-muted-foreground">{info.summary}</span>
                   <span className="mt-auto inline-flex items-center gap-2 pt-2 font-bold text-archetype">
                     {isCurrent ? "Continue as" : "Log in as"} {info.label.toLowerCase()}
-                    <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                    <Icon name="arrow_forward" className="text-base transition-transform group-hover:translate-x-1" />
                   </span>
                 </button>
-              </form>
+              </Form>
             </li>
           )
         })}

@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bridge Studio examples</title>
+<meta name="description" content="Example UI for Bridge Studio, the BridgeGoodx design system. All people and projects are synthetic examples.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600&display=swap">
+<style>
+:root {
+  color-scheme: light;
+  --paper: #FAF6EE; --surface: #FFFFFF; --surface-sunken: #F3EDE1;
+  --ink: #1F2A44; --ink-muted: #3E4760;
+  --action: #1F3A6B; --on-action: #FFFFFF;
+  --line: #E2D9C8; --line-strong: #767066;
+  --marker: #F6D57A; --note: #FFF1B8; --gold: #CC9900;
+  --draft: #5B4B9A; --draft-soft: #EEEAF8;
+  --success: #2B6A3F; --success-soft: #E3F1E6;
+  --error: #A3261B; --error-soft: #FBE8E5;
+  --apprentice: #2A4F95; --apprentice-soft: #E6ECF7;
+  --mentor: #2F6B4F; --mentor-soft: #E2F0E7;
+  --ambassador: #6A3F86; --ambassador-soft: #EFE7F5;
+  --partner: #8A4B12; --partner-soft: #F7EADB;
+  --note-shadow: 0 2px 0 rgb(31 42 68 / 0.12);
+  --font-body: "Atkinson Hyperlegible Next", system-ui, sans-serif;
+  --font-head: "Bricolage Grotesque", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #14181F; --surface: #1C222B; --surface-sunken: #10141A;
+    --ink: #EDE8DE; --ink-muted: #C4BFB4;
+    --action: #A9C1EC; --on-action: #14181F;
+    --line: #2E3642; --line-strong: #8A8F99;
+    --marker: #5C4A12; --note: #3A3216; --gold: #D9AE3C;
+    --draft: #BDB2F0; --draft-soft: #25213A;
+    --success: #93CFA4; --success-soft: #1A2E22;
+    --error: #F2A196; --error-soft: #3A1C19;
+    --apprentice: #9DB8EE; --apprentice-soft: #1E2A40;
+    --mentor: #8FCBAA; --mentor-soft: #1A2E25;
+    --ambassador: #C9AEE0; --ambassador-soft: #2A2036;
+    --partner: #E7B07A; --partner-soft: #33261A;
+    --note-shadow: none;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #14181F; --surface: #1C222B; --surface-sunken: #10141A;
+  --ink: #EDE8DE; --ink-muted: #C4BFB4;
+  --action: #A9C1EC; --on-action: #14181F;
+  --line: #2E3642; --line-strong: #8A8F99;
+  --marker: #5C4A12; --note: #3A3216; --gold: #D9AE3C;
+  --draft: #BDB2F0; --draft-soft: #25213A;
+  --success: #93CFA4; --success-soft: #1A2E22;
+  --error: #F2A196; --error-soft: #3A1C19;
+  --apprentice: #9DB8EE; --apprentice-soft: #1E2A40;
+  --mentor: #8FCBAA; --mentor-soft: #1A2E25;
+  --ambassador: #C9AEE0; --ambassador-soft: #2A2036;
+  --partner: #E7B07A; --partner-soft: #33261A;
+  --note-shadow: none;
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 5rem; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 1rem/1.625 var(--font-body); }
+h1, h2, h3 { font-family: var(--font-head); font-weight: 600; line-height: 1.2; margin: 0; text-wrap: balance; }
+h1 { font-size: 2.25rem; } h2 { font-size: 1.75rem; } h3 { font-size: 1.375rem; }
+p { margin: 0; }
+a { color: var(--action); text-underline-offset: 3px; }
+:focus-visible { outline: 3px solid var(--action); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip { position: absolute; left: 1rem; top: -4rem; background: var(--action); color: var(--on-action); padding: .75rem 1rem; border-radius: 10px; z-index: 10; }
+.skip:focus { top: 1rem; }
+.wrap { max-width: 80rem; margin: 0 auto; padding: 0 24px; }
+.muted { color: var(--ink-muted); }
+.small { font-size: .875rem; line-height: 1.375rem; }
+.lead { font-size: 1.125rem; line-height: 1.875rem; max-width: 70ch; }
+.stack > * + * { margin-top: 16px; }
+.row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.grid { display: grid; gap: 24px; }
+.icon { width: 20px; height: 20px; stroke-width: 1.75; flex-shrink: 0; }
+
+.topbar { position: sticky; top: 0; z-index: 5; background: var(--paper); border-bottom: 1px solid var(--line); }
+.topbar .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; min-height: 64px; padding-block: 8px; }
+.topbar .tag { max-width: 100%; }
+.logo { font-weight: 700; letter-spacing: .02em; text-decoration: none; color: var(--ink); }
+.logo span { color: var(--gold); }
+.topbar nav { display: flex; gap: 4px; margin-left: auto; }
+
+.section { padding: 56px 0; border-bottom: 1px solid var(--line); }
+.section-head { margin-bottom: 24px; }
+.section-head p { margin-top: 8px; }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
+.sunken { background: var(--surface-sunken); border-radius: 16px; padding: 24px; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 20px; border-radius: 10px; font: 600 1rem/1.5 var(--font-body); cursor: pointer; text-decoration: none; border: 1.5px solid transparent; }
+.btn-primary { background: var(--action); color: var(--on-action); }
+.btn-secondary { background: var(--surface); color: var(--action); border-color: var(--line-strong); }
+.btn-quiet { background: transparent; color: var(--action); padding: 0 8px; }
+.btn-quiet:hover { text-decoration: underline; }
+.btn-danger { background: var(--surface); color: var(--error); border-color: var(--line-strong); }
+
+.field { display: grid; gap: 6px; }
+.field label { font-weight: 600; }
+.field .hint { font-size: .875rem; color: var(--ink-muted); }
+.input { min-height: 48px; width: 100%; padding: 10px 14px; border: 1.5px solid var(--line-strong); border-radius: 10px; background: var(--surface); color: var(--ink); font: inherit; }
+textarea.input { min-height: 96px; resize: vertical; }
+.input[aria-invalid="true"] { border: 2px solid var(--error); }
+.err { display: flex; gap: 6px; align-items: center; color: var(--error); font-weight: 600; }
+
+.tag { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; font-size: .875rem; font-weight: 600; line-height: 1.375rem; }
+.tag .icon { width: 16px; height: 16px; }
+.t-apprentice { background: var(--apprentice-soft); color: var(--apprentice); }
+.t-mentor { background: var(--mentor-soft); color: var(--mentor); }
+.t-ambassador { background: var(--ambassador-soft); color: var(--ambassador); }
+.t-partner { background: var(--partner-soft); color: var(--partner); }
+.t-steward { background: var(--surface-sunken); color: var(--ink); }
+.t-draft { background: var(--draft-soft); color: var(--draft); }
+.t-success { background: var(--success-soft); color: var(--success); }
+.t-error { background: var(--error-soft); color: var(--error); }
+.t-synthetic { background: var(--surface-sunken); color: var(--ink-muted); font-weight: 400; }
+
+.notice { display: flex; gap: 12px; padding: 16px; border-radius: 12px; }
+.notice strong { display: block; }
+.n-success { background: var(--success-soft); } .n-success .icon { color: var(--success); }
+.n-error { background: var(--error-soft); } .n-error .icon { color: var(--error); }
+.n-warning { background: var(--marker); }
+.n-info { background: var(--apprentice-soft); } .n-info .icon { color: var(--apprentice); }
+
+.mark { background: var(--marker); color: var(--ink); padding: 0 4px; border-radius: 2px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.note { background: var(--note); color: var(--ink); border-radius: 2px; padding: 16px 18px; box-shadow: var(--note-shadow); transform: rotate(-0.8deg); }
+.note.right { transform: rotate(0.6deg); }
+.note-head { display: flex; gap: 8px; align-items: center; font-weight: 600; margin-bottom: 6px; }
+.draft { border: 1.5px dashed var(--draft); border-radius: 12px; padding: 16px; background: var(--surface); }
+.draft-label { display: inline-flex; align-items: center; gap: 6px; color: var(--draft); font-weight: 600; font-size: .875rem; }
+.draft-label .icon { width: 16px; height: 16px; }
+.draft.edited { border-style: solid; border-color: var(--line-strong); }
+
+.avatar { width: 44px; height: 44px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; flex-shrink: 0; }
+.a-apprentice { background: var(--apprentice); } .a-mentor { background: var(--mentor); } .a-partner { background: var(--partner); } .a-ambassador { background: var(--ambassador); }
+:root[data-theme="dark"] .avatar { color: #14181F; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .avatar { color: #14181F; } }
+.person { display: flex; gap: 12px; align-items: center; }
+.person b { display: block; }
+.team { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding-top: 8px; }
+.team svg.path { position: absolute; inset: 0 0 auto 0; width: 100%; height: 60px; pointer-events: none; }
+.team li { position: relative; list-style: none; display: grid; justify-items: center; text-align: center; gap: 6px; }
+.team ul { display: contents; }
+
+.stepper { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); position: relative; }
+.stepper::before { content: ""; position: absolute; top: 19px; left: 10%; right: 10%; border-top: 3px dotted var(--gold); }
+.stepper li { position: relative; display: grid; justify-items: center; text-align: center; gap: 8px; padding: 0 4px; }
+.dot { width: 40px; height: 40px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; background: var(--surface); border: 2px solid var(--line-strong); font-weight: 700; }
+.stepper .done .dot { background: var(--surface); border-color: var(--success); color: var(--success); }
+.stepper [aria-current="step"] .dot { background: var(--apprentice); border-color: var(--apprentice); color: var(--surface); }
+.stepper [aria-current="step"] .step-name { font-weight: 700; }
+
+.shell { display: grid; grid-template-columns: 16rem 1fr; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--paper); }
+.side { background: var(--surface-sunken); padding: 24px 16px; }
+.side h3 { font-family: var(--font-body); font-size: .875rem; color: var(--ink-muted); margin: 16px 12px 6px; }
+.side a { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 12px; border-radius: 10px; border-left: 4px solid transparent; color: var(--ink); text-decoration: none; }
+.side a[aria-current="page"] { border-left-color: var(--role, var(--action)); background: var(--surface); font-weight: 700; }
+.main { padding: 32px; min-width: 0; }
+.screen-label { display: flex; gap: 12px; align-items: baseline; margin: 40px 0 12px; }
+
+.swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
+.swatch { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--surface); }
+.swatch div { height: 56px; }
+.swatch p { padding: 10px 12px; font-size: .875rem; line-height: 1.375rem; }
+
+.chat { display: grid; gap: 12px; }
+.bubble { max-width: 85%; padding: 12px 16px; border-radius: 16px; }
+.bubble.you { justify-self: end; background: var(--partner); color: var(--surface); }
+:root[data-theme="dark"] .bubble.you { color: #14181F; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .bubble.you { color: #14181F; } }
+.queue { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.queue li { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: start; }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .side { display: none; }
+  .stepper { grid-template-columns: 1fr; gap: 12px; }
+  .stepper::before { display: none; }
+  .stepper li { grid-template-columns: auto 1fr; justify-items: start; text-align: left; }
+  .two { grid-template-columns: 1fr !important; }
+}
+@media (prefers-reduced-motion: reduce) { .note, .note.right { transform: none; } * { transition: none !important; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="logo" href="#main">BRIDGEGOOD<span aria-hidden="true">x</span><span class="sr-only"> BridgeGoodx</span></a>
+    <span class="tag t-synthetic">Design examples · all people are synthetic</span>
+    <nav aria-label="Theme">
+      <button class="btn btn-quiet" type="button" data-set-theme="light" aria-pressed="false">Light</button>
+      <button class="btn btn-quiet" type="button" data-set-theme="dark" aria-pressed="false">Dark</button>
+      <button class="btn btn-quiet" type="button" data-set-theme="system" aria-pressed="true">System</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="wrap">
+
+<section class="section" aria-labelledby="intro-title">
+  <div class="stack">
+    <p class="tag t-steward"><i data-lucide="scroll-text" class="icon" aria-hidden="true"></i>Bridge Studio</p>
+    <h1 id="intro-title" style="font-size:3rem;line-height:3.5rem">Design that shows who&rsquo;s connected and what&rsquo;s still a draft</h1>
+    <p class="lead muted">Example UI for the BridgeGoodx design system. The spec is in <code>DESIGN.md</code>. Body text meets AAA contrast, every role carries an icon and a label, and AI output always looks like a draft.</p>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="color-title">
+  <div class="section-head">
+    <h2 id="color-title">Color</h2>
+    <p class="muted">Ratios are for the light theme on paper. Switch themes at the top to see the dark values.</p>
+  </div>
+  <div class="swatches">
+    <div class="swatch"><div style="background:var(--paper);border-bottom:1px solid var(--line)"></div><p><b>Paper</b><br>Page background</p></div>
+    <div class="swatch"><div style="background:var(--ink)"></div><p><b>Ink</b><br>Body text · 13.2:1</p></div>
+    <div class="swatch"><div style="background:var(--ink-muted)"></div><p><b>Ink muted</b><br>Secondary · 8.6:1</p></div>
+    <div class="swatch"><div style="background:var(--action)"></div><p><b>Action</b><br>Buttons, links · 10.4:1</p></div>
+    <div class="swatch"><div style="background:var(--line-strong)"></div><p><b>Line strong</b><br>Control borders · 4.6:1</p></div>
+    <div class="swatch"><div style="background:var(--marker)"></div><p><b>Marker</b><br>Highlighter only · ink 10:1</p></div>
+    <div class="swatch"><div style="background:var(--gold)"></div><p><b>Gold</b><br>Paths and rules only</p></div>
+    <div class="swatch"><div style="background:var(--draft)"></div><p><b>Draft</b><br>AI output · 6.7:1</p></div>
+    <div class="swatch"><div style="background:var(--apprentice)"></div><p><b>Apprentice</b><br>7.4:1</p></div>
+    <div class="swatch"><div style="background:var(--mentor)"></div><p><b>Mentor</b><br>5.8:1</p></div>
+    <div class="swatch"><div style="background:var(--ambassador)"></div><p><b>Ambassador</b><br>7.3:1</p></div>
+    <div class="swatch"><div style="background:var(--partner)"></div><p><b>Community partner</b><br>6.3:1</p></div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="type-title">
+  <div class="section-head"><h2 id="type-title">Type</h2></div>
+  <div class="grid two" style="grid-template-columns:1fr 1fr">
+    <div class="card stack">
+      <p class="small muted">Bricolage Grotesque · headings, 20px and up</p>
+      <p style="font:600 2.25rem/2.75rem var(--font-head)">Shape your problem into a project brief</p>
+      <p style="font:600 1.375rem/1.875rem var(--font-head)">Who might be left out?</p>
+    </div>
+    <div class="card stack">
+      <p class="small muted">Atkinson Hyperlegible Next · body and interface</p>
+      <p class="lead">Describe what isn&rsquo;t working, in plain language. A person at BRIDGEGOOD reads every brief.</p>
+      <p>Il1 O0 rn m — letters that stay distinct for readers with low vision.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="comp-title">
+  <div class="section-head"><h2 id="comp-title">Components</h2></div>
+  <div class="grid two" style="grid-template-columns:1fr 1fr">
+    <div class="card stack">
+      <h3>Buttons and fields</h3>
+      <div class="row">
+        <button class="btn btn-primary" type="button">Send brief</button>
+        <button class="btn btn-secondary" type="button">Save for later</button>
+        <button class="btn btn-quiet" type="button">Cancel</button>
+      </div>
+      <div class="field">
+        <label for="ex-title">Project title</label>
+        <input class="input" id="ex-title" value="Food pantry sign-up in two languages">
+      </div>
+      <div class="field">
+        <label for="ex-community">Community affected</label>
+        <span class="hint" id="ex-community-hint">Describe people as a group. No names.</span>
+        <textarea class="input" id="ex-community" aria-invalid="true" aria-describedby="ex-community-hint ex-community-err"></textarea>
+        <span class="err" id="ex-community-err"><i data-lucide="circle-alert" class="icon" aria-hidden="true"></i>Describe the community affected</span>
+      </div>
+    </div>
+    <div class="card stack">
+      <h3>Roles and status</h3>
+      <div class="row">
+        <span class="tag t-apprentice"><i data-lucide="sprout" class="icon" aria-hidden="true"></i>Apprentice</span>
+        <span class="tag t-mentor"><i data-lucide="message-circle-heart" class="icon" aria-hidden="true"></i>Mentor</span>
+        <span class="tag t-ambassador"><i data-lucide="map-pin" class="icon" aria-hidden="true"></i>Chapter lead</span>
+        <span class="tag t-ambassador"><i data-lucide="building-2" class="icon" aria-hidden="true"></i>Company host</span>
+        <span class="tag t-partner"><i data-lucide="heart-handshake" class="icon" aria-hidden="true"></i>Community partner</span>
+        <span class="tag t-steward"><i data-lucide="scroll-text" class="icon" aria-hidden="true"></i>BRIDGEGOOD steward</span>
+      </div>
+      <div class="notice n-success" role="status"><i data-lucide="circle-check" class="icon" aria-hidden="true"></i><p><strong>Brief sent for review</strong>A person at BRIDGEGOOD will reply within 3 working days.</p></div>
+      <div class="notice n-warning"><i data-lucide="triangle-alert" class="icon" aria-hidden="true"></i><p><strong>No community voice yet</strong>Add how the people you serve will shape this before sending.</p></div>
+      <div class="notice n-info"><i data-lucide="info" class="icon" aria-hidden="true"></i><p><strong>Step 3 of your path</strong>Choose a project from the open briefs.</p></div>
+    </div>
+    <div class="card stack">
+      <h3>Studio marks</h3>
+      <p class="lead">Before you submit: who might be <span class="mark">left out</span> of this sign-up flow?</p>
+      <div class="note">
+        <p class="note-head"><i data-lucide="sticky-note" class="icon" aria-hidden="true"></i>Note from Jordan, your mentor</p>
+        <p>Try the form with a screen reader before Thursday. The date picker might be the barrier.</p>
+      </div>
+    </div>
+    <div class="card stack">
+      <h3>AI draft frame</h3>
+      <div class="draft">
+        <p class="draft-label"><i data-lucide="sparkles" class="icon" aria-hidden="true"></i>AI draft · you decide</p>
+        <p style="margin-top:6px">Suggested scope: redesign the sign-up form and confirmation text in English and Spanish, tested with five families.</p>
+      </div>
+      <div class="draft edited">
+        <p class="draft-label" style="color:var(--ink-muted)"><i data-lucide="pencil" class="icon" aria-hidden="true"></i>Edited by you</p>
+        <p style="margin-top:6px">Redesign the sign-up form in English and Spanish, and test it with families at Saturday distribution.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="screens-title">
+  <div class="section-head">
+    <h2 id="screens-title">Example screens</h2>
+    <p class="muted">Synthetic examples. These show the system, not final content.</p>
+  </div>
+
+  <div class="screen-label"><h3>Apprentice · Your path</h3><span class="tag t-synthetic">Synthetic example</span></div>
+  <div class="shell" style="--role:var(--apprentice)">
+    <nav class="side" aria-label="Apprentice area">
+      <span class="tag t-apprentice"><i data-lucide="sprout" class="icon" aria-hidden="true"></i>Apprentice</span>
+      <h3>Your path</h3>
+      <a href="#screens-title" aria-current="page"><i data-lucide="route" class="icon" aria-hidden="true"></i>Overview</a>
+      <a href="#screens-title"><i data-lucide="book-open" class="icon" aria-hidden="true"></i>Library</a>
+      <a href="#screens-title"><i data-lucide="sticky-note" class="icon" aria-hidden="true"></i>Reflect</a>
+      <h3>Your people</h3>
+      <a href="#screens-title"><i data-lucide="message-circle-heart" class="icon" aria-hidden="true"></i>My mentor</a>
+      <a href="#screens-title"><i data-lucide="users" class="icon" aria-hidden="true"></i>Community of practice</a>
+    </nav>
+    <div class="main stack">
+      <h3 style="font-size:2rem;line-height:2.5rem">Welcome back, Ari</h3>
+      <ol class="stepper" aria-label="Your apprenticeship path">
+        <li class="done"><span class="dot"><i data-lucide="check" class="icon" aria-hidden="true"></i></span><span class="step-name">Bootcamp<span class="sr-only">, done</span></span></li>
+        <li class="done"><span class="dot"><i data-lucide="check" class="icon" aria-hidden="true"></i></span><span class="step-name">Mini project<span class="sr-only">, done</span></span></li>
+        <li aria-current="step"><span class="dot">3</span><span class="step-name">Choose a project</span></li>
+        <li><span class="dot">4</span><span class="step-name">Capstone</span></li>
+        <li><span class="dot">5</span><span class="step-name">Alumni</span></li>
+      </ol>
+      <div class="grid two" style="grid-template-columns:3fr 2fr;align-items:start">
+        <div class="card stack">
+          <h3>Your team</h3>
+          <div class="team">
+            <svg class="path" viewBox="0 0 300 60" preserveAspectRatio="none" aria-hidden="true"><path d="M50 30 C 100 0, 120 60, 150 30 S 220 0, 250 30" fill="none" stroke="var(--gold)" stroke-width="2.5" vector-effect="non-scaling-stroke"/></svg>
+            <ul>
+              <li><span class="avatar a-apprentice">A</span><b>Ari</b><span class="small muted">Apprentice (you)</span></li>
+              <li><span class="avatar a-mentor">J</span><b>Jordan</b><span class="small muted">Mentor, alum</span></li>
+              <li><span class="avatar a-partner">E</span><b>Eastside Food Pantry</b><span class="small muted">Community partner</span></li>
+            </ul>
+          </div>
+          <div class="row"><a class="btn btn-primary" href="#screens-title">Choose a project<i data-lucide="arrow-right" class="icon" aria-hidden="true"></i></a><a class="btn btn-secondary" href="#screens-title">Message your team</a></div>
+        </div>
+        <div class="note right">
+          <p class="note-head"><i data-lucide="sticky-note" class="icon" aria-hidden="true"></i>Your last reflection</p>
+          <p>I assumed families would sign up online. Most of them come in person on Saturdays.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen-label"><h3>Community partner · Shape a project brief</h3><span class="tag t-synthetic">Synthetic example</span></div>
+  <div class="grid two" style="grid-template-columns:5fr 6fr;align-items:start">
+    <section class="card stack" aria-label="Scoping assistant conversation">
+      <div class="person"><span class="avatar" style="background:var(--draft)"><i data-lucide="bot" class="icon" aria-hidden="true"></i></span><div><b>Scoping assistant <span class="tag t-draft">AI</span></b><span class="small muted">Drafts your brief. A person at BRIDGEGOOD reviews it.</span></div></div>
+      <div class="chat">
+        <p class="bubble you">Most families we serve speak Spanish, but our sign-up form is only in English.</p>
+        <div class="draft">
+          <p class="draft-label"><i data-lucide="sparkles" class="icon" aria-hidden="true"></i>Assistant (AI)</p>
+          <p style="margin-top:6px">Thanks. <span class="mark">How could families help shape the new form?</span> For example, could the team test it at Saturday distribution?</p>
+        </div>
+      </div>
+      <div class="field"><label for="msg">Your reply</label><textarea class="input" id="msg"></textarea></div>
+      <div class="row"><button class="btn btn-secondary" type="button"><i data-lucide="image-plus" class="icon" aria-hidden="true"></i>Add screenshot</button><button class="btn btn-primary" type="button" style="margin-left:auto"><i data-lucide="send" class="icon" aria-hidden="true"></i>Send</button></div>
+    </section>
+    <section class="card stack" aria-labelledby="brief-h">
+      <div class="row" style="justify-content:space-between"><h3 id="brief-h">Project brief</h3><span class="tag t-steward">Reviewed by BRIDGEGOOD</span></div>
+      <div class="field"><label for="b1">Problem</label>
+        <div class="draft" style="padding:0;border-width:1.5px"><textarea class="input" id="b1" style="border:0;background:transparent" aria-describedby="b1-ai">The sign-up form is English-only, so Spanish-speaking families sign up on paper or not at all.</textarea></div>
+        <span class="draft-label" id="b1-ai"><i data-lucide="sparkles" class="icon" aria-hidden="true"></i>AI draft · edit anything</span>
+      </div>
+      <div class="field"><label for="b2">How will the people you serve shape this?</label>
+        <textarea class="input" id="b2">Families test drafts at Saturday distribution, with a volunteer interpreter.</textarea>
+        <span class="small muted">Written by you</span>
+      </div>
+      <button class="btn btn-primary" type="button">Send brief to BRIDGEGOOD</button>
+    </section>
+  </div>
+
+  <div class="screen-label"><h3>Mentor · Growth conversation</h3><span class="tag t-synthetic">Synthetic example</span></div>
+  <div class="card stack">
+    <div class="row" style="justify-content:space-between">
+      <div class="person"><span class="avatar a-apprentice">A</span><div><b>Ari&rsquo;s mini project</b><span class="small muted">Bilingual sign-up form · submitted Tuesday</span></div></div>
+      <span class="tag t-mentor"><i data-lucide="message-circle-heart" class="icon" aria-hidden="true"></i>You&rsquo;re the mentor</span>
+    </div>
+    <div class="grid two" style="grid-template-columns:1fr 1fr">
+      <div class="sunken stack">
+        <h3 style="font-size:1.125rem;font-family:var(--font-body)">Ari&rsquo;s self-assessment · Accessibility and inclusion</h3>
+        <p>&ldquo;I checked contrast, but I didn&rsquo;t test with a screen reader yet.&rdquo;</p>
+      </div>
+      <div class="stack">
+        <div class="field"><label for="g1">What&rsquo;s working</label><textarea class="input" id="g1">Clear labels in both languages, and you tested with real families.</textarea></div>
+        <div class="field"><label for="g2">One next step</label><textarea class="input" id="g2">Run the form with VoiceOver and note where it gets stuck.</textarea></div>
+      </div>
+    </div>
+    <div class="draft">
+      <p class="draft-label"><i data-lucide="sparkles" class="icon" aria-hidden="true"></i>AI conversation starters · for you, not for Ari</p>
+      <p style="margin-top:6px">Ask: &ldquo;Whose voice is still missing from your testing?&rdquo; The AI can&rsquo;t judge lived experience, so you decide what matters here.</p>
+    </div>
+    <div class="row"><button class="btn btn-primary" type="button">Send to Ari</button><span class="small muted">No scores. Ari sees your words, not a grade.</span></div>
+  </div>
+
+  <div class="screen-label"><h3>BRIDGEGOOD steward · Philosophy inbox</h3><span class="tag t-synthetic">Synthetic example · milestone 3</span></div>
+  <div class="card stack">
+    <ul class="queue">
+      <li class="sunken">
+        <div class="stack" style="--gap:8px">
+          <div class="row"><span class="tag t-ambassador"><i data-lucide="map-pin" class="icon" aria-hidden="true"></i>Chapter lead · Chicago</span><span class="tag t-steward">Accessibility and inclusion</span></div>
+          <p><b>Local adaptation:</b> &ldquo;In our chapter, access includes language access. We ask every brief which languages its community speaks.&rdquo;</p>
+        </div>
+        <div class="row"><button class="btn btn-primary" type="button">Accept</button><button class="btn btn-secondary" type="button">Reply</button></div>
+      </li>
+      <li class="sunken">
+        <div class="stack">
+          <div class="row"><span class="tag t-mentor"><i data-lucide="message-circle-heart" class="icon" aria-hidden="true"></i>Mentor</span><span class="tag t-draft"><i data-lucide="sparkles" class="icon" aria-hidden="true"></i>Disagreed with AI</span></div>
+          <p>The AI flagged &ldquo;low contrast&rdquo; on a decorative image. The mentor marked it as not an issue.</p>
+        </div>
+        <div class="row"><button class="btn btn-secondary" type="button">Update rubric</button><button class="btn btn-quiet" type="button">Dismiss</button></div>
+      </li>
+    </ul>
+    <p class="small muted">Accepted changes appear in the public changelog, credited only with consent.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap" style="padding:32px 24px 48px">
+  <p class="small muted">The Design for Social Good philosophy is authored and stewarded by BRIDGEGOOD. All people, organizations and projects on this page are synthetic examples.</p>
+</footer>
+
+<script src="https://unpkg.com/lucide@1.54.0/dist/umd/lucide.min.js"></script>
+<script>
+  if (window.lucide) lucide.createIcons({ attrs: { "stroke-width": 1.75, "aria-hidden": "true" } })
+  const buttons = document.querySelectorAll("[data-set-theme]")
+  function setTheme(mode) {
+    const root = document.documentElement
+    if (mode === "system") root.removeAttribute("data-theme")
+    else root.setAttribute("data-theme", mode)
+    buttons.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.setTheme === mode)))
+    try { localStorage.setItem("bgx-theme", mode) } catch {}
+  }
+  buttons.forEach((b) => b.addEventListener("click", () => setTheme(b.dataset.setTheme)))
+  try { const saved = localStorage.getItem("bgx-theme"); if (saved) setTheme(saved) } catch {}
+</script>
+</body>
+</html>

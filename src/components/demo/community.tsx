@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, type FormEvent } from "react"
 import { newId, nowLabel, useCollection } from "@/lib/demo-store"
 import { CIRCLES, DEMO_STUDENT, SEED_POSTS, type Post } from "@/content/seed"
@@ -11,6 +9,7 @@ export function CommunityOfPractice() {
   const [posts, setPosts] = useCollection<Post>("posts", SEED_POSTS)
   const [circle, setCircle] = useState(CIRCLES[0].id)
   const [draft, setDraft] = useState("")
+  const [status, setStatus] = useState("")
   const current = CIRCLES.find((c) => c.id === circle)!
   const items = posts.filter((p) => p.circle === circle).toReversed()
 
@@ -19,10 +18,14 @@ export function CommunityOfPractice() {
     if (!draft.trim()) return
     setPosts((prev) => [...prev, { id: newId(), circle, author: DEMO_STUDENT, body: draft.trim(), at: nowLabel() }])
     setDraft("")
+    setStatus("Posted to the circle.")
   }
 
   return (
     <div className="grid gap-6 lg:grid-cols-[18rem_1fr]">
+      <p role="status" className="sr-only">
+        {status}
+      </p>
       <nav aria-label="Circles">
         <ul className="space-y-2">
           {CIRCLES.map((c) => (
@@ -49,11 +52,11 @@ export function CommunityOfPractice() {
             Share something with the circle
           </Label>
           <Textarea id="post-body" value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="A tip, a question, a win…" />
-          <Button type="submit" className="bg-archetype text-white hover:bg-archetype/90">
+          <Button type="submit" className="bg-archetype text-on-archetype hover:bg-archetype/90">
             Post
           </Button>
         </form>
-        <ul className="space-y-3" aria-live="polite">
+        <ul className="space-y-3">
           {items.map((p) => (
             <li key={p.id} className="rounded-xl border bg-card p-4">
               <p className="text-sm">

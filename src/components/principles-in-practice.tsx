@@ -8,7 +8,7 @@ export function PrinciplesInPractice({ role }: { role: Role }) {
       {PRINCIPLES.map((p) => (
         <li key={p.id} className="rounded-xl border bg-card">
           <details className="group">
-            <summary className="flex min-h-11 cursor-pointer list-none items-start justify-between gap-4 rounded-xl p-5 [&::-webkit-details-marker]:hidden">
+            <summary className="flex min-h-12 cursor-pointer list-none items-start justify-between gap-4 rounded-xl p-5 [&::-webkit-details-marker]:hidden">
               <span>
                 <span className="block text-lg font-bold">{p.name}</span>
                 <span className="mt-1 block text-muted-foreground">{p.meaning}</span>

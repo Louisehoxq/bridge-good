@@ -32,9 +32,10 @@ cp .env.example .env.local   # optional: add ANTHROPIC_API_KEY to switch on the 
 npm run dev
 ```
 
-Open http://localhost:3000, choose **Log in**, and pick a demo account.
+Open http://localhost:5173, choose **Log in**, and pick a demo account.
 
-- `npm run build` creates a production build, and `npm run lint` lints.
+- `npm run build` creates a production build and `npm start` serves it. `npm run typecheck` generates route types and type-checks, and `npm run lint` lints.
+- Everything runs locally. The only outside call is to Claude (Anthropic) when the partner assistant is switched on.
 - Without an API key, the partner page explains that the assistant is off, and the brief can still be filled in by hand.
 
 ### Demo walkthrough (cross-role)
@@ -47,29 +48,31 @@ Demo data lives in this browser's localStorage. Use **Reset demo data** in the f
 
 ## How it works
 
-- **Demo login:** `/login` sets a `bgx-session` cookie holding the role. `src/proxy.ts` (Next 16's renamed middleware) guards `/student`, `/mentor`, `/ambassador` and `/partner`. **Not real authentication.**
+- **Stack:** React Router 7 in framework mode on Vite, React 19, TanStack Query, Tailwind 4 and shadcn/ui on Base UI, styled with the BRIDGEGOOD Design System (Material 3 tokens, Google Sans, Material Symbols, light and dark themes). This is close to [BRIDGEGOOD's own stack](https://bridgegood.com/stack) but without a database.
+- **Demo login:** the `/login` action sets an httpOnly `bgx-session` cookie holding the role (`src/lib/session.server.ts`). Each role area's layout `loader` checks it and redirects to `/login` otherwise. **Not real authentication.**
 - **Desktop-first layout:** a full top navigation bar and, inside role areas, a sticky left sidebar beside a wide content column (`src/components/app-shell.tsx`). Below `lg` the sidebar becomes a tab strip, and below `md` the top nav becomes a sheet menu.
 - **Demo store:** `src/lib/demo-store.ts` keeps collections in localStorage, seeded from `src/content/seed.ts`. All roles share it, so flows connect across roles.
-- **AI scoping:** `src/app/api/scope/route.ts` uses the AI SDK (`streamText`, Claude Sonnet 5.5) with an `updateBrief` tool. The client (`src/components/partner/scoping-studio.tsx`) merges tool calls into an editable brief. Human judgement stays central: the brief is labelled a draft, it's always editable, BRIDGEGOOD reviews it, and the assistant never asks for personal details.
-- **Content:** editable copy and data live in `src/content/`. Every person, organisation, chapter and project is a **synthetic example** and labelled as one.
+- **AI scoping:** the resource route `src/routes/api.scope.ts` uses the AI SDK (`streamText`, Claude Sonnet 5.5) with an `updateBrief` tool. It requires the partner session, validates the conversation, accepts only user and assistant turns, and caps message length and screenshots (shrunk in the browser first). The client (`src/components/partner/scoping-studio.tsx`) merges tool calls into an editable brief. Human judgement stays central: the brief is labelled a draft, it's always editable, BRIDGEGOOD reviews it, and the assistant never asks for personal details.
+- **Content:** editable copy and data live in `src/content/`. Every person, organization, chapter and project is a **synthetic example** and labelled as one.
 
 ## Repository layout
 
 ```
-docs/                    challenge brief, design system notes
+docs/                    challenge brief, design system, evaluation and concept notes
 src/
-  app/
-    page.tsx             Welcome
-    login/ chapters/ training/
-    student/ mentor/ ambassador/ partner/   role areas (each has a RoleShell layout)
-    api/scope/route.ts   AI scoping assistant
-    actions.ts           demo login / logout server actions
-  proxy.ts               role guard
+  root.tsx               HTML shell, fonts, session loader, error page
+  routes.ts              route table
+  app.css                BRIDGEGOOD Material 3 tokens, type scale, base styles
+  routes/
+    home.tsx             Welcome
+    login.tsx logout.ts chapters.tsx training*.tsx
+    student/ mentor/ ambassador/ partner/   role areas (layout.tsx guards the role and renders RoleShell)
+    api.scope.ts         AI scoping assistant (resource route)
   components/            shell, nav, impact loop, principles, problem board, training, toolkits
   components/demo/       messages, office hours, submissions & review, community, snapshots
   components/partner/    scoping studio, submitted briefs
   content/               principles, glossary, problems, chapters, training, toolkits, seed data
-  lib/                   roles, session, demo store, brief schema
+  lib/                   roles, session (cookie + guard), demo store, brief schema, AI config
 ```
 
 ## Guardrails we're holding ourselves to
@@ -82,7 +85,7 @@ src/
 - Content follows inclusive-language and accessibility (WCAG 2.2 AA) standards.
 
 ## Still to come
-- The official BRIDGEGOOD Design System (colours, type, logo, tone)
+- The official BRIDGEGOOD logo files (tokens, type and icons are in; the wordmark is still a placeholder)
 - Details for the AI Reflection Companion
 - Real training assets and templates
 - The P1 funding & legal templates
