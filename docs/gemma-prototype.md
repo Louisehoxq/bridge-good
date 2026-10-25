@@ -1,6 +1,35 @@
 # Gemma 4 prototype for the Reflection Companion: build instructions
 
-> **Status (after PR #7): path A built, not yet run against a live model.** Running it is item 2 under "Next" in [BACKLOG.md](BACKLOG.md). See [Path A: what's built and how to run it](#path-a-whats-built-and-how-to-run-it). This is the brief for running the student Reflection Companion on Google's Gemma 4 open-weights models instead of Claude, so the two can be compared. BRIDGEGOOD decides which model the real service uses. Read [ai-evaluator.md](ai-evaluator.md) first, especially sections 3, 4, 7 and "What shipped: student Reflection Companion".
+## Status and setup
+
+> **Nothing has been run against a live model yet**, neither Claude nor Gemma. Every check so far used mocked replies or no key. The [Results](#results) section stays empty until someone runs the goldens with a real key.
+
+The student Reflection Companion (`/student/reflection`, `src/routes/api.reflect.ts`) picks its model with `EVALUATOR_PROVIDER`, read at request time in `src/lib/evaluator/model.server.ts`. Without what a provider needs, the companion is off: the page falls back to BRIDGEGOOD's questions and `/api/reflect` answers 503.
+
+| `EVALUATOR_PROVIDER` | Model | Built? | Environment variables | Key needed? | Where screenshots and notes go |
+|---|---|---|---|---|---|
+| unset or `claude` (default) | Claude Sonnet 5.5 | Yes | `ANTHROPIC_API_KEY`, or else `AI_GATEWAY_API_KEY` (on Vercel, the project's OIDC token works with no key) | Yes: an Anthropic key or a Gateway key | Anthropic, directly or through the Vercel AI Gateway |
+| `gemma-gateway` | Gemma 4 31B (`EVALUATOR_MODEL=google/gemma-4-26b-a4b-it` for the smaller one) | Yes | `AI_GATEWAY_API_KEY` (or the OIDC token on Vercel), optional `EVALUATOR_MODEL`. An Anthropic key alone leaves the companion off | Yes: a Gateway key | The Vercel AI Gateway and the provider it routes to. **Still a hosted service** |
+| `gemma-local` | Gemma 4 on your own Ollama or vLLM server | **No: designed in [step 8](#8-self-hosting-path-b-only-if-a-looks-promising), not built.** Today the value logs a warning and falls back to Claude | Would be `EVALUATOR_BASE_URL`, optional `EVALUATOR_API_KEY` and `EVALUATOR_MODEL` | Ollama: none. vLLM: only the secret you choose with `--api-key`, not a paid account | Your own machine or server: it never leaves infrastructure you control |
+
+**"Open weights" isn't the same as local.** Gemma's weights are public, but through the Gateway the model runs on someone else's servers, so the data goes there. Only `gemma-local` keeps screenshots on your own hardware, and it isn't built.
+
+**Set up a key:** copy `.env.example` to `.env.local` in the repo root and fill in one key. `npm start` and the comparison script both read `.env.local`. `npm run dev` reads it too. Never commit it.
+
+**Run a live check against a production build:** this tests the whole route (session, message checks, redaction, the server's own model choice), not just the model.
+
+```bash
+npm run build && npm start   # serves on http://localhost:3000 and reads .env.local
+# in a second terminal:
+node --experimental-strip-types --no-warnings --import ./src/lib/evaluator/test/register.mjs \
+  scripts/compare-evaluators.ts --live http://localhost:3000 --runs 3
+```
+
+`--live` logs in as the synthetic demo apprentice, posts each golden to `/api/reflect` the way the page does, reads the streamed reply, and scores it with `scoreReply()` from `src/lib/evaluator/golden-checks.ts`. It prints time to first token for each run. It stops early if the server says the companion is off. Without `--live`, the script calls the models directly with the route's prompt, schema and checks, which is the way to compare Claude and Gemma side by side.
+
+---
+
+> **Background: the original build brief.** Running the comparison is item 2 under "Next" in [BACKLOG.md](BACKLOG.md). The rest of this file is the brief for running the companion on Google's Gemma 4 open-weights models instead of Claude, so the two can be compared, with notes on what was built. BRIDGEGOOD decides which model the real service uses. Read [ai-evaluator.md](ai-evaluator.md) first, especially sections 3, 4, 7 and "What shipped: student Reflection Companion".
 
 ## Goal
 
@@ -53,19 +82,22 @@ node --env-file-if-exists=.env.local --experimental-strip-types --no-warnings --
 Options:
 - `--providers gemma-gateway` runs one provider.
 - `--only contrast,injection` runs some items.
+- `--live <baseUrl>` posts to a running server's `/api/reflect` instead of calling the models (see [Status and setup](#status-and-setup)). The server's own `EVALUATOR_PROVIDER` decides the model, so `--providers` doesn't apply.
 
 The script prints a Markdown table for the Results section below. It saves raw replies to `.evaluator-runs/`, which is git-ignored.
 
 **Verified:**
-- Typecheck, lint, build and the evaluator unit tests (`npm run test:unit`) pass. The tests cover the provider switch and each scoring check.
+- Typecheck, lint, build and `npm run test:unit` pass (50 tests on 2026-10-25, across the evaluator and the feedback loop). The tests cover the provider switch and each scoring check.
 - The dry run passes. A placeholder Gateway key records an auth error cleanly.
 - In the browser, the page with `EVALUATOR_PROVIDER=gemma-gateway` is switched on and names Gemma 4 in "How this was made". The reply there was mocked.
+
+- `--live` against a production build with no key: it logs in, sees the companion is off and stops with a clear message. The route answers 401 without the student session and 503 without a key.
 
 **Not verified:** any live Gemma or Claude reply. No key was available.
 
 **Still to do:**
-- Add the env lines above to `.env.example`. That file is owned by another workstream.
-- Run the comparison and fill in Results.
+- Run the goldens with a real key and fill in [Results](#results).
+- Build `gemma-local` (step 8), if BRIDGEGOOD wants the "data stays with us" option.
 
 ## Why try an open-weights model
 
@@ -83,12 +115,12 @@ The model is chosen in one place. Everything else stays the same whichever model
 
 | Piece | File | Changes for Gemma? |
 |---|---|---|
-| Model choice | `src/lib/evaluator/model.server.ts` (`evaluatorModel()`) | **Yes**: becomes a switch |
-| AI on/off check | `isAiConfigured()` in `src/lib/ai.server.ts` (shared with the partner scoping route) | **Yes**: add an evaluator-specific check (see step 2) |
+| Model choice | `src/lib/evaluator/model.server.ts` (`evaluatorModel()`) | Done: now a switch |
+| AI on/off check | `isAiConfigured()` in `src/lib/ai.server.ts` (shared with the partner scoping route) | Done: the companion uses its own `isEvaluatorConfigured()`, and `isAiConfigured()` is unchanged |
 | Route hardening | `src/routes/api.reflect.ts`, `src/lib/evaluator/validate.ts` | No |
 | Rubric, schema, system prompt | `src/lib/evaluator/{rubric,schema,prompts}.ts` | No, unless the golden runs show Gemma needs a shorter prompt (step 6) |
 | Reading and checking replies | `src/lib/evaluator/read-review.ts` | No. It already rejects bad JSON and trims lists that are too long |
-| UI | `src/components/reflection/*` | Only the model name in "How this was made" (step 3) |
+| UI | `src/components/reflection/*` | Done: only the model name in "How this was made" changed (step 3) |
 
 ## Three ways to run Gemma 4
 
@@ -104,7 +136,7 @@ Do path A first. It answers the question that matters most, "is Gemma good enoug
 
 ### 1. Environment flag
 
-Add these variables. Document them in `.env.example`, which another session owns, so coordinate or hand over the lines:
+These variables are documented in `.env.example`. `EVALUATOR_BASE_URL` and `EVALUATOR_API_KEY` only matter once `gemma-local` is built:
 
 ```bash
 # Reflection Companion model. Unset or "claude" = Claude Sonnet 5.5 (default).
@@ -233,7 +265,7 @@ Coordinate before touching these:
 
 ## Results
 
-Not run yet. Paste the script's table here, with the date, run count and model IDs.
+Not run yet: no key has been available. Run the live check in [Status and setup](#status-and-setup) (or the direct comparison in [Path A](#path-a-whats-built-and-how-to-run-it)) and paste the script's table here, with the date, run count, model and whether it was `--live`.
 
 ## Write-up
 
