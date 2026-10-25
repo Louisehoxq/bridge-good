@@ -10,6 +10,15 @@ The roles are: **apprentice** (BRIDGEGOOD's word for a student), **mentor**, **a
 
 ## Unreleased
 
+### Reflection Companion docs and a live golden run
+
+No change in the app for any role. Docs and tooling for whoever runs or checks the AI.
+
+- `docs/gemma-prototype.md` opens with **Status and setup**: a table of the companion's providers (`claude`, `gemma-gateway`, and `gemma-local`, which is designed but not built), each with its environment variables, whether it needs a key, and where screenshots and notes go. It says plainly that Gemma through the Vercel AI Gateway is hosted, not local, and that nothing has run against a live model yet.
+- `docs/ai-evaluator.md` matches the code: `/api/reflect` instead of the planned `/api/evaluate`, the regex personal-data screen instead of Haiku, and the files as built.
+- `.env.example` documents `EVALUATOR_PROVIDER` and `EVALUATOR_MODEL`, and says the keys serve the companion as well as partner scoping.
+- `scripts/compare-evaluators.ts --live <baseUrl>` logs in as the demo apprentice, posts each synthetic golden to a running server's `/api/reflect`, and scores the streamed replies with `scoreReply`, with time to first token for each run. It tests the whole route, not just the model.
+
 ### Community events
 
 Small, Luma-style chapter calendars: each event is a simple page with an RSVP, and access details are required up front. Deliberately not a ticketing platform: no payments, waitlists, reminders, calendar sync, recurring series or check-in. Every event, host and place is synthetic, and places are an area only, never an address.
