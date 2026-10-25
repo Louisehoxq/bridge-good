@@ -2,6 +2,7 @@ import { Link } from "react-router"
 import { PageHeader } from "@/components/app-shell"
 import { PathStepper } from "@/components/path/path-stepper"
 import { PrinciplesInPractice } from "@/components/principles-in-practice"
+import { ProposeAdaptation } from "@/components/feedback/propose-adaptation" // Milestone 3 hook
 import { AMBASSADOR_KIND_INFO } from "@/lib/roles"
 import { useSession } from "@/lib/session"
 import { pageMeta } from "@/lib/meta"
@@ -46,6 +47,8 @@ export default function AmbassadorPlaybook() {
           </section>
         </aside>
       </div>
+      {/* Milestone 3 hook: chapter leads propose local adaptations to the BRIDGEGOOD steward. */}
+      <ProposeAdaptation />
       <section aria-labelledby="principles-title" className="mt-14">
         <h2 id="principles-title" className="mb-6 type-title-2">
           How BRIDGEGOOD works with ambassadors

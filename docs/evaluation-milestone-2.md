@@ -63,7 +63,7 @@ Mostly sound: one public library with stable URLs, role areas grouped into "Your
 3. **The apprentice sidebar has 8 items**, and Overview and Your path overlap. Consider making Your path the apprentice home.
 4. **"Funding & legal templates" is a coming-soon page in the partner sidebar.** Fold it into Toolkit & FAQs as a coming-soon row.
 5. **URLs that don't match their labels:** `/mentor/submissions` is labelled "Growth conversations", and `/student/activities` "Practice". Rename them, with redirects.
-6. **Nowhere for staff.** The BRIDGEGOOD steward area (milestone 3) is the missing home for review, adaptations and the changelog.
+6. **Nowhere for staff.** Fixed in milestone 3: the BRIDGEGOOD steward area at `/steward` is the home for review, adaptations and the changelog.
 
 ## 3. The app compared with the docs
 
@@ -85,7 +85,7 @@ Mostly sound: one public library with stable URLs, role areas grouped into "Your
 
 | From | Recommendation | State |
 |---|---|---|
-| `evaluation.md` pivot 2, `social-good.md` recommendation 5 | Feedback loop: steward inbox, adaptations, versioned framework, public changelog | Planned for milestone 3. Only mentions exist today ("steward" in 4 files, "field note" in 3). |
+| `evaluation.md` pivot 2, `social-good.md` recommendation 5 | Feedback loop: steward inbox, adaptations, versioned framework, public changelog | Done in milestone 3: steward role and inbox, adaptations, flags, AI disagreement counts, partner retrospectives, a community card, field notes, a versioned framework and `/learn/changelog`. Decisions live in the browser until there's a database. |
 | `evaluation.md` pivot 3 | Practice moments (scenarios showing BRIDGEGOOD's reasoning) instead of course-style modules | Not started |
 | `evaluation.md` pivot 4 | A "Carry it forward" kit for outside communities | Not started |
 | `social-good.md` recommendation 1 | The dual outcome (what changed for the community *and* how designers grew) at the center of projects and the gallery | Not started |
@@ -109,7 +109,7 @@ Mostly sound: one public library with stable URLs, role areas grouped into "Your
      - `Highlight` on the decision-point prompt
      - `RoleBadge` wherever a role appears
    - Then remove the Material 3 aliases from `app.css`, and do the manual accessibility checks (200% zoom, 320px, text spacing, forced colors, screen reader).
-3. **Milestone 3: the feedback loop.**
+3. **Milestone 3: the feedback loop.** Done. Tested end to end in `tests/feedback-loop.spec.ts`; the rules have unit tests in `src/lib/feedback/test/`. Open items: a real store and accounts so decisions leave the browser, mentor-lens feedback controls (only the companion's are wired; mentor records are synthetic), and the home page and library index still read the static `FRAMEWORK_META.version`.
    - A BRIDGEGOOD steward demo login with an inbox.
    - "Propose an adaptation" for chapter leads, and "this didn't fit" flags on prompts and guides.
    - Mentor–AI disagreement records (wire the companion's feedback controls into the inbox), partner retrospectives, and an aggregated community feedback card.

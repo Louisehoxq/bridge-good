@@ -26,12 +26,19 @@ export default [
     route("tracks/:slug", "routes/learn/track.tsx"),
     route("guides/:slug", "routes/learn/guide.tsx"),
     route("self-check", "routes/learn/self-check.tsx"),
+    route("changelog", "routes/learn/changelog.tsx"), // Milestone 3
   ]),
 
   area("student", ["practice", "projects", "submissions", "reflection", "mentor", "community"]),
   area("mentor", ["prepare", "mentee", "conversations"]),
   area("ambassador", ["playbook", "matching", "projects", "toolkits"]),
   area("partner", ["submit", "project", "gallery", "toolkit"]),
+  // Milestone 3: the BRIDGEGOOD steward area.
+  route("steward", "routes/steward/layout.tsx", [
+    index("routes/steward/index.tsx"),
+    route("framework", "routes/steward/framework.tsx"),
+    route("feedback/:id", "routes/steward/feedback.tsx"),
+  ]),
 
   // Old URLs: v1 role pages, /training/*, and role pages merged into others.
   ...REDIRECT_PATHS.map((path) => route(path, "routes/legacy-redirect.ts", { id: `redirect-${path.replace(/[^a-z]+/g, "-")}` })),

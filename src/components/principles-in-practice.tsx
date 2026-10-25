@@ -1,9 +1,9 @@
 import { Icon } from "@/components/icon"
 import { PRINCIPLES } from "@/content/principles"
-import type { Role } from "@/lib/roles"
+import type { CommunityRole } from "@/lib/roles"
 
 /** Each principle paired with what it asks of this archetype. Uses <details> so it works without JavaScript. */
-export function PrinciplesInPractice({ role }: { role: Role }) {
+export function PrinciplesInPractice({ role }: { role: CommunityRole }) {
   return (
     <ul className="grid gap-4 lg:grid-cols-2">
       {PRINCIPLES.map((p) => (

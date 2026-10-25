@@ -20,7 +20,7 @@ React Router 7 in framework mode on Vite 8 (`src/` is the app directory, server 
 
 ## Roadmap
 
-- Milestone 3: the feedback loop. A BRIDGEGOOD steward inbox, local adaptations, "this didn't fit" flags, mentor–AI disagreement records, and a versioned framework with a public changelog. See `docs/evaluation-milestone-2.md` section 4.
+- Milestone 3 (built): the feedback loop. The steward role (`/steward`) is the only one that decides on feedback or changes the framework's official wording, always with a reason. Rules and store are in `src/lib/feedback/`, components in `src/components/feedback/`, version history in `src/content/framework-history.ts`, and the public changelog at `/learn/changelog`. Existing pages show it through small hooks marked "Milestone 3". Next: see `docs/evaluation-milestone-2.md` section 4.
 
 Hackathon project for BRIDGEGOOD: codify and scale the Design for Social Good philosophy. The full brief is in `docs/challenge.md`. Read it before proposing concepts or writing content.
 

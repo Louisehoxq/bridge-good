@@ -5,6 +5,7 @@ import { useMatches, usePartnerFeedback } from "@/components/demo/journey-data"
 import { MilestoneList } from "@/components/demo/milestones"
 import { SubmittedBriefs } from "@/components/partner/submitted-briefs"
 import { SyntheticBadge } from "@/components/synthetic-badge"
+import { PartnerRetrospective } from "@/components/feedback/partner-retrospective" // Milestone 3 hook
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -107,6 +108,8 @@ export default function PartnerProject() {
       </div>
 
       <FeedbackForm />
+      {/* Milestone 3 hook: the end-of-project retrospective goes to the BRIDGEGOOD steward. */}
+      <PartnerRetrospective projectId={PARTNER_PROBLEM_ID} projectTitle={project.title} />
     </>
   )
 }
