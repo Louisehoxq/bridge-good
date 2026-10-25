@@ -1,10 +1,9 @@
 import { createCookie, redirect } from "react-router"
-import { isAmbassadorKind, isRole, ROLE_INFO, SESSION_COOKIE, type AmbassadorKind, type Role, type Session } from "@/lib/roles"
+import { isRole, ROLE_INFO, SESSION_COOKIE, type Role, type Session } from "@/lib/roles"
 
 /**
  * DEMO session: the signed-in role lives in a cookie. There is no password and no account, so this is
- * not real authentication. It only decides which role area a visitor sees, and for ambassadors which
- * kind (chapter lead or company host).
+ * not real authentication. It only decides which role area a visitor sees.
  */
 const sessionCookie = createCookie(SESSION_COOKIE, {
   path: "/",
@@ -16,10 +15,7 @@ const sessionCookie = createCookie(SESSION_COOKIE, {
 
 export async function getSession(request: Request): Promise<Session | null> {
   const value: unknown = await sessionCookie.parse(request.headers.get("Cookie"))
-  if (value && typeof value === "object" && "role" in value && isRole(value.role)) {
-    const kind = "ambassadorKind" in value && isAmbassadorKind(value.ambassadorKind) ? value.ambassadorKind : "chapter-lead"
-    return { role: value.role, ambassadorKind: value.role === "ambassador" ? kind : undefined }
-  }
+  if (value && typeof value === "object" && "role" in value && isRole(value.role)) return { role: value.role }
   return null
 }
 
@@ -34,11 +30,12 @@ export async function requireRole(request: Request, role: Role) {
   throw redirect(`/login?next=${encodeURIComponent(pathname)}`)
 }
 
-/** Demo login: no password, just the chosen synthetic account's role (and ambassador kind). */
-export async function loginAs(role: Role, next: string, ambassadorKind?: AmbassadorKind) {
+/** Demo login: no password, just the chosen synthetic account's role. */
+export async function loginAs(role: Role, next: string) {
   // Only follow `next` into the chosen role's own area, so it can't send anyone off-site.
-  const target = next === `/${role}` || next.startsWith(`/${role}/`) ? next : ROLE_INFO[role].home
-  const session: Session = role === "ambassador" ? { role, ambassadorKind: ambassadorKind ?? "chapter-lead" } : { role }
+  const home = ROLE_INFO[role].home
+  const target = next === home || next.startsWith(`${home}/`) ? next : home
+  const session: Session = { role }
   return redirect(target, { headers: { "Set-Cookie": await sessionCookie.serialize(session) } })
 }
 

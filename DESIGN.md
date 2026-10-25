@@ -242,8 +242,9 @@ These follow BRIDGEGOOD's tone guide (bridgegood.com/design): supportive, direct
 | Icons | `src/components/icon.tsx` (`<Icon name="…">`) |
 | Primitives | `src/components/ui/` (shadcn/ui on Base UI): button, input, textarea, label, sheet, `NativeSelect` |
 | Notices and form errors | `src/components/notice.tsx`: `Notice`, `ErrorSummary` (takes focus, links to fields), `FieldMessage` |
-| Signature elements | `src/components/studio/`: `Path`, `TeamPath`, `JourneyStepper`, `PeopleChip`, `RoleBadge` (`STUDIO_ROLE_FOR` maps demo roles), `Highlight`, `PinnedNote`, `FieldNote`, `DraftFrame`, `DraftTextarea`, `DraftFieldFrame` |
-| Team views | `src/components/team/team-view.tsx`: people chips joined by the gold path |
+| Signature elements | `src/components/studio/`: `Path`, `TeamPath`, `JourneyStepper`, `PeopleChip`, `RoleBadge`, `Highlight`, `PinnedNote`, `FieldNote`, `DraftFrame`, `DraftTextarea`, `DraftFieldFrame` |
+| The cycle | `src/components/cycle.tsx`: `CycleDiagram` (Welcome), `CycleStageBar` (every public page: its stage, with `aria-current="step"`, and the next step), `PublicPage` |
+| Navigation | Seven top-level items in the concept's order (Welcome, Understand, Decision Lab, Practice Library, Living Playbook, Teach & Facilitate, About), shown in the bar from `xl` up and in the sheet menu below |
 | Live reference | `src/routes/design.tsx` (`/design`, `noindex`) |
 | Static showcase | `docs/design/examples.html`. It copies the tokens by hand, so update it when section 2 changes |
 | Logo | `src/components/wordmark.tsx` is a text placeholder. Use BRIDGEGOOD's official SVGs in `public/brand/`; don't redraw, recolor or add effects |

@@ -1,203 +1,155 @@
 import { Link } from "react-router"
-import { Icon } from "@/components/icon"
-import { FRAMEWORK_META, PILLARS } from "@/content/framework"
-import { PRINCIPLES } from "@/content/principles"
 import { AppShell } from "@/components/app-shell"
-import { ImpactLoop } from "@/components/impact-loop"
-import { PrinciplesTable } from "@/components/principles-table"
-import { RoleBadge, type StudioRole } from "@/components/studio/role-badge"
+import { CycleDiagram } from "@/components/cycle"
+import { Icon } from "@/components/icon"
 import { buttonVariants } from "@/components/ui/button"
+import { PATHWAYS, PRINCIPLES } from "@/content/philosophy"
+import { pageMeta } from "@/lib/meta"
 
-/** "Start where you are": each role goes to the library page written for them, no login needed. */
-const ROUTES: { role: StudioRole; who: string; href: string; cta: string }[] = [
-  { role: "apprentice", who: "You're in the apprenticeship, or thinking about applying", href: "/learn/tracks/apprentices", cta: "The apprentice track" },
-  { role: "mentor", who: "You guide apprentices, or would like to", href: "/learn/tracks/mentors", cta: "The mentor track" },
-  { role: "chapter-lead", who: "You'd like to run a chapter in your city", href: "/learn/tracks/ambassadors", cta: "The chapter lead track" },
-  { role: "company-host", who: "Your company could host mentors or sponsor a project", href: "/learn/tracks/company-hosts", cta: "The company host track" },
-  { role: "community-partner", who: "Your organization has a problem a team could work on", href: "/learn/guides/real-case", cta: "How a partner project runs" },
-]
+export const meta = () => pageMeta()
 
 export default function WelcomePage() {
   return (
     <AppShell>
       <section aria-labelledby="hero-title" className="border-b bg-surface-sunken">
-        <div className="mx-auto max-w-7xl space-y-10 px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
           <div className="max-w-4xl space-y-6">
+            <p className="type-small font-bold tracking-widest text-action uppercase">
+              BRIDGEGOOD · <span className="text-muted-foreground">Design for Social Good</span>
+            </p>
             <h1 id="hero-title" className="type-title-1 lg:type-display">
-              Design for Social Good: how BRIDGEGOOD works, and how you can work this way too
+              Design for people. Build for good.
             </h1>
-            <p className="max-w-[70ch] type-body-lg">
-              In BRIDGEGOOD&apos;s approach, the community a project serves helps define the problem and judge the result.
-              Emerging designers from groups underrepresented in design do the work, with mentors. A project counts only if
-              it works for the community and the designers grow through it.
+            <p className="max-w-[65ch] type-body-lg">
+              Great design doesn&apos;t just solve problems. It helps people see their own potential, makes space for voices
+              too often overlooked, and creates opportunities for communities to thrive.
             </p>
+            <p className="max-w-[65ch] type-body-lg">
+              Welcome to BRIDGEGOOD&apos;s shared space for learning, practicing, and carrying forward Design for Social Good.
+            </p>
+            <div className="flex flex-wrap gap-3 pt-2">
+              <Link to="/understand" className={buttonVariants({ size: "lg" })}>
+                Explore the philosophy
+                <Icon name="arrow-right" />
+              </Link>
+              <Link to="/lab" className={buttonVariants({ size: "lg", variant: "outline" })}>
+                Put it into practice
+              </Link>
+            </div>
           </div>
-
-          <nav aria-labelledby="start-title">
-            <h2 id="start-title" className="mb-4 type-title-3">
-              Start where you are
-            </h2>
-            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-              {ROUTES.map((r) => (
-                <li key={r.role}>
-                  <Link
-                    to={r.href}
-                    data-archetype={r.role}
-                    className="group flex h-full flex-col gap-3 rounded-xl border bg-card p-4 hover:border-archetype hover:bg-archetype-soft"
-                  >
-                    <RoleBadge role={r.role} className="self-start" />
-                    <span>{r.who}</span>
-                    <span className="mt-auto inline-flex items-center gap-2 font-bold text-primary">
-                      {r.cta}
-                      <Icon name="arrow-right" className="text-base transition-transform group-hover:translate-x-1" />
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <ul className="mt-4 grid gap-4 md:grid-cols-2">
-              <li>
-                <Link to="/learn/practice" className="group flex h-full items-start gap-3 rounded-xl border border-dashed border-input bg-card p-4 hover:bg-muted">
-                  <Icon name="scale" className="mt-0.5 text-primary" />
-                  <span>
-                    <span className="block font-bold">Practice moments</span>
-                    <span className="block text-muted-foreground">Any role: make a call in a short dilemma, then see how BRIDGEGOOD reasons. Never scored.</span>
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/learn/carry-it-forward" className="group flex h-full items-start gap-3 rounded-xl border border-dashed border-input bg-card p-4 hover:bg-muted">
-                  <Icon name="globe" className="mt-0.5 text-primary" />
-                  <span>
-                    <span className="block font-bold">Outside BRIDGEGOOD? Carry it forward</span>
-                    <span className="block text-muted-foreground">Teachers and organizers: run a critique circle in your community, and tell BRIDGEGOOD what you changed.</span>
-                  </span>
-                </Link>
-              </li>
-            </ul>
-            <p className="mt-4">
-              Already taking part?{" "}
-              <Link to="/login" className="font-semibold text-primary underline underline-offset-4">
-                Log in to your area
-              </Link>{" "}
-              (demo accounts, no password).
-            </p>
-          </nav>
         </div>
       </section>
 
-      <div className="mx-auto max-w-7xl space-y-20 px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
-        <section id="pillars" aria-labelledby="pillars-title" className="scroll-mt-24">
-          <h2 id="pillars-title" className="type-title-2">
-            Five pillars: what the work asks of you
+      <div className="mx-auto max-w-7xl space-y-20 px-4 py-16 sm:px-6 lg:px-8">
+        <section aria-labelledby="more-title" className="grid gap-8 lg:grid-cols-[2fr_3fr] lg:items-start">
+          <h2 id="more-title" className="type-title-1">
+            Design is more than what you make.
           </h2>
-          <p className="mt-3 mb-8 max-w-[70ch] type-body-lg text-muted-foreground">
-            Each pillar has a plain meaning, an example from a project, a learning outcome, and reflection prompts that
-            come up when decisions get made. {FRAMEWORK_META.author} authors and owns the framework. This is version{" "}
-            {FRAMEWORK_META.version}, a {FRAMEWORK_META.status.toLowerCase()}, updated {FRAMEWORK_META.updated}.
+          <div className="space-y-4 type-body-lg">
+            <p>
+              It&apos;s how you listen. Whose perspectives you include. What you choose to question. And who benefits from
+              the solutions you create.
+            </p>
+            <p>
+              At BRIDGEGOOD, design is also a way to build confidence, expand access, strengthen communities, and open doors
+              to economic opportunity.
+            </p>
+            <p className="font-semibold">
+              This philosophy isn&apos;t something to memorize. It&apos;s something to practice, question, and carry into the
+              world.
+            </p>
+          </div>
+        </section>
+
+        <section aria-labelledby="principles-title">
+          <h2 id="principles-title" className="type-title-2">
+            The principles behind the practice
+          </h2>
+          <p className="mt-2 mb-8 type-body-lg text-muted-foreground italic">Not rules to follow blindly, but questions to return to.</p>
+          <ol className="grid gap-4 md:grid-cols-2">
+            {PRINCIPLES.map((p) => (
+              <li key={p.id} className="flex flex-col gap-3 rounded-2xl border bg-card p-6">
+                <p className="w-fit border-b-4 border-gold pb-1 font-heading text-3xl font-bold text-action" aria-hidden="true">
+                  {p.number}
+                </p>
+                <h3 className="type-title-3">
+                  <span className="sr-only">Principle {p.number}: </span>
+                  {p.title}
+                </h3>
+                <p>{p.body}</p>
+                <Link
+                  to={`/understand#${p.id}`}
+                  className="mt-auto inline-flex min-h-12 items-center gap-1 font-semibold text-action underline underline-offset-4"
+                >
+                  The reasoning and an example
+                  <Icon name="arrow-right" className="text-base" />
+                </Link>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section aria-labelledby="journey-title">
+          <h2 id="journey-title" className="type-title-2">
+            Your journey. Your way to contribute.
+          </h2>
+          <p className="mt-2 mb-8 max-w-3xl type-body-lg text-muted-foreground">
+            Whether you&apos;re learning design, guiding someone else&apos;s growth, or bringing these values into a new
+            organization, there&apos;s a place for you here.
           </p>
-          <ol className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {PILLARS.map((p) => (
+          <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+            {PATHWAYS.map((p) => (
               <li key={p.id}>
                 <Link
-                  to={`/learn/pillars/${p.id}`}
-                  className="group flex h-full flex-col gap-2 rounded-xl border bg-card p-5 hover:border-primary hover:bg-muted"
+                  to={`/start/${p.id}`}
+                  className="group flex h-full flex-col gap-3 rounded-2xl border-2 border-border bg-card p-5 transition-colors hover:border-action"
                 >
-                  <span className="type-small font-semibold text-muted-foreground">Pillar {p.number}</span>
-                  <span className="type-title-3 font-heading">{p.name}</span>
-                  <span>{p.meaning}</span>
-                  <span className="text-muted-foreground">
-                    <span className="font-semibold text-foreground">You&apos;ll be able to: </span>
-                    {p.learningOutcome}
-                  </span>
-                  <span className="mt-auto inline-flex items-center gap-2 pt-2 font-bold text-primary">
-                    Read about {p.name}, with {p.promptIds.length} reflection {p.promptIds.length === 1 ? "prompt" : "prompts"}
+                  <Icon name={p.icon} className="text-2xl text-action" />
+                  <span className="type-title-3">{p.title}</span>
+                  <span className="text-muted-foreground">{p.body}</span>
+                  <span className="mt-auto inline-flex items-center gap-1 pt-2 font-bold text-action">
+                    {p.cta}
                     <Icon name="arrow-right" className="text-base transition-transform group-hover:translate-x-1" />
                   </span>
                 </Link>
               </li>
             ))}
-            <li>
-              <Link to="/learn/terms" className="group flex h-full flex-col gap-2 rounded-xl border border-dashed border-input p-5 hover:bg-muted">
-                <span className="type-title-3 font-heading">What the words mean</span>
-                <span>
-                  What BRIDGEGOOD means by inclusion, access and social good, and how this approach differs from
-                  human-centered design and pro bono work.
-                </span>
-                <span className="mt-auto inline-flex items-center gap-2 pt-2 font-bold text-primary">
-                  Terms of reference
-                  <Icon name="arrow-right" className="text-base transition-transform group-hover:translate-x-1" />
-                </span>
-              </Link>
-            </li>
-          </ol>
-        </section>
-
-        <section id="how" aria-labelledby="how-title" className="scroll-mt-24">
-          <h2 id="how-title" className="type-title-2">
-            How BRIDGEGOOD works with everyone involved
-          </h2>
-          <p className="mt-3 mb-8 max-w-[70ch] type-body-lg text-muted-foreground">
-            The pillars describe what apprentices learn. These six ways of working describe how BRIDGEGOOD, mentors,
-            ambassadors and partners work together so the pillars can happen. Draft wording, for BRIDGEGOOD to review.
-          </p>
-          <ul className="grid gap-x-8 gap-y-6 md:grid-cols-2 xl:grid-cols-3">
-            {PRINCIPLES.map((p) => (
-              <li key={p.id} className="border-t-2 border-gold pt-3">
-                <h3 className="type-title-3">{p.name}</h3>
-                <p className="mt-1 text-muted-foreground">{p.meaning}</p>
-              </li>
-            ))}
           </ul>
-          <details className="group mt-8 rounded-xl border bg-card">
-            <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 p-4 font-bold [&::-webkit-details-marker]:hidden">
-              What each way of working asks of each role
-              <Icon name="chevron-down" className="text-primary transition-transform group-open:rotate-180" />
-            </summary>
-            <div className="border-t p-4">
-              <PrinciplesTable />
-            </div>
-          </details>
         </section>
 
-        <section id="loop" aria-labelledby="loop-title" className="scroll-mt-24">
-          <h2 id="loop-title" className="mb-2 type-title-2">
-            How it fits together
+        <section aria-labelledby="cycle-title">
+          <h2 id="cycle-title" className="type-title-2">
+            Understand, practice, reflect, teach, and again
           </h2>
-          <p className="mb-8 max-w-[70ch] text-muted-foreground">
-            Every project runs the same loop. What people learn along the way goes back to BRIDGEGOOD.
+          <p className="mt-2 mb-8 max-w-3xl type-body-lg text-muted-foreground">
+            This is more than a resource portal. It helps you move through a repeatable cycle of understanding, action,
+            reflection, and shared learning.
           </p>
-          <ImpactLoop />
+          <CycleDiagram />
         </section>
 
-        <section id="ownership" aria-labelledby="ownership-title" className="grid scroll-mt-24 gap-8 xl:grid-cols-2">
-          <div className="space-y-4">
-            <h2 id="ownership-title" className="type-title-2">
-              Who this philosophy belongs to
+        <section aria-labelledby="grow-title" className="rounded-3xl bg-surface-sunken p-8 lg:p-12">
+          <div className="max-w-3xl space-y-4">
+            <h2 id="grow-title" className="type-title-2">
+              Don&apos;t just learn the philosophy. Help it grow.
             </h2>
-            <p className="max-w-[70ch] type-body-lg">
-              Since 2009, BRIDGEGOOD has helped people see themselves as creators, leaders and problem-solvers. Design for
-              Social Good is the way of working behind that: design that benefits communities, values lived experience, and
-              grows confidence, access and economic mobility for the people doing it. Apprentices pay no tuition, with no
-              income share agreements (public fact; confirm with BRIDGEGOOD).
+            <p className="type-body-lg">
+              Every community is different. Every challenge brings something new. The goal isn&apos;t to reproduce one perfect
+              solution — it&apos;s to carry forward the thinking, care, and responsibility behind the work.
             </p>
-          </div>
-          <div className="rounded-2xl border bg-card p-6">
-            <h3 className="type-title-3">BRIDGEGOOD authors it. A community practices it.</h3>
-            <ul className="mt-3 list-disc space-y-2 pl-5">
-              <li>BRIDGEGOOD authors and stewards it, and approves every change to its wording.</li>
-              <li>Apprentices, mentors, ambassadors and partners practice it, and improve it through feedback.</li>
-              <li>Communities can adapt it locally while keeping its core commitments.</li>
-              <li>Technology on this site supports the relationships behind it. It doesn&apos;t replace them.</li>
-            </ul>
-            <div className="mt-4 flex flex-wrap gap-3">
-              <Link to="/learn/guides/adapt-locally" className={buttonVariants({ variant: "outline" })}>
-                How local adaptation works
+            <p className="type-body-lg">Share a lesson. Reflect on a challenge. Adapt a tool. Mentor someone. Tell us what should change.</p>
+            <p className="type-title-3 border-l-4 border-gold pl-4">The playbook belongs to the community that practices it.</p>
+            <div className="flex flex-wrap gap-3 pt-2">
+              <Link to="/playbook/contribute" className={buttonVariants({ size: "lg" })}>
+                Share a lesson
               </Link>
-              <Link to="/learn/carry-it-forward" className="inline-flex min-h-12 items-center font-semibold text-primary underline underline-offset-4">
-                Run a session in your community
+              <Link to="/playbook" className={buttonVariants({ size: "lg", variant: "outline" })}>
+                Read the Living Playbook
               </Link>
             </div>
+            <p className="pt-4 text-muted-foreground italic">
+              Rooted in BRIDGEGOOD&apos;s philosophy. Shaped by lived experience. Carried forward together.
+            </p>
           </div>
         </section>
       </div>

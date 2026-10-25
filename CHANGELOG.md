@@ -4,11 +4,38 @@ Release notes for BridgeGoodx, newest first. Each entry is one merged pull reque
 
 Every person, chapter, organization and project in the app is a synthetic example. BRIDGEGOOD authors and owns the Design for Social Good philosophy; the app is a prototype of how it could be shared, practiced and improved.
 
-The roles are: **apprentice** (BRIDGEGOOD's word for a student), **mentor**, **ambassador** (a **chapter lead** or a **company host**), **community partner**, and **BRIDGEGOOD steward** (program staff who keep the framework).
+Since v3 the site is public, with two demo logins: **company host** and **BRIDGEGOOD steward** (program staff who review Living Playbook contributions). Earlier entries mention roles that v3 removed.
 
 ---
 
 ## Unreleased
+
+### v3: rebuilt around the Community Playbook concept
+
+The product now follows the *Welcome Page and Community Playbook* draft: one public site organized around the community experience cycle, **Understand → Practice → Reflect and Share → Teach and Evolve**. The company host is kept as an extra role, and the steward now reviews Playbook contributions. The site uses the BRIDGEGOOD logo navy (#003365) and gold (#CD991D).
+
+**For everyone (no login)**
+- **Welcome**, with the concept's copy: "Design for people. Build for good.", the four principles as questions to return to, five audience pathways, the cycle, and "Help it grow".
+- **Pathways** at `/start/:audience` for students, alumni, mentors and volunteers, chapters / partners / educators, and company hosts: one suggestion per cycle stage.
+- **Understand**: each principle's reasoning with a concrete design choice and the generic alternative, how it differs from generic claims, what access, inclusion, community benefit and economic mobility mean here, and questions about assumptions and power.
+- **Design Decision Lab**: six synthetic dilemmas covering the concept's themes, in six steps, with consequences (who's helped, who's left out), other perspectives, reflection prompts, and links into practice. Never graded. Reflections save in the browser.
+- **Practice Library**: 24 tools in six task-based categories, filterable by role, goal, format, level and time. Each has every field the concept lists, including source, owner, version and "Suggest an improvement".
+- **Living Playbook**: core philosophy, practice examples, local adaptations and open questions, labelled apart. The seven-part contribution template includes permission and attribution. Contributors see their review status and can reply to the steward.
+- **Teach & Facilitate** and **About the Philosophy**: guides, chapter starter kit, train-the-facilitator steps, adaptation notes, the review workflow, trust and safety, a correction/withdrawal route, guardrails and success indicators.
+
+**Company hosts**
+- New area at `/host`: overview and path, host guide (explainer, modules, what BRIDGEGOOD looks for), "Bring it to your workplace", partner projects to sponsor (hosts never choose the problems), and the organization toolkit.
+
+**BRIDGEGOOD stewards**
+- Review queue, a review page with the five checks (relevance, consent, privacy, accessibility, alignment), discussion with the contributor, labelling, publish or decline with a reason, and theme tags. There's a maintenance log and a recurring-themes view.
+
+**Removed**
+- The apprentice, mentor, chapter lead and community partner areas, the `/learn` library, practice moments, the carry-it-forward kit, the chapters page, the feedback-loop inbox and framework versioning, the partner scoping assistant, and the apprentice Reflection Companion.
+
+**Technical**
+- New routes in `src/routes.ts`; content in `src/content/{philosophy,lab,practice-library,playbook,company-host}.ts`; Playbook rules in `src/lib/playbook.ts` with unit tests in `src/lib/test/`.
+- `/api/reflect` is now the Lab's reflection helper (AI SDK `generateText` with structured output). It returns questions only, caps input size, and rejects contact details. `src/lib/evaluator/` and `src/lib/feedback/` were removed; the model choice moved to `src/lib/model.server.ts`.
+- `tests/community-cycle.spec.ts` covers Lab → Library → contribute → steward publishes, and the company host guard. `tests/a11y.spec.ts` covers every new route.
 
 ### Practice moments and the carry-it-forward kit
 

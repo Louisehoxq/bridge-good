@@ -5,31 +5,17 @@ import { cn } from "@/lib/utils"
 
 /**
  * Bridge Studio roles (DESIGN.md section 2). Each one always shows icon + label + color together.
- * Chapter lead and company host share the ambassador color; their icons tell them apart.
  */
 export const STUDIO_ROLES = {
-  apprentice: { label: "Apprentice", icon: "sprout" },
-  mentor: { label: "Mentor", icon: "message-circle-heart" },
-  "chapter-lead": { label: "Chapter lead", icon: "map-pin" },
   "company-host": { label: "Company host", icon: "building-2" },
-  "community-partner": { label: "Community partner", icon: "heart-handshake" },
   steward: { label: "BRIDGEGOOD steward", icon: "scroll-text" },
-} as const satisfies Record<string, { label: string; icon: IconName }>
+} as const satisfies Record<Role, { label: string; icon: IconName }>
 
 export type StudioRole = keyof typeof STUDIO_ROLES
 
-/** The Bridge Studio role each demo account role (src/lib/roles.ts) shows as. */
-export const STUDIO_ROLE_FOR = {
-  student: "apprentice",
-  mentor: "mentor",
-  ambassador: "chapter-lead",
-  partner: "community-partner",
-  steward: "steward", // Milestone 3: BRIDGEGOOD staff
-} as const satisfies Record<Role, StudioRole>
-
-/** The Bridge Studio role for a signed-in demo session: ambassadors show as their own kind. */
+/** The Bridge Studio role for a signed-in demo session. */
 export function studioRoleFor(session: Session): StudioRole {
-  return session.role === "ambassador" ? (session.ambassadorKind ?? "chapter-lead") : STUDIO_ROLE_FOR[session.role]
+  return session.role
 }
 
 /** A fully round tag in the role's soft tint, with its icon and a word. `children` replaces the default label. */

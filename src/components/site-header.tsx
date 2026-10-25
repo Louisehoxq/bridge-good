@@ -7,7 +7,7 @@ import { AccountMenu, DashboardLink, SheetAccount } from "@/components/account-m
 import { NavLink } from "@/components/nav-link"
 import { Wordmark } from "@/components/wordmark"
 
-/** Desktop-first top bar. Below lg the links collapse into a sheet; below md account actions move there too. */
+/** Desktop-first top bar. Below xl the links collapse into a sheet; below md account actions move there too. */
 export function SiteHeader({ role }: { role?: Role }) {
   return (
     <header className="sticky top-0 z-40 print:hidden border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/85">
@@ -16,8 +16,8 @@ export function SiteHeader({ role }: { role?: Role }) {
           <Wordmark />
         </Link>
 
-        <nav aria-label="Main" className="hidden flex-1 lg:block">
-          <ul className="flex items-center gap-1">
+        <nav aria-label="Main" className="hidden flex-1 xl:block">
+          <ul className="flex items-center gap-0.5">
             {PUBLIC_NAV.map((item) => (
               <li key={item.href}>
                 <NavLink href={item.href} exact={item.href === "/"} variant="top">
@@ -34,7 +34,7 @@ export function SiteHeader({ role }: { role?: Role }) {
         <div className="ml-auto flex items-center gap-2">
           <AccountMenu />
           <Sheet>
-            <SheetTrigger render={<Button variant="outline" size="icon" aria-label="Open menu" className="lg:hidden" />}>
+            <SheetTrigger render={<Button variant="outline" size="icon" aria-label="Open menu" className="xl:hidden" />}>
               <Icon name="menu" />
             </SheetTrigger>
             <SheetContent side="right" className="w-[85vw] max-w-sm overflow-y-auto p-6">

@@ -1,26 +1,25 @@
 import AxeBuilder from "@axe-core/playwright"
 import { expect, test, type Page } from "@playwright/test"
 import routes from "../src/routes"
-import { PILLARS } from "../src/content/framework"
-import { AUDIENCES } from "../src/content/training"
-import { GUIDE_SLUGS, TRACKS } from "../src/lib/library"
-import { PRACTICE_MOMENTS } from "../src/content/practice"
-import { SEED_FEEDBACK } from "../src/content/feedback-seed"
-import { ALL_ROLES, type Role } from "../src/lib/roles"
+import { LAB_SCENARIOS } from "../src/content/lab"
+import { AUDIENCES } from "../src/content/philosophy"
+import { SEED_ENTRIES } from "../src/content/playbook"
+import { RESOURCES } from "../src/content/practice-library"
+import { ROLE_INFO, ROLES, type Role } from "../src/lib/roles"
 
 type RouteEntry = { path?: string; index?: boolean; file: string; children?: RouteEntry[] }
 
 /** Values for dynamic segments, so every page route gets a real URL. */
 const PARAMS: Record<string, readonly string[]> = { audience: AUDIENCES }
 
-/** Values for segments whose name is shared by several routes (both library tracks and guides use :slug). */
+/** Values for segments whose name is shared by several routes (Lab and Library both use :slug). */
 const PATH_PARAMS: Record<string, readonly string[]> = {
-  "learn/pillars/:pillarId": PILLARS.map((p) => p.id),
-  "learn/tracks/:slug": TRACKS.map((t) => t.slug),
-  "learn/guides/:slug": GUIDE_SLUGS,
-  "learn/practice/:slug": PRACTICE_MOMENTS.map((m) => m.slug),
-  // Every seeded kind and status, plus an open AI disagreement group.
-  "steward/feedback/:id": [...SEED_FEEDBACK.map((f) => f.id), "ai-responsible-ai"],
+  "lab/:slug": LAB_SCENARIOS.map((s) => s.slug),
+  "library/:slug": RESOURCES.map((r) => r.slug),
+  // One of each kind of published entry.
+  "playbook/:id": ["core-feedback-responsibility", "pe-phone-booking", "la-interview-guide-dari", "oq-paying-participants"],
+  // The seeded contribution waiting for review, and a published one.
+  "steward/review/:id": SEED_ENTRIES.filter((e) => e.type !== "core").slice(-2).map((e) => e.id),
 }
 
 /** Every page route in src/routes.ts. Resource routes and redirects (.ts files) have no page to test. */
@@ -46,13 +45,14 @@ function expand(path: string): string[] {
  */
 const KNOWN: Record<string, string[]> = {}
 
-const roleFor = (path: string) => ALL_ROLES.find((role) => path === `/${role}` || path.startsWith(`/${role}/`))
+const roleFor = (path: string) => ROLES.find((role) => path === ROLE_INFO[role].home || path.startsWith(`${ROLE_INFO[role].home}/`))
 
 /** Logs in through the demo login screen by submitting the chosen role's form. */
 async function logIn(page: Page, role: Role) {
-  await page.goto(`/login?next=/${role}`)
+  const home = ROLE_INFO[role].home
+  await page.goto(`/login?next=${home}`)
   await page.locator(`form:has(input[name="role"][value="${role}"]) [type="submit"]`).first().click()
-  await page.waitForURL((url) => url.pathname.startsWith(`/${role}`))
+  await page.waitForURL((url) => url.pathname.startsWith(home))
 }
 
 const paths = [...new Set(pagePaths(routes as RouteEntry[]))]

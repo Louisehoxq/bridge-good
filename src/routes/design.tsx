@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { PRINCIPLES } from "@/content/principles"
+import { PRINCIPLES } from "@/content/philosophy"
 import { pageMeta } from "@/lib/meta"
 
 /** Dev page: Bridge Studio (DESIGN.md) rendered with the app's own tokens and components. */
@@ -219,16 +219,10 @@ export default function DesignPage() {
             <Card title="People chips">
               <ul className="space-y-4">
                 <li>
-                  <PeopleChip name="Ari Santos" role="apprentice" you />
+                  <PeopleChip name="Dana Whitfield" role="company-host" you />
                 </li>
                 <li>
-                  <PeopleChip name="Jordan Lee" role="mentor" detail="alum" />
-                </li>
-                <li>
-                  <PeopleChip name="Priya Raman" role="chapter-lead" detail="Chicago" />
-                </li>
-                <li>
-                  <PeopleChip name="Eastside Food Pantry" role="community-partner" />
+                  <PeopleChip name="Morgan Ellis" role="steward" detail="BRIDGEGOOD" />
                 </li>
               </ul>
               <p className="type-small text-muted-foreground">Initials only. Synthetic examples.</p>
@@ -238,13 +232,10 @@ export default function DesignPage() {
               <p className="text-muted-foreground">Only where the relationship is real: a team, a journey, the impact loop.</p>
               <TeamPath label="Your team (synthetic example)">
                 <li>
-                  <PeopleChip stacked name="Ari Santos" role="apprentice" you />
+                  <PeopleChip stacked name="Dana Whitfield" role="company-host" you />
                 </li>
                 <li>
-                  <PeopleChip stacked name="Jordan Lee" role="mentor" />
-                </li>
-                <li>
-                  <PeopleChip stacked name="Eastside Food Pantry" role="community-partner" />
+                  <PeopleChip stacked name="Morgan Ellis" role="steward" />
                 </li>
               </TeamPath>
               <div data-archetype="apprentice">
@@ -283,8 +274,8 @@ export default function DesignPage() {
 
             <Card title="Field note">
               <div className="space-y-1 border-l-4 border-gold pl-4">
-                <p className="font-semibold">{principle.name}</p>
-                <p>{principle.meaning}</p>
+                <p className="font-semibold">{principle.title}</p>
+                <p>{principle.body}</p>
                 <p className="type-small text-muted-foreground">BRIDGEGOOD&apos;s wording (draft for BRIDGEGOOD to review)</p>
               </div>
               <FieldNote chapter="the Chicago chapter">

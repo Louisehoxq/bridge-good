@@ -1,9 +1,8 @@
 import type { ReactNode } from "react"
 import { ROLE_INFO, type Role } from "@/lib/roles"
-import { useSession } from "@/lib/session"
 import { Icon, type IconName } from "@/components/icon"
 import { NavLink } from "@/components/nav-link"
-import { RoleBadge, STUDIO_ROLE_FOR, STUDIO_ROLES, studioRoleFor } from "@/components/studio/role-badge"
+import { RoleBadge, STUDIO_ROLES } from "@/components/studio/role-badge"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
 
@@ -22,31 +21,14 @@ export function AppShell({ children }: { children: ReactNode }) {
 
 /** Sidebar icons by link, so each item reads at a glance. The same icon always means the same thing. */
 const SIDEBAR_ICONS: Record<string, IconName> = {
-  "/student": "route",
-  "/student/practice": "pencil-ruler",
-  "/student/projects": "clipboard-list",
-  "/student/submissions": "messages-square",
-  "/student/reflection": "sticky-note",
-  "/student/mentor": "message-circle-heart",
-  "/student/community": "users",
-  "/mentor": "house",
-  "/mentor/prepare": "book-open",
-  "/mentor/conversations": "messages-square",
-  "/mentor/mentee": "sprout",
-  "/ambassador": "house",
-  "/ambassador/playbook": "book-open",
-  "/ambassador/matching": "flag",
-  "/ambassador/projects": "heart-handshake",
-  "/ambassador/toolkits": "folder-open",
-  "/partner": "house",
-  "/partner/submit": "file-plus",
-  "/partner/project": "users",
-  "/partner/gallery": "layout-grid",
-  "/partner/toolkit": "folder-open",
-  // Milestone 3: the BRIDGEGOOD steward area.
+  "/host": "house",
+  "/host/guide": "book-open",
+  "/host/workplace": "building-2",
+  "/host/projects": "heart-handshake",
+  "/host/toolkit": "folder-open",
   "/steward": "inbox",
-  "/steward/framework": "scroll-text",
-  "/learn/changelog": "history",
+  "/steward/log": "history",
+  "/steward/themes": "sparkles",
 }
 
 /**
@@ -55,10 +37,7 @@ const SIDEBAR_ICONS: Record<string, IconName> = {
  */
 export function RoleShell({ role, children }: { role: Role; children: ReactNode }) {
   const info = ROLE_INFO[role]
-  const session = useSession()
-  // Chapter leads and company hosts share the ambassador area; label it with their own kind.
-  const studioRole = session?.role === role ? studioRoleFor(session) : STUDIO_ROLE_FOR[role]
-  const badge = <RoleBadge role={studioRole}>{STUDIO_ROLES[studioRole].label} area</RoleBadge>
+  const badge = <RoleBadge role={role}>{STUDIO_ROLES[role].label} area</RoleBadge>
   return (
     <div data-archetype={role} className="flex min-h-full flex-col">
       <SiteHeader role={role} />
