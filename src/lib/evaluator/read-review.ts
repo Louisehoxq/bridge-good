@@ -3,17 +3,33 @@ import { studentReviewSchema, type StudentReview } from "./schema"
 const LIMITS = { observations: 12, strengths: 4, reflectionPrompts: 3 } as const
 
 /**
+ * The JSON in a reply. Hosts that don't enforce the schema (often with open models) may wrap it in a ```json
+ * fence or add a sentence around it, so fall back to the fenced block, then to the outermost {...}.
+ */
+function parseJson(text: string): unknown {
+  const fenced = /```(?:json)?\s*([\s\S]*?)```/i.exec(text)?.[1]
+  const start = text.indexOf("{")
+  const end = text.lastIndexOf("}")
+  const braces = start >= 0 && end > start ? text.slice(start, end + 1) : undefined
+  for (const candidate of [text, fenced, braces]) {
+    if (candidate === undefined) continue
+    try {
+      return JSON.parse(candidate)
+    } catch {
+      // Try the next way of finding the JSON.
+    }
+  }
+  return undefined
+}
+
+/**
  * Read a finished review from the assistant's message text (structured output arrives as JSON).
  * Lists longer than the schema allows are trimmed rather than rejected, because the provider may not
  * enforce array lengths. Anything else that doesn't match the schema is rejected.
  */
 export function readReview(text: string): StudentReview | null {
-  let raw: unknown
-  try {
-    raw = JSON.parse(text)
-  } catch {
-    return null
-  }
+  const raw = parseJson(text)
+  if (raw === undefined) return null
   if (raw && typeof raw === "object") {
     const obj = raw as Record<string, unknown>
     for (const [key, max] of Object.entries(LIMITS)) {
