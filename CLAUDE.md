@@ -1,5 +1,20 @@
 # BridgeGoodx: working notes for Claude
 
+@AGENTS.md
+
+## Stack
+
+Next.js 16 (App Router, `src/`, Cache Components on), Tailwind 4, shadcn/ui on Base UI (`render` prop, not `asChild`), zod 4, and AI SDK v7 (docs in `node_modules/ai/docs`). Deploy on Vercel.
+
+- Layout is **desktop-first**. Public pages use `AppShell`. Role areas (`src/app/{student,mentor,ambassador,partner}`) use `RoleShell` with a sidebar driven by `ROLE_INFO` in `src/lib/roles.ts`.
+- Login is a demo cookie (`bgx-session`), guarded by `src/proxy.ts`. Interactive data goes through `useCollection` in `src/lib/demo-store.ts`.
+- Brand tokens are in `src/app/globals.css`. See `docs/design-system.md` before changing styles or copy.
+
+## AI features
+
+- Every AI surface must be labelled as AI, leave the human with the final decision (editable output, BRIDGEGOOD review), and never request personal data.
+- Partner scoping lives in `src/app/api/scope/route.ts`.
+
 Hackathon project for BRIDGEGOOD: codify and scale the Design for Social Good philosophy. The full brief is in `docs/challenge.md`. Read it before proposing concepts or writing content.
 
 ## Non-negotiables (from the brief)
