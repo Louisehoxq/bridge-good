@@ -15,6 +15,7 @@ export default [
   route("training", "routes/training.tsx"),
   route("training/:audience", "routes/training.audience.tsx"),
   route("api/scope", "routes/api.scope.ts"),
+  route("design", "routes/design.tsx"),
 
   area("student", ["learn", "activities", "submissions", "reflection", "community", "office-hours", "messages"]),
   area("mentor", ["training", "submissions", "office-hours", "messages"]),
