@@ -12,7 +12,7 @@ export default function MentorHome() {
   return (
     <>
       <PageHeader title={`Welcome back, ${ROLE_INFO.mentor.demoAccount.name.split(" ")[0]}`}>
-        You finished the BRIDGEGOOD apprenticeship and came back to mentor (synthetic example). Care, honesty and
+        You finished the BRIDGEGOOD apprenticeship and came back to mentor. Care, honesty and
         encouragement are what make this work.
       </PageHeader>
       <div className="space-y-8">
