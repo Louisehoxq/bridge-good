@@ -1,33 +1,32 @@
-import { Icon } from "@/components/icon"
+import type { Route } from "./+types/reflection"
 import { PageHeader } from "@/components/app-shell"
+import { ContrastChecker } from "@/components/reflection/contrast-checker"
+import { ReflectionCompanion } from "@/components/reflection/reflection-companion"
+import { SavedReflections, SharedWithMentor } from "@/components/reflection/shared-lists"
+import { isAiConfigured } from "@/lib/ai.server"
 import { pageMeta } from "@/lib/meta"
 
 export const meta = () => pageMeta("AI Reflection Companion")
 
-export default function ReflectionPage() {
+/** Read at request time, so adding a key needs no rebuild. */
+export function loader() {
+  return { aiEnabled: isAiConfigured() }
+}
+
+export default function ReflectionPage({ loaderData }: Route.ComponentProps) {
   return (
     <>
-      <PageHeader eyebrow="AI Reflection Companion" title="Coming soon">
-        A companion to help you reflect on your projects each week. Details are still being designed with BRIDGEGOOD.
+      <PageHeader eyebrow="AI Reflection Companion" title="Reflect on your work with questions, not grades">
+        Describe a mini project or capstone sprint. The companion is AI: it asks questions tied to BRIDGEGOOD&apos;s Design for Social Good
+        pillars, and it never scores your work. You decide what to keep and what to share with your mentor.
       </PageHeader>
-      <div className="grid max-w-5xl gap-6 lg:grid-cols-2">
-        <div className="rounded-2xl border-2 border-dashed border-archetype p-6">
-          <Icon name="auto_awesome" className="mb-3 text-[2rem] text-archetype" />
-          <h2 className="text-xl font-bold">What we&apos;re planning</h2>
-          <ul className="mt-3 list-disc space-y-2 pl-5">
-            <li>Gentle prompts that connect your week&apos;s work to the principles</li>
-            <li>Helps you put lived experience into words for your portfolio</li>
-            <li>Your reflections stay yours, and you choose what to share with mentors</li>
-          </ul>
-        </div>
-        <div className="rounded-2xl bg-muted p-6">
-          <h2 className="text-xl font-bold">Commitments</h2>
-          <ul className="mt-3 list-disc space-y-2 pl-5">
-            <li>It supports your mentors. It doesn&apos;t replace them.</li>
-            <li>It never makes decisions about you or grades your work.</li>
-            <li>It&apos;s clearly labelled as AI, with its limits explained.</li>
-          </ul>
-        </div>
+      <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_22rem]">
+        <ReflectionCompanion aiEnabled={loaderData.aiEnabled} />
+        <aside aria-label="Your reflections and tools" className="space-y-6">
+          <SharedWithMentor />
+          <SavedReflections />
+          <ContrastChecker />
+        </aside>
       </div>
     </>
   )
