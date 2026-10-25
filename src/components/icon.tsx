@@ -1,48 +1,99 @@
-import type { ComponentProps } from "react"
+import type { LucideIcon, LucideProps } from "lucide-react"
+import {
+  Accessibility,
+  ArrowRight,
+  Bot,
+  Building2,
+  Calendar,
+  CalendarClock,
+  Check,
+  CircleAlert,
+  CircleCheck,
+  CirclePlay,
+  Clock,
+  ExternalLink,
+  FileText,
+  HeartHandshake,
+  ImagePlus,
+  Info,
+  LogIn,
+  Mail,
+  MapPin,
+  Menu,
+  MessageCircleHeart,
+  Pencil,
+  Route,
+  ScrollText,
+  Send,
+  Sparkles,
+  Sprout,
+  StickyNote,
+  TriangleAlert,
+  Users,
+  X,
+} from "lucide-react"
 import { cn } from "@/lib/utils"
 
 /**
- * Material Symbols Rounded names used in the app. root.tsx loads only these glyphs from Google Fonts,
- * so add a name here before using it.
+ * Lucide outline icons (DESIGN.md section 5). The snake_case names are the Material Symbols names the app
+ * used before Bridge Studio, kept so call sites don't change. The same icon always means the same thing.
  */
-export const ICON_NAMES = [
-  "accessibility_new",
-  "add_photo_alternate",
-  "arrow_forward",
-  "auto_awesome",
-  "calendar_clock",
-  "calendar_today",
-  "check",
-  "close",
-  "description",
-  "group",
-  "location_on",
-  "login",
-  "mail",
-  "menu",
-  "open_in_new",
-  "play_circle",
-  "schedule",
-  "send",
-  "smart_toy",
-] as const
+const ICONS = {
+  accessibility_new: Accessibility,
+  add_photo_alternate: ImagePlus,
+  arrow_forward: ArrowRight,
+  auto_awesome: Sparkles,
+  calendar_clock: CalendarClock,
+  calendar_today: Calendar,
+  check: Check,
+  close: X,
+  description: FileText,
+  group: Users,
+  location_on: MapPin,
+  login: LogIn,
+  mail: Mail,
+  menu: Menu,
+  open_in_new: ExternalLink,
+  play_circle: CirclePlay,
+  schedule: Clock,
+  send: Send,
+  smart_toy: Bot,
 
-export type IconName = (typeof ICON_NAMES)[number]
+  // Bridge Studio meanings: roles, status, AI drafts and studio marks.
+  sprout: Sprout,
+  "message-circle-heart": MessageCircleHeart,
+  "map-pin": MapPin,
+  "building-2": Building2,
+  "heart-handshake": HeartHandshake,
+  "scroll-text": ScrollText,
+  "circle-check": CircleCheck,
+  "circle-alert": CircleAlert,
+  "triangle-alert": TriangleAlert,
+  info: Info,
+  sparkles: Sparkles,
+  pencil: Pencil,
+  "sticky-note": StickyNote,
+  route: Route,
+} satisfies Record<string, LucideIcon>
 
-/** Decorative icon. Always pair it with visible text or an aria-label on the control. */
-export function Icon({ name, filled, className, ...props }: { name: IconName; filled?: boolean } & ComponentProps<"span">) {
+export type IconName = keyof typeof ICONS
+
+export const ICON_NAMES = Object.keys(ICONS) as IconName[]
+
+/**
+ * Decorative icon. Always pair it with visible text or an aria-label on the control.
+ * It is 1.25em of the surrounding text (20px beside body text); a text-size class on it sets the size.
+ */
+export function Icon({ name, className, ...props }: { name: IconName } & Omit<LucideProps, "ref">) {
+  const Glyph = ICONS[name]
   return (
-    <span
+    <Glyph
       aria-hidden="true"
-      translate="no"
-      className={cn("material-symbols-rounded inline-block shrink-0 select-none", className)}
-      style={filled ? { fontVariationSettings: '"FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24' } : undefined}
+      focusable="false"
+      size="1em"
+      strokeWidth={1.75}
+      className={cn("bgx-icon inline-block shrink-0 select-none", className)}
       {...props}
-    >
-      {name}
-    </span>
+    />
   )
 }
-
-/** Google Fonts URL that subsets Material Symbols Rounded to ICON_NAMES (the list must be sorted). */
-export const ICON_FONT_URL = `https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=${[...ICON_NAMES].sort().join(",")}&display=block`
