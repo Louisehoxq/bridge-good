@@ -14,6 +14,7 @@ React Router 7 in framework mode on Vite 8 (`src/` is the app directory, server 
 - Interactive data (Lab reflections, Playbook contributions, review state) goes through `useCollection` in `src/lib/demo-store.ts`. Living Playbook rules are pure functions in `src/lib/playbook.ts`, unit tested in `src/lib/test/`.
 - The design system is **Bridge Studio**: spec and implementation notes in `DESIGN.md`, static showcase in `docs/design/examples.html` (update it when tokens or signature components change). Tokens live in `src/app.css`; use the `type-*` scale and Bridge Studio token names, not the old Material 3 aliases. Icons are Lucide via `<Icon>` in `src/components/icon.tsx`. Signature components (`DraftFrame`, `PeopleChip`, `Path`, `PinnedNote`, `Highlight`, `RoleBadge`, `FieldNote`) are in `src/components/studio/` and shown on `/design`.
 - Checks: `npm run typecheck`, `lint`, `build`, `check:contrast`, `test:unit` and `test:a11y` (axe plus WCAG reflow, zoom and text-spacing checks on every page, light and dark). CI runs them on every PR.
+- Evaluations: `/evaluate-mission` scores the app against the brief and writes `docs/evaluation-<label>.md`; `/evaluate-rubric` scores it against the judging rubric and demo readiness and writes `docs/evaluation-rubric-<label>.md`. Both are project skills in `.claude/skills/`, keep the criteria fixed so scores compare, and archive the previous report.
 
 ## AI features
 
