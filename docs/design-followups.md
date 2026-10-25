@@ -31,9 +31,9 @@ This tracks how far the pages follow `DESIGN.md`, and records the accessibility 
 
 - **Welcome (`/`)** is shorter and organized around the 5 pillars. Order: hero with "Start where you are" (one card per role, linking to that role's library track, plus log in), the five pillars, "How BRIDGEGOOD works with everyone involved" (the 6 principles, with the by-role table behind a disclosure), the impact loop, and who the philosophy belongs to.
 - **Terms** and the comparison with other approaches moved to a new library page, `/learn/terms`. The duplicated resources list is gone; the library already holds those pages.
-- **Apprentice home:** Your path is now the home page at `/student`. Overview and Your path merged, and the sidebar went from 8 items to 7. `/student/path` redirects to `/student`.
-- **Funding & legal templates** is a "coming soon" section on Toolkit & FAQs (`/partner/toolkit#legal`). `/partner/legal` redirects there.
-- **URLs match labels:** `/mentor/submissions` → `/mentor/conversations`, `/student/activities` → `/student/practice`, both with 301 redirects.
+- **Apprentice home:** Your path is now the home page at `/student`. Overview and Your path merged, and the sidebar went from 8 items to 7.
+- **Funding & legal templates** is a "coming soon" section on Toolkit & FAQs (`/partner/toolkit#legal`).
+- **URLs match labels:** `/mentor/submissions` → `/mentor/conversations`, `/student/activities` → `/student/practice`.
 - **Mentor conversation starters** (questions apprentices shared from the companion) now show on Growth conversations, so the apprentice-side promise is true.
 - `docs/page-copy-changes.md` was checked item by item, found fully applied, and deleted.
 

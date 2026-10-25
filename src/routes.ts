@@ -1,5 +1,4 @@
 import { index, route, type RouteConfig } from "@react-router/dev/routes"
-import { REDIRECT_PATHS } from "./routes/redirects"
 
 /** Each role area: a guarded layout (RoleShell + sidebar) with its pages nested inside. */
 const area = (role: string, pages: string[]) =>
@@ -32,7 +31,4 @@ export default [
   area("mentor", ["prepare", "mentee", "conversations"]),
   area("ambassador", ["playbook", "matching", "projects", "toolkits"]),
   area("partner", ["submit", "project", "gallery", "toolkit"]),
-
-  // Old URLs: v1 role pages, /training/*, and role pages merged into others.
-  ...REDIRECT_PATHS.map((path) => route(path, "routes/legacy-redirect.ts", { id: `redirect-${path.replace(/[^a-z]+/g, "-")}` })),
 ] satisfies RouteConfig

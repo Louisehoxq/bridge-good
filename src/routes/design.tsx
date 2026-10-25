@@ -152,7 +152,7 @@ export default function DesignPage() {
               </div>
               <div className="flex flex-wrap items-center gap-3">
                 <Button variant="destructive">
-                  <Icon name="close" />
+                  <Icon name="x" />
                   Remove brief
                 </Button>
                 <Button variant="outline" size="sm">

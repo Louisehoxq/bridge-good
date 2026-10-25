@@ -30,7 +30,7 @@ A **desktop-first web app**, following the team's wireframe. One public library 
 | Log in | `/login` | Five synthetic demo accounts |
 | Design system | `/design` | Bridge Studio tokens and signature components, for the team |
 
-Every library page has a stable URL, breadcrumbs and previous/next links. Signed in, it also shows a strip such as "Part of step 1 of your path: Bootcamp · Back to your path". Old `/training/*` URLs redirect to the library.
+Every library page has a stable URL, breadcrumbs and previous/next links. Signed in, it also shows a strip such as "Part of step 1 of your path: Bootcamp · Back to your path".
 
 **Role areas** (sidebars grouped into "Your path" and "Your people")
 
@@ -43,8 +43,6 @@ Every library page has a stable URL, breadcrumbs and previous/next links. Signed
 | **Community partner** `/partner` | Eastside Tenants Network | Overview · Submit a problem (AI scoping studio) · My project and team · Project gallery · Toolkit & FAQs (including funding and legal templates, coming soon) |
 
 Chapter lead and company host share one `ambassador` role key; the session stores which kind.
-
-Old URLs redirect (301): `/student/path` → `/student`, `/student/activities` → `/student/practice`, `/mentor/submissions` → `/mentor/conversations`, `/partner/legal` → `/partner/toolkit#legal`, and `/training/*` → the library.
 
 Everything connects through one loop: **a community partner shares a problem → an ambassador gathers support → apprentices design with the community while mentors guide → feedback goes back to BRIDGEGOOD, which decides what changes in the philosophy.**
 
@@ -105,7 +103,6 @@ src/
     home.tsx             Welcome
     learn/               public library: index, pillars, prompts, terms, role tracks, guides, self-check
     login.tsx logout.ts chapters.tsx
-    legacy-redirect.ts redirects.ts   old URLs (/training/*, merged role pages)
     student/ mentor/ ambassador/ partner/   role areas (layout.tsx guards the role and renders RoleShell)
     api.scope.ts         AI scoping assistant (resource route)
     api.reflect.ts       Reflection Companion (resource route)

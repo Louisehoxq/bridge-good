@@ -25,7 +25,7 @@ export function AccountMenu() {
       // The button's own inline-flex would override `hidden`, so the breakpoint lives on a wrapper.
       <span className="hidden md:inline-flex">
         <Link to="/login" className={buttonVariants({ size: "default" })}>
-          <Icon name="login" />
+          <Icon name="log-in" />
           Log in
         </Link>
       </span>
@@ -59,7 +59,7 @@ export function SheetAccount() {
   if (!session) {
     return (
       <Link to="/login" className={buttonVariants({ className: "w-full" })}>
-        <Icon name="login" />
+        <Icon name="log-in" />
         Log in
       </Link>
     )

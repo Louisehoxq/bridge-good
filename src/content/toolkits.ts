@@ -44,7 +44,7 @@ export const PROBLEM_OWNER_TOOLKIT: ToolkitSection[] = [
   },
 ]
 
-export const ORGANISATION_TOOLKIT: ToolkitSection[] = [
+export const ORGANIZATION_TOOLKIT: ToolkitSection[] = [
   {
     title: "Make the case",
     items: [
@@ -80,9 +80,6 @@ export const ORGANISATION_TOOLKIT: ToolkitSection[] = [
     ],
   },
 ]
-
-/** US-spelling alias for ORGANISATION_TOOLKIT. */
-export const ORGANIZATION_TOOLKIT = ORGANISATION_TOOLKIT
 
 /** `draft: true` marks answers that are our estimate until BRIDGEGOOD confirms them. */
 export const PARTNER_FAQS: { q: string; a: string; draft?: boolean }[] = [

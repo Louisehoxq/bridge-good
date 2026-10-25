@@ -33,7 +33,7 @@ export function TeamView({ label, members }: { label: string; members: TeamMembe
  */
 export function teamFor(match: TeamMatch, you?: string): TeamMember[] {
   const partner = PROBLEMS.find((p) => p.id === match.problemId)
-  const partnerName = match.problemId === PARTNER_PROBLEM_ID ? PARTNER_NAME : (partner?.organisationType ?? "Community partner")
+  const partnerName = match.problemId === PARTNER_PROBLEM_ID ? PARTNER_NAME : (partner?.organizationType ?? "Community partner")
   return [
     { name: partnerName, role: "community-partner", you: you === partnerName },
     ...match.apprentices.map((name) => ({ name, role: "apprentice" as const, you: you === name })),

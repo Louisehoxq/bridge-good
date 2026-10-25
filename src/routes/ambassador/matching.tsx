@@ -126,7 +126,7 @@ function MatchCard({
         {problem.synthetic && <SyntheticBadge />}
       </div>
       <p className="type-small text-muted-foreground">
-        {problem.organisationType} · {problem.location}
+        {problem.organizationType} · {problem.location}
       </p>
 
       <h4 className="mt-4 font-bold">What apprentices said</h4>
