@@ -10,6 +10,16 @@ The roles are: **apprentice** (BRIDGEGOOD's word for a student), **mentor**, **a
 
 ## Unreleased
 
+### A new welcome page: "Design for …" and three ways in
+
+**For everyone:** the home page has a bigger title, "Design for social good", whose last words run once through people, purpose, passion, community and impact, each in its own color, then settle on "social good" (under 5 seconds, so no pause button is needed; it never moves under reduced motion, and screen readers hear "Design for Social Good" once). The intro under it is now one sentence. Practice moments, the carry-it-forward kit and the 12 reflection prompts now have their own "Toolkits for any role" section below the hero instead of sitting among the roles.
+
+**Apprentices, chapter leads and community partners:** each gets a large "I'm a …" card that leads to the library page written for them.
+
+**Mentors and company hosts:** a smaller "I'm a …" link each, under the three main cards.
+
+Technical: `HeroTitle` in `src/components/hero-title.tsx` stacks every word in one grid cell so the line never changes width, and starts only after hydration. DESIGN.md notes the hero as the one allowed autoplay.
+
 ### Removed the "version 0.1 … updated Oct 24, 2026" line
 
 **For everyone:** the home page and the Learn page no longer show the framework's version, draft status or "updated" date. The note that BRIDGEGOOD owns and approves the wording stays. Technical: `FRAMEWORK_META.updated` is gone; the version history at `/learn/changelog` keeps its dates.

@@ -1,35 +1,79 @@
 import { Link } from "react-router"
-import { Icon } from "@/components/icon"
+import { HeroTitle } from "@/components/hero-title"
+import { Icon, type IconName } from "@/components/icon"
 import { FRAMEWORK_META, PILLARS } from "@/content/framework"
 import { PRINCIPLES } from "@/content/principles"
 import { AppShell } from "@/components/app-shell"
 import { ImpactLoop } from "@/components/impact-loop"
 import { PrinciplesTable } from "@/components/principles-table"
-import { RoleBadge, type StudioRole } from "@/components/studio/role-badge"
+import { STUDIO_ROLES, type StudioRole } from "@/components/studio/role-badge"
 import { buttonVariants } from "@/components/ui/button"
 
 /** "Start where you are": each role goes to the library page written for them, no login needed. */
-const ROUTES: { role: StudioRole; who: string; href: string; cta: string }[] = [
-  { role: "apprentice", who: "You're in the apprenticeship, or thinking about applying", href: "/learn/tracks/apprentices", cta: "The apprentice track" },
-  { role: "mentor", who: "You guide apprentices, or would like to", href: "/learn/tracks/mentors", cta: "The mentor track" },
-  { role: "chapter-lead", who: "You'd like to run a chapter in your city", href: "/learn/tracks/ambassadors", cta: "The chapter lead track" },
-  { role: "company-host", who: "Your company could host mentors or sponsor a project", href: "/learn/tracks/company-hosts", cta: "The company host track" },
-  { role: "community-partner", who: "Your organization has a problem a team could work on", href: "/learn/guides/real-case", cta: "How a partner project runs" },
+const MAIN_ROLES: { role: StudioRole; iam: string; who: string; href: string; cta: string }[] = [
+  {
+    role: "apprentice",
+    iam: "I'm an apprentice",
+    who: "I'm in the apprenticeship, or thinking about applying. I want to grow as a designer on real community projects, with a mentor beside me.",
+    href: "/learn/tracks/apprentices",
+    cta: "The apprentice track",
+  },
+  {
+    role: "chapter-lead",
+    iam: "I'm a chapter lead",
+    who: "I'd like to run a chapter in my city: host events, bring people together and adapt the work to my community.",
+    href: "/learn/tracks/ambassadors",
+    cta: "The chapter lead track",
+  },
+  {
+    role: "community-partner",
+    iam: "I'm a community partner",
+    who: "My organization has a problem a team could work on, and our community should help define it and judge the result.",
+    href: "/learn/guides/real-case",
+    cta: "How a partner project runs",
+  },
+]
+
+/** Mentors and company hosts support the work; they get a smaller link each. */
+const SUPPORT_ROLES: { role: StudioRole; iam: string; href: string }[] = [
+  { role: "mentor", iam: "I'm a mentor, or would like to be", href: "/learn/tracks/mentors" },
+  { role: "company-host", iam: "I'm with a company that could host mentors or sponsor a project", href: "/learn/tracks/company-hosts" },
+]
+
+/** Tools for any role, inside BRIDGEGOOD or not. */
+const TOOLKITS: { icon: IconName; title: string; body: string; href: string; cta: string }[] = [
+  {
+    icon: "scale",
+    title: "Practice moments",
+    body: "Make a call in a short, synthetic dilemma, then see how BRIDGEGOOD reasons about it. Never scored.",
+    href: "/learn/practice",
+    cta: "Try a practice moment",
+  },
+  {
+    icon: "globe",
+    title: "Carry it forward kit",
+    body: "Outside BRIDGEGOOD? Teachers and organizers can run a critique circle in their own community, and tell BRIDGEGOOD what they changed.",
+    href: "/learn/carry-it-forward",
+    cta: "Open the printable kit",
+  },
+  {
+    icon: "messages-square",
+    title: "The 12 reflection prompts",
+    body: "Questions to ask at the moments decisions get made, answered in your own words.",
+    href: "/learn/prompts",
+    cta: "Read the prompts",
+  },
 ]
 
 export default function WelcomePage() {
   return (
     <AppShell>
       <section aria-labelledby="hero-title" className="border-b bg-surface-sunken">
-        <div className="mx-auto max-w-7xl space-y-10 px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
-          <div className="max-w-4xl space-y-6">
-            <h1 id="hero-title" className="type-title-1 lg:type-display">
-              Design for Social Good: how BRIDGEGOOD works, and how you can work this way too
-            </h1>
-            <p className="max-w-[70ch] type-body-lg">
-              In BRIDGEGOOD&apos;s approach, the community a project serves helps define the problem and judge the result.
-              Emerging designers from groups underrepresented in design do the work, with mentors. A project counts only if
-              it works for the community and the designers grow through it.
+        <div className="mx-auto max-w-7xl space-y-12 px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+          <div className="max-w-5xl space-y-6">
+            <HeroTitle id="hero-title" />
+            <p className="max-w-[60ch] type-body-lg">
+              How BRIDGEGOOD designs with communities, not for them, and how you can work this way too.
             </p>
           </div>
 
@@ -37,17 +81,20 @@ export default function WelcomePage() {
             <h2 id="start-title" className="mb-4 type-title-3">
               Start where you are
             </h2>
-            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-              {ROUTES.map((r) => (
+            <ul className="grid gap-4 lg:grid-cols-3">
+              {MAIN_ROLES.map((r) => (
                 <li key={r.role}>
                   <Link
                     to={r.href}
                     data-archetype={r.role}
-                    className="group flex h-full flex-col gap-3 rounded-xl border bg-card p-4 hover:border-archetype hover:bg-archetype-soft"
+                    className="group flex h-full flex-col gap-4 rounded-2xl border-2 border-archetype/30 bg-card p-6 hover:border-archetype hover:bg-archetype-soft"
                   >
-                    <RoleBadge role={r.role} className="self-start" />
+                    <span className="flex size-12 items-center justify-center rounded-full bg-archetype-soft text-archetype group-hover:bg-card">
+                      <Icon name={STUDIO_ROLES[r.role].icon} className="text-2xl" />
+                    </span>
+                    <span className="type-title-2 text-archetype">{r.iam}</span>
                     <span>{r.who}</span>
-                    <span className="mt-auto inline-flex items-center gap-2 font-bold text-primary">
+                    <span className="mt-auto inline-flex items-center gap-2 pt-2 font-bold text-primary">
                       {r.cta}
                       <Icon name="arrow-right" className="text-base transition-transform group-hover:translate-x-1" />
                     </span>
@@ -55,27 +102,22 @@ export default function WelcomePage() {
                 </li>
               ))}
             </ul>
-            <ul className="mt-4 grid gap-4 md:grid-cols-2">
-              <li>
-                <Link to="/learn/practice" className="group flex h-full items-start gap-3 rounded-xl border border-dashed border-input bg-card p-4 hover:bg-muted">
-                  <Icon name="scale" className="mt-0.5 text-primary" />
-                  <span>
-                    <span className="block font-bold">Practice moments</span>
-                    <span className="block text-muted-foreground">Any role: make a call in a short dilemma, then see how BRIDGEGOOD reasons. Never scored.</span>
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/learn/carry-it-forward" className="group flex h-full items-start gap-3 rounded-xl border border-dashed border-input bg-card p-4 hover:bg-muted">
-                  <Icon name="globe" className="mt-0.5 text-primary" />
-                  <span>
-                    <span className="block font-bold">Outside BRIDGEGOOD? Carry it forward</span>
-                    <span className="block text-muted-foreground">Teachers and organizers: run a critique circle in your community, and tell BRIDGEGOOD what you changed.</span>
-                  </span>
-                </Link>
-              </li>
+            <ul className="mt-4 grid gap-3 md:grid-cols-2">
+              {SUPPORT_ROLES.map((r) => (
+                <li key={r.role}>
+                  <Link
+                    to={r.href}
+                    data-archetype={r.role}
+                    className="group flex h-full min-h-12 items-center gap-3 rounded-xl border bg-card px-4 py-3 hover:border-archetype hover:bg-archetype-soft"
+                  >
+                    <Icon name={STUDIO_ROLES[r.role].icon} className="text-archetype" />
+                    <span className="font-semibold">{r.iam}</span>
+                    <Icon name="arrow-right" className="ml-auto text-base text-primary transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </li>
+              ))}
             </ul>
-            <p className="mt-4">
+            <p className="mt-6">
               Already taking part?{" "}
               <Link to="/login" className="font-semibold text-primary underline underline-offset-4">
                 Log in to your area
@@ -83,6 +125,32 @@ export default function WelcomePage() {
               (demo accounts, no password).
             </p>
           </nav>
+        </div>
+      </section>
+
+      <section id="toolkits" aria-labelledby="toolkits-title" className="scroll-mt-24 border-b">
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          <h2 id="toolkits-title" className="type-title-2">
+            Toolkits for any role
+          </h2>
+          <p className="mt-3 mb-8 max-w-[70ch] type-body-lg text-muted-foreground">
+            Try the way of working before you sign up for anything, or take it to your own community. No login needed.
+          </p>
+          <ul className="grid gap-4 md:grid-cols-3">
+            {TOOLKITS.map((t) => (
+              <li key={t.href}>
+                <Link to={t.href} className="group flex h-full flex-col gap-3 rounded-2xl border bg-card p-5 hover:border-primary hover:bg-muted">
+                  <Icon name={t.icon} className="text-2xl text-primary" />
+                  <span className="type-title-3 font-heading">{t.title}</span>
+                  <span className="text-muted-foreground">{t.body}</span>
+                  <span className="mt-auto inline-flex items-center gap-2 pt-2 font-bold text-primary">
+                    {t.cta}
+                    <Icon name="arrow-right" className="text-base transition-transform group-hover:translate-x-1" />
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
