@@ -17,7 +17,7 @@ export default function AmbassadorPlaybook() {
     <>
       <PageHeader title={`Your ${label} playbook`}>
         The stages of carrying the philosophy forward as a {label}. The guides and tracks live in the public library, so
-        partners and mentors can read the same pages. This is part of the proposed chapter model (concept).
+        partners and mentors can read the same pages.
       </PageHeader>
       <div className="grid gap-8 xl:grid-cols-[3fr_2fr]">
         <PathStepper pathKey={kind} />
