@@ -10,6 +10,12 @@ The roles are: **apprentice** (BRIDGEGOOD's word for a student), **mentor**, **a
 
 ## Unreleased
 
+### Reflection Companion: first live run on Google Gemma
+
+**For students:** with a free Google AI Studio key the companion now returns a review (about a minute, because the model thinks first).
+
+**Technical:** first live run against a real model (`gemma-google`, `gemma-4-26b-a4b-it`). Google's Gemma endpoint rejects JSON-schema output (400), so for `gemma-google` the route sends the schema in the prompt instead of `Output.object`; `readReview()` already handles a fenced reply. `gemma-4-31b-it` returned 500s that day; set `EVALUATOR_MODEL=gemma-4-26b-a4b-it`. Other providers are unchanged.
+
 ### A new welcome page: "Design for …" and three ways in
 
 **For everyone:** the home page has a bigger title, "Design for social good", whose last words run once through people, purpose, passion, community and impact, each in its own color, then settle on "social good" (under 5 seconds, so no pause button is needed; it never moves under reduced motion, and screen readers hear "Design for Social Good" once). The intro under it is now one sentence. Practice moments, the carry-it-forward kit and the 12 reflection prompts now have their own "Toolkits for any role" section below the hero instead of sitting among the roles.
