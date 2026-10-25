@@ -39,7 +39,7 @@ function expand(path: string): string[] {
 }
 
 /**
- * Violations in markup outside the design-system files, waiting on the fixes in docs/design-followups.md.
+ * Known axe violations, by page. Empty since milestone 2.5: keep it that way, and track any new one in docs/BACKLOG.md.
  * Any other violation fails. So does a listed one that has gone, so this list can't go stale.
  */
 const KNOWN: Record<string, string[]> = {}
@@ -135,7 +135,7 @@ async function clippedText(page: Page) {
 type LayoutCheck = "at320" | "at200" | "clipped"
 
 /**
- * Known layout failures, tracked in docs/design-followups.md. Empty since milestone 2.5: keep it that way.
+ * Known layout failures, tracked in docs/BACKLOG.md. Empty since milestone 2.5: keep it that way.
  * Any other failure fails the test, and so does a listed one that has gone, so this list can only shrink.
  */
 const KNOWN_LAYOUT: Record<string, LayoutCheck[]> = {}

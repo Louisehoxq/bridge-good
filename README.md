@@ -90,7 +90,7 @@ Demo data lives in this browser's localStorage. Use **Reset demo data** in the f
 ## How it works
 
 - **Stack:** React Router 7 in framework mode on Vite, React 19, TanStack Query, Tailwind 4 and shadcn/ui on Base UI. This is close to [BRIDGEGOOD's own stack](https://bridgegood.com/stack) but without a database.
-- **Design system: Bridge Studio** ([DESIGN.md](DESIGN.md)). Warm paper and navy ink, with body text at AAA contrast, in light and dark. Atkinson Hyperlegible Next and Bricolage Grotesque, Lucide icons, and signature components in `src/components/studio/`: AI draft frame, people and paths, pinned notes, highlighter and role badges. It keeps BRIDGEGOOD's logo, navy and gold lineage, and tone.
+- **Design system: Bridge Studio** ([DESIGN.md](DESIGN.md); see it live at `/design`, or open the static showcase [docs/design/examples.html](docs/design/examples.html) with no server or login). Warm paper and navy ink, with body text at AAA contrast, in light and dark. Atkinson Hyperlegible Next and Bricolage Grotesque, Lucide icons, and signature components in `src/components/studio/`: AI draft frame, people and paths, pinned notes, highlighter and role badges. It keeps BRIDGEGOOD's logo, navy and gold lineage, and tone.
 - **Demo login:** the `/login` action sets an httpOnly `bgx-session` cookie holding the role, plus the ambassador kind for chapter leads and company hosts (`src/lib/session.server.ts`). Each role area's layout `loader` checks it and redirects to `/login` otherwise. **Not real authentication.**
 - **Desktop-first layout:** a full top navigation bar and, inside role areas, a sticky left sidebar beside a wide content column (`src/components/app-shell.tsx`). Below `lg` the sidebar becomes a tab strip, and below `md` the top nav becomes a sheet menu.
 - **Demo store:** `src/lib/demo-store.ts` keeps collections in localStorage, seeded from `src/content/seed.ts`. All roles share it, so flows connect across roles.
@@ -147,14 +147,5 @@ src/
 
 ## Where it stands and what's next
 
-See [docs/evaluation-milestone-2.md](docs/evaluation-milestone-2.md) for the full review.
-
-- **Done:** the React Router migration, Bridge Studio tokens and components, the public library with role paths, the new roles, growth conversations, and Reflection Companion phase 1.
-- **Done in milestone 2.5:** Bridge Studio on every page (type scale, no all caps, no pill links, the AI draft frame on both AI surfaces, people and paths on team views, pinned notes, the highlighted prompt, role badges), all known layout failures fixed, a manual accessibility pass, and the content reorganization above. Results are in `docs/design-followups.md`.
-- **Done in milestone 3:** the feedback loop. A BRIDGEGOOD steward role and inbox, local adaptations, "this didn't fit" flags, AI disagreement records from the companion, partner retrospectives, an aggregated community feedback card, field notes on pillar pages, and a versioned framework with a public changelog.
-- **Needs an API key:** a live check of the scoping assistant, the Reflection Companion and the Gemma comparison.
-- **Needs BRIDGEGOOD:**
-  - official logo files
-  - approval of the framework wording and of BridgeGoodx having its own visual style
-  - real training assets
-  - the funding and legal templates
+- **What's shipped**, PR by PR and role by role: [CHANGELOG.md](CHANGELOG.md).
+- **What's next**, in priority order, including what waits on BRIDGEGOOD: [docs/BACKLOG.md](docs/BACKLOG.md).
