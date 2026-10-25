@@ -21,6 +21,7 @@ React Router 7 in framework mode on Vite 8 (`src/` is the app directory, server 
 
 - Every AI surface must be labelled as AI, show its output in a `DraftFrame` until a person edits or accepts it, leave the human with the final decision (editable output, BRIDGEGOOD review), and never request personal data.
 - Partner scoping is the resource route `src/routes/api.scope.ts`, and the student Reflection Companion is `src/routes/api.reflect.ts` with `src/lib/evaluator/`. Both validate messages, require the right session and cap sizes. Server-only helpers are in `src/lib/ai.server.ts`. The design is in `docs/ai-evaluator.md`.
+- The companion's model is `EVALUATOR_PROVIDER` in `src/lib/evaluator/model.server.ts`: Gemma first (`gemma-local`, `gemma-google`, `gemma-openrouter`), Claude as the fallback. Setup and the provider table are in `docs/gemma-prototype.md`; `npm run keys` manages `.env.local`. Free tiers may train on inputs, so they stay off without `EVALUATOR_FREE_TIER=synthetic-only` and must only ever see synthetic examples. Provider changes need the offline contract tests in `src/lib/evaluator/test/providers.test.ts` to pass.
 
 ## Keep the docs current
 

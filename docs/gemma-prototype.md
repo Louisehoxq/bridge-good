@@ -1,6 +1,65 @@
 # Gemma 4 prototype for the Reflection Companion: build instructions
 
-> **Status (after PR #7): path A built, not yet run against a live model.** Running it is item 2 under "Next" in [BACKLOG.md](BACKLOG.md). See [Path A: what's built and how to run it](#path-a-whats-built-and-how-to-run-it). This is the brief for running the student Reflection Companion on Google's Gemma 4 open-weights models instead of Claude, so the two can be compared. BRIDGEGOOD decides which model the real service uses. Read [ai-evaluator.md](ai-evaluator.md) first, especially sections 3, 4, 7 and "What shipped: student Reflection Companion".
+## Status and setup
+
+> **Direction (2026-10-25): Gemma first, Anthropic as the fallback.** The demo aims to run the companion on Gemma 4, an open-weights model BRIDGEGOOD or a chapter could run on its own hardware, with a Claude key ready if Gemma misbehaves on the day. The Vercel AI Gateway still works in code but isn't pursued.
+>
+> **Nothing has run against a live model yet**, neither Gemma nor Claude. The offline contract tests below check our side of each provider; the [Results](#results) section stays empty until someone runs the goldens with a real model.
+
+The student Reflection Companion (`/student/reflection`, `src/routes/api.reflect.ts`) picks its model with `EVALUATOR_PROVIDER`, read at request time in `src/lib/evaluator/model.server.ts`. Without what a provider needs, the companion is off: the page falls back to BRIDGEGOOD's questions and `/api/reflect` answers 503. `npm run keys -- status` shows which providers are ready, and `npm run keys -- setup <provider>` fills in `.env.local` with hidden input.
+
+| `EVALUATOR_PROVIDER` | Model (default) | What you need | Cost | Where screenshots and notes go | Best for |
+|---|---|---|---|---|---|
+| `gemma-local` | Gemma 4 12B (`gemma4:12b`) | `EVALUATOR_BASE_URL` of an OpenAI-compatible server on your machine. No key (`EVALUATOR_API_KEY` only if your server asks for one) | Free | **Never leave your machine** | The "data stays with BRIDGEGOOD" story; development; a recorded run |
+| `gemma-google` | Gemma 4 31B (`gemma-4-31b-it`) | `GOOGLE_GENERATIVE_AI_API_KEY` (free from Google AI Studio) **and** `EVALUATOR_FREE_TIER=synthetic-only` | Free, rate limited | Google. The free tier may use inputs to improve Google's products | **The live Gemma demo**, with synthetic examples only |
+| `gemma-openrouter` | Gemma 4 31B (`google/gemma-4-31b-it:free`) | `OPENROUTER_API_KEY`, and `EVALUATOR_FREE_TIER=synthetic-only` for a `:free` model. `EVALUATOR_MODEL=google/gemma-4-31b-it` is the paid one | Free (`:free`) or low cost | OpenRouter and whichever host serves the model | A backup if Google's limits run out |
+| unset or `claude` | Claude Sonnet 5.5 | `ANTHROPIC_API_KEY` | Pay as you go | Anthropic, under its API terms | **The fallback** if Gemma fails on the day |
+| `gemma-gateway` | Gemma 4 31B | `AI_GATEWAY_API_KEY` | Billed per token | The Vercel AI Gateway and its provider | Not pursued for now |
+
+**"Open weights" isn't the same as local.** Gemma's weights are public, but on Google, OpenRouter or the Gateway the model runs on someone else's servers, so the data goes there. Only `gemma-local` keeps screenshots on your own hardware.
+
+**The free-tier guard.** Google AI Studio's free tier, and many OpenRouter `:free` endpoints, may use what's sent to improve their products. So those providers stay off until whoever deploys sets `EVALUATOR_FREE_TIER=synthetic-only`. The companion then tells the apprentice, before they send anything, to use synthetic examples only, and "How this was made" says a free tier wrote the review. Never point a free tier at real apprentice work.
+
+### Running Gemma locally (an M2 MacBook Air with 16 GB)
+
+Any server with an OpenAI-compatible `/v1` API works, because `gemma-local` only needs its URL:
+
+| Runtime | `EVALUATOR_BASE_URL` | Notes |
+|---|---|---|
+| **Ollama** | `http://localhost:11434/v1` | The easiest. Raise the context window: Ollama reportedly defaults Gemma 4 to 4K tokens, and its OpenAI-compatible endpoint can't change that per request, so the system prompt and a screenshot can get cut off. Start it with `OLLAMA_CONTEXT_LENGTH=16384 ollama serve`, or create a model with `PARAMETER num_ctx 16384` in a Modelfile. Structured output needs a recent version |
+| **LM Studio** | `http://localhost:1234/v1` | Can use Apple's MLX engine, usually the fastest on M-series chips. Its docs say it enforces a JSON schema and supports images through MLX. Set the context length when you load the model |
+| **llama.cpp `llama-server`** | `http://localhost:8080/v1` | The most control (context size with `-c`, the vision projector, grammar-constrained JSON). The most manual setup |
+| vLLM | your server's URL | Built for GPU servers with many users. On a Mac it needs the newer vLLM-Metal plugin, and it doesn't help one person on a laptop. Use it on a rented GPU for a chapter pilot |
+
+What fits on 16 GB: Gemma 4 E4B (about 4.5 GB at 4-bit) and 12B (about 6.7 GB) fit alongside the browser and the app. The 26B (about 14 GB) and 31B (about 17.5 GB) don't. Expect roughly 40 seconds to 2 minutes per review, which is our estimate, not a measurement: fine for development and a recording, slow for a live demo. Check that the model you pull accepts images, since sources disagree on which sizes do. A model is 3 to 8 GB of disk.
+
+### Checking it
+
+**Offline contract tests** (no keys, part of `npm run test:unit`): `src/lib/evaluator/test/providers.test.ts` runs the companion's real pipeline against a fake host for `gemma-google`, `gemma-openrouter` and `gemma-local`. They check the request each host gets (endpoint, key, where the rules go, the screenshot, the JSON schema), that a review comes back readable (including one wrapped in a ```json fence), that a reply with a score or without "what I can't judge" is rejected, that a host error surfaces, and that no email address or phone number is sent. They can't tell you whether a real host accepts the schema, or how good Gemma's reviews are.
+
+**One live call per host** answers that. For each provider you plan to use, run one golden first:
+
+```bash
+node --env-file-if-exists=.env.local --experimental-strip-types --no-warnings --import ./src/lib/evaluator/test/register.mjs \
+  scripts/compare-evaluators.ts --providers gemma-google --only consent --runs 1
+```
+
+Things only a live call shows: whether Google accepts a JSON schema for Gemma, whether OpenRouter's free endpoint honours `json_schema`, and whether your local model takes images and fits the prompt. If a host rejects the schema, `readReview()` already accepts JSON in plain text or a code fence, so structured output can be turned off for that provider without loosening the schema check.
+
+**A live check against a production build** tests the whole route (session, message checks, redaction, the server's own model choice):
+
+```bash
+npm run build && npm start   # serves on http://localhost:3000 and reads .env.local
+# in a second terminal:
+node --experimental-strip-types --no-warnings --import ./src/lib/evaluator/test/register.mjs \
+  scripts/compare-evaluators.ts --live http://localhost:3000 --runs 3
+```
+
+`--live` logs in as the synthetic demo apprentice, posts each golden to `/api/reflect` the way the page does, and scores the streamed replies with `scoreReply()` from `src/lib/evaluator/golden-checks.ts`, with time to first token for each run. Use it to pick the golden for the demo: one that finds its seeded issue in every run, with the shortest wait.
+
+---
+
+> **Background: the original build brief.** Running the comparison is item 2 under "Next" in [BACKLOG.md](BACKLOG.md). The rest of this file is the brief for running the companion on Google's Gemma 4 open-weights models instead of Claude, so the two can be compared, with notes on what was built. BRIDGEGOOD decides which model the real service uses. Read [ai-evaluator.md](ai-evaluator.md) first, especially sections 3, 4, 7 and "What shipped: student Reflection Companion".
 
 ## Goal
 
@@ -21,13 +80,15 @@ Run the same Reflection Companion on Gemma 4, behind an environment flag, withou
 
 | Step | Status | Where |
 |---|---|---|
-| 1. Environment flag | Done for `claude` and `gemma-gateway`. `gemma-local` (path B) isn't built. An unknown value logs a warning once and uses Claude | `src/lib/evaluator/model.server.ts` |
+| 1. Environment flag | Done for `claude`, `gemma-google`, `gemma-openrouter`, `gemma-gateway` and `gemma-local`. An unknown value logs a warning once and uses Claude | `src/lib/evaluator/model.server.ts` |
 | 2. Model switch | Done: `evaluatorProvider()`, `evaluatorModel()`, `isEvaluatorConfigured()` and `evaluatorLabel()`. Gemma needs the AI Gateway: an Anthropic key alone leaves the companion off. `isAiConfigured()` is unchanged | same file, used by `src/routes/api.reflect.ts` and `src/routes/student/reflection.tsx` |
 | 3. Real model name in the UI | Done. The page loader returns `modelLabel`, and "How this was made" shows it, e.g. "Gemma 4 31B (Google, open weights), through the Vercel AI Gateway" | `review-panel.tsx`, `reflection-companion.tsx` |
 | 4–6. Structured output, images, prompt fit | Not checked yet: these need a live run. The comparison script's "Readable replies" row answers step 4 | |
 | 7. Golden set and comparison script | Done: 6 synthetic items (contrast, pre-ticked consent, English-only for a Spanish-first community, clean control, injection, personal data), automatic checks, and a script | `src/content/evaluator-goldens/`, `src/lib/evaluator/golden-checks.ts`, `scripts/compare-evaluators.ts` |
 
-To try Gemma in the app, add to `.env.local`:
+**Free, local and low-cost providers (added after the first build)** are described in [Status and setup](#status-and-setup).
+
+To try Gemma through the AI Gateway in the app, add to `.env.local`:
 
 ```bash
 AI_GATEWAY_API_KEY=<your Vercel AI Gateway key>
@@ -53,19 +114,22 @@ node --env-file-if-exists=.env.local --experimental-strip-types --no-warnings --
 Options:
 - `--providers gemma-gateway` runs one provider.
 - `--only contrast,injection` runs some items.
+- `--live <baseUrl>` posts to a running server's `/api/reflect` instead of calling the models (see [Status and setup](#status-and-setup)). The server's own `EVALUATOR_PROVIDER` decides the model, so `--providers` doesn't apply.
 
 The script prints a Markdown table for the Results section below. It saves raw replies to `.evaluator-runs/`, which is git-ignored.
 
 **Verified:**
-- Typecheck, lint, build and the evaluator unit tests (`npm run test:unit`) pass. The tests cover the provider switch and each scoring check.
+- Typecheck, lint, build and `npm run test:unit` pass (50 tests on 2026-10-25, across the evaluator and the feedback loop). The tests cover the provider switch and each scoring check.
 - The dry run passes. A placeholder Gateway key records an auth error cleanly.
 - In the browser, the page with `EVALUATOR_PROVIDER=gemma-gateway` is switched on and names Gemma 4 in "How this was made". The reply there was mocked.
+
+- `--live` against a production build with no key: it logs in, sees the companion is off and stops with a clear message. The route answers 401 without the student session and 503 without a key.
 
 **Not verified:** any live Gemma or Claude reply. No key was available.
 
 **Still to do:**
-- Add the env lines above to `.env.example`. That file is owned by another workstream.
-- Run the comparison and fill in Results.
+- One live call per Gemma host, then the goldens with `--live`, and fill in [Results](#results).
+- Pick the demo golden from those runs.
 
 ## Why try an open-weights model
 
@@ -83,14 +147,16 @@ The model is chosen in one place. Everything else stays the same whichever model
 
 | Piece | File | Changes for Gemma? |
 |---|---|---|
-| Model choice | `src/lib/evaluator/model.server.ts` (`evaluatorModel()`) | **Yes**: becomes a switch |
-| AI on/off check | `isAiConfigured()` in `src/lib/ai.server.ts` (shared with the partner scoping route) | **Yes**: add an evaluator-specific check (see step 2) |
+| Model choice | `src/lib/evaluator/model.server.ts` (`evaluatorModel()`) | Done: now a switch |
+| AI on/off check | `isAiConfigured()` in `src/lib/ai.server.ts` (shared with the partner scoping route) | Done: the companion uses its own `isEvaluatorConfigured()`, and `isAiConfigured()` is unchanged |
 | Route hardening | `src/routes/api.reflect.ts`, `src/lib/evaluator/validate.ts` | No |
 | Rubric, schema, system prompt | `src/lib/evaluator/{rubric,schema,prompts}.ts` | No, unless the golden runs show Gemma needs a shorter prompt (step 6) |
 | Reading and checking replies | `src/lib/evaluator/read-review.ts` | No. It already rejects bad JSON and trims lists that are too long |
-| UI | `src/components/reflection/*` | Only the model name in "How this was made" (step 3) |
+| UI | `src/components/reflection/*` | Done: only the model name in "How this was made" changed (step 3) |
 
 ## Three ways to run Gemma 4
+
+> Written before the free and local providers existed. Today's choices, Gemma first, are in [Status and setup](#status-and-setup).
 
 | Path | What it is | New dependency | Data leaves our infrastructure? | Use it for |
 |---|---|---|---|---|
@@ -104,7 +170,7 @@ Do path A first. It answers the question that matters most, "is Gemma good enoug
 
 ### 1. Environment flag
 
-Add these variables. Document them in `.env.example`, which another session owns, so coordinate or hand over the lines:
+These variables are documented in `.env.example`. `EVALUATOR_BASE_URL` and `EVALUATOR_API_KEY` only matter once `gemma-local` is built:
 
 ```bash
 # Reflection Companion model. Unset or "claude" = Claude Sonnet 5.5 (default).
@@ -191,6 +257,8 @@ Run the script from the command line only, with synthetic inputs only. It never 
 
 ### 8. Self-hosting (path B, only if A looks promising)
 
+> **Built as `gemma-local`.** Setup for Ollama, LM Studio and llama.cpp on a laptop is in [Running Gemma locally](#running-gemma-locally-an-m2-macbook-air-with-16-gb). The notes below still apply to a GPU server.
+
 - **Laptop (Ollama):** install Ollama, pull the Gemma 4 tag listed in Ollama's library, and set `EVALUATOR_BASE_URL=http://localhost:11434/v1`. This is fine for development, but it's slow with images on a CPU.
 - **GPU server (vLLM):** `vllm serve <gemma-4 model id from Hugging Face> --api-key <secret>`, on a GPU with enough memory for the chosen size. Hosting options include Modal, RunPod, Hugging Face Inference Endpoints, or a cloud VM.
 - **Things to sort out before anyone outside the team uses it:**
@@ -215,7 +283,7 @@ New files:
 - tests
 
 Coordinate before touching these:
-- `package.json`: path B adds `@ai-sdk/openai-compatible`.
+- `package.json`: `@ai-sdk/google` and `@ai-sdk/openai-compatible` are added for the free and local providers.
 - `.env.example`
 - `src/lib/ai.server.ts`
 
@@ -233,7 +301,7 @@ Coordinate before touching these:
 
 ## Results
 
-Not run yet. Paste the script's table here, with the date, run count and model IDs.
+Not run yet: no key has been available. Run the live check in [Status and setup](#status-and-setup) (or the direct comparison in [Path A](#path-a-whats-built-and-how-to-run-it)) and paste the script's table here, with the date, run count, model and whether it was `--live`.
 
 ## Write-up
 

@@ -91,9 +91,19 @@ describe("readReview", () => {
     assert.equal(readReview(JSON.stringify(long))?.reflectionPrompts.length, 3)
   })
 
+  it("finds the JSON inside a ```json fence or a sentence around it", () => {
+    assert.deepEqual(readReview("```json\n" + JSON.stringify(SAMPLE) + "\n```"), SAMPLE)
+    assert.deepEqual(readReview("```\n" + JSON.stringify(SAMPLE) + "\n```"), SAMPLE)
+    assert.deepEqual(readReview(`Here is my review:\n${JSON.stringify(SAMPLE)}\nI hope this helps.`), SAMPLE)
+  })
+
   it("rejects broken or off-schema replies", () => {
     assert.equal(readReview('{"lens":"student"'), null)
+    assert.equal(readReview("```json\n{\"lens\":\"student\"\n```"), null)
+    assert.equal(readReview("No JSON here."), null)
     assert.equal(readReview(JSON.stringify({ ...SAMPLE, lens: "mentor" })), null)
+    // Finding the JSON never loosens the schema: a score field or an empty cannotJudge is still rejected.
+    assert.equal(readReview("```json\n" + JSON.stringify({ ...SAMPLE, cannotJudge: [] }) + "\n```"), null)
   })
 })
 

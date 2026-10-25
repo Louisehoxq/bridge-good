@@ -10,6 +10,26 @@ The roles are: **apprentice** (BRIDGEGOOD's word for a student), **mentor**, **a
 
 ## Unreleased
 
+### Reflection Companion: Gemma first, on free and local providers
+
+The companion can now run on Gemma 4, Google's open-weights model, on your own machine or on a free tier, with Claude as the fallback. Nothing has run against a live model yet.
+
+**Apprentices**
+- "How this was made" names the model and the host that wrote the review, and says when a free tier wrote it. Only a Gemma model is credited to Google.
+- When a free tier runs the companion, the form says so before you send anything: use synthetic examples only.
+
+**For the team**
+- `EVALUATOR_PROVIDER` accepts `gemma-local` (Ollama, LM Studio, llama.cpp or vLLM: no key, and data stays on your machine), `gemma-google` (Google AI Studio free tier), `gemma-openrouter`, `gemma-gateway` and `claude`. Switching is an environment change, not a code change.
+- Free tiers may use inputs to improve the host's products, so they stay off until whoever deploys sets `EVALUATOR_FREE_TIER=synthetic-only`.
+- `npm run keys` sets, reads and checks keys in `.env.local` with hidden input and masked output, writes the file owner-only, and asks before turning on a free tier.
+- `docs/gemma-prototype.md` opens with **Status and setup**: every provider with what it needs, its cost and where the data goes, how to run Gemma locally on a 16 GB Mac (including Ollama's context window), and how to check each host. `docs/ai-evaluator.md` now matches the code (`/api/reflect`, the regex personal-data screen, the files as built). `.env.example` documents every variable.
+
+**Technical**
+- Offline contract tests (`src/lib/evaluator/test/providers.test.ts`, in `npm run test:unit`) run the companion's real pipeline against a fake host for each Gemma provider: request shape, reply parsing, host errors, and no personal details sent. `evaluatorModel()` takes an optional `fetch` for this.
+- `readReview()` finds the JSON inside a ```json fence or a sentence around it, which open models often add; the schema check is unchanged.
+- `scripts/compare-evaluators.ts --live <baseUrl>` logs in as the demo apprentice, posts each synthetic golden to a running server's `/api/reflect`, and scores the replies with time to first token, testing the whole route.
+- Adds `@ai-sdk/google` and `@ai-sdk/openai-compatible`.
+
 ### Reusable evaluation skills
 
 **For the team**

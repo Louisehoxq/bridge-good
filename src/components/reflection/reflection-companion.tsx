@@ -43,7 +43,16 @@ const stageLabel = (id: StageId) => STAGES.find((s) => s.id === id)?.label ?? id
  * The AI Reflection Companion: the apprentice describes their work, the companion answers with
  * questions tied to the pillars and reflection prompts, and the apprentice decides what to keep.
  */
-export function ReflectionCompanion({ aiEnabled, modelLabel }: { aiEnabled: boolean; modelLabel: string }) {
+export function ReflectionCompanion({
+  aiEnabled,
+  modelLabel,
+  freeTierNotice = null,
+}: {
+  aiEnabled: boolean
+  modelLabel: string
+  /** Set when a free tier runs the companion: its host may use what's sent, so only synthetic examples belong here. */
+  freeTierNotice?: string | null
+}) {
   const [transport] = useState(() => new DefaultChatTransport({ api: "/api/reflect" }))
   const { messages, sendMessage, regenerate, setMessages, status, error, stop, clearError } = useChat({ transport })
   const [stage, setStage] = useState<StageId>("mini-project")
@@ -200,6 +209,7 @@ export function ReflectionCompanion({ aiEnabled, modelLabel }: { aiEnabled: bool
                 ? "Say what changed, or what you'd like to look at next. The companion keeps the earlier context."
                 : "A few sentences is enough. Please don't include anyone's personal details."}
             </p>
+            {freeTierNotice && <p className="mt-3 rounded-xl border border-dashed p-3">{freeTierNotice}</p>}
           </div>
 
           <ErrorSummary errors={errors} summaryRef={summaryRef} title="Before sending:" />

@@ -1,6 +1,6 @@
 # AI evaluator: design
 
-> **Status: draft design, updated after PR #7.** BRIDGEGOOD owns the rubric, the wording, and every decision the evaluator supports. Built so far: the partner scoping assistant (`src/routes/api.scope.ts`), the student Reflection Companion (see [What shipped: student Reflection Companion](#what-shipped-student-reflection-companion)), and, since milestone 3, the companion's "Not right" counts in the BRIDGEGOOD steward inbox (`/steward`). Neither AI surface has run against a live model yet. The next phases are item 1 under "Next" in [BACKLOG.md](BACKLOG.md).
+> **Status: draft design, updated after PR #7.** BRIDGEGOOD owns the rubric, the wording, and every decision the evaluator supports. Built so far: the partner scoping assistant (`src/routes/api.scope.ts`), the student Reflection Companion (see [What shipped: student Reflection Companion](#what-shipped-student-reflection-companion)), and, since milestone 3, the companion's "Not right" counts in the BRIDGEGOOD steward inbox (`/steward`). Neither AI surface has run against a live model yet. Which models the companion can run on, and the keys each needs, are in [gemma-prototype.md: Status and setup](gemma-prototype.md#status-and-setup). The next phases are item 1 under "Next" in [BACKLOG.md](BACKLOG.md).
 
 ## In one paragraph
 
@@ -157,7 +157,7 @@ Every observation has three controls: **Useful**, **Not right**, **Something's m
 Where it goes:
 1. **Per-review:** stored with the review (`rubricVersion`, `lens`, `observationId`, `reason`).
 2. **Aggregated for BRIDGEGOOD:** a staff-only view showing which pillar or observation types get "not right" most, by lens and chapter. Counts only, with no artifacts and no names.
-3. **Rubric review:** on a cadence BRIDGEGOOD sets (for example, each cohort), staff and community representatives change the rubric, prompt wording or lens notes, and bump `rubricVersion`. The change log is public on the Training page, so people can see their feedback changed something.
+3. **Rubric review:** on a cadence BRIDGEGOOD sets (for example, each cohort), staff and community representatives change the rubric, prompt wording or lens notes, and bump `rubricVersion`. The change log is public at `/learn/changelog` (where framework changes already appear), so people can see their feedback changed something.
 
 This is the brief's "feedback changes the plan" principle applied to the tool itself.
 
@@ -214,13 +214,15 @@ upload / brief
        anonymised disagreement counts → BRIDGEGOOD rubric review → rubric vN+1
 ```
 
-- **Endpoint:** `POST /api/evaluate` with `{ lens, artifact: { images?, text?, url? }, context: { activity, stage, focusPillars? } }`. It uses the same key and AI Gateway fallback as `src/routes/api.scope.ts`. For structured output, use the AI SDK's object output with `reviewSchema` (`Output.object` / `generateText`, or stream partial objects for the student UX). The Reflection Companion uses `streamText` with `Output.object` (see "What shipped" below).
+> **As built (student lens only):** the plan below was for one `/api/evaluate` endpoint. What exists is `POST /api/reflect` (`src/routes/api.reflect.ts`), the student lens, streaming `studentReviewSchema` with `streamText` and `Output.object`. The personal-data pre-screen is a regex (`src/lib/evaluator/privacy.ts`), not Haiku. The model is switchable in `src/lib/evaluator/model.server.ts`: Gemma 4 on a local server, on Google AI Studio's free tier or on OpenRouter (free tiers only with `EVALUATOR_FREE_TIER=synthetic-only`), or Claude Sonnet 5.5 by default. The demo aims for Gemma first, with Claude as the fallback ([gemma-prototype.md](gemma-prototype.md#status-and-setup)). The other lenses, URL audits with axe-core and the Opus and Haiku roles aren't built.
+
+- **Endpoint (planned):** `POST /api/evaluate` with `{ lens, artifact: { images?, text?, url? }, context: { activity, stage, focusPillars? } }`, using the same key and AI Gateway fallback as `src/routes/api.scope.ts`. The student lens shipped as `POST /api/reflect` instead; other lenses can join it or a shared route later.
 - **Partner lens:** extend the existing route rather than adding a new chat. Add a `reviewBrief` tool whose input is the lens extras, called when the brief has a problem, community and goals. It then writes `framingNotes` and `openQuestions` into the live brief.
 - **Models:**
   - `claude-sonnet-5-5` for all interactive lenses.
   - `claude-opus-5-5` for ambassador case-readiness (slower, low volume, longer documents) and for generating golden-set variants.
   - `claude-haiku-5-5` for the personal-data pre-screen.
-- **Files (proposed):** `src/lib/evaluator/{rubric,schema,lenses,prompts}.ts`, `src/lib/evaluator/checks/contrast.ts`, `src/routes/api.evaluate.ts`, `src/components/evaluator/{review-panel,how-this-was-made,feedback-controls}.tsx`. (The student lens shipped as `src/routes/api.reflect.ts` and `src/components/reflection/`.)
+- **Files (as built):** `src/lib/evaluator/{rubric,schema,prompts,request,validate,privacy,read-review,golden-checks,store,model.server}.ts`, `src/lib/evaluator/checks/contrast.ts`, `src/routes/api.reflect.ts`, `src/routes/student/reflection.tsx`, and `src/components/reflection/{reflection-companion,review-panel,question-list,feedback-controls,contrast-checker,shared-lists}.tsx`. There's no `lenses.ts` yet, since only the student lens exists.
 - **UI basics (WCAG 2.2 AA):**
   - Results in an `aria-live="polite"` region.
   - Each section has a heading. A, B and C are distinguished by text labels, not colour alone.
@@ -233,7 +235,7 @@ upload / brief
 
 **Phase 0: hackathon demo (about 1 day)**
 1. `rubric.ts` and `schema.ts` exactly as in section 3. Include `rubricVersion: "0.1-draft"`.
-2. `/api/evaluate` with the **student lens** (image upload plus short note), and Sonnet 5.5 structured output.
+2. `/api/evaluate` (shipped as `/api/reflect`) with the **student lens** (image upload plus short note), and Sonnet 5.5 structured output.
 3. Replace "Coming soon" on `src/routes/student/reflection.tsx` with the review panel: three labelled sections, the "How this was made" card, the reflection-prompt questions, and the student's own reflection textarea, saved to `useCollection`.
 4. A **contrast checker** where the student enters two colours and gets a deterministic WCAG result. This shows A vs. B honestly without a headless browser.
 5. **Feedback controls** saved to the demo store, plus a tiny "What people told us" counter on a staff page to show the loop.
@@ -250,7 +252,7 @@ This is the student lens from Phase 0 above. The build brief called it "phase 1"
 | 2. Endpoint, student lens, Sonnet 5.5 structured output | Done as `POST /api/reflect` (not `/api/evaluate`; the other lenses can join it later). It uses `streamText` with `Output.object({ schema: studentReviewSchema })`. It requires the student session, validates with `safeValidateUIMessages`, accepts only user and assistant roles and text, file and step-start parts, caps turns (9), text (4,000 user / 16,000 assistant characters), images (4, PNG/JPEG/WebP) and output (3,000 tokens), redacts emails and phone numbers before the model sees them, and reads AI availability at request time (503 without a key, `GET` returns `{ enabled }`) | `src/routes/api.reflect.ts`, `src/lib/evaluator/{validate,privacy,prompts,request,model.server}.ts` |
 | 3. Review panel on `/student/reflection` | Done. It has three labelled parts: What's working, What to explore (AI observation or Question for you, with evidence and confidence) and What I can't judge (lived experience and real users are always listed). It also has the "How this was made" card. Every question is editable. The apprentice ticks what to keep and what to share, and nothing is kept by default. With no key, the page falls back to BRIDGEGOOD's `studentSubmit` prompts | `src/components/reflection/*` |
 | 4. Contrast checker (kind A) | Done. It's deterministic and labelled "Automated check, not AI" | `src/lib/evaluator/checks/contrast.ts`, `contrast-checker.tsx` |
-| 5. Feedback controls | Mostly done. Useful and Not right (with a reason) are saved to the `evaluator-feedback` collection, without the work itself. Since PR #7 the steward inbox shows the "Not right" counts by pillar, which is the staff counter. Not done: "Something's missing" | `feedback-controls.tsx` |
+| 5. Feedback controls | Mostly done. Useful and Not right (with a reason) are saved to the `evaluator-feedback` collection, without the work itself. Since milestone 3, every Not right reaches the BRIDGEGOOD steward's inbox as an anonymous "AI disagreement" count by pillar, alongside synthetic seed records. Not done: "Something's missing" | `feedback-controls.tsx`, `src/lib/feedback/store.ts` |
 | 6. Partner framing flags | Not done (that work is in `api.scope.ts`, owned elsewhere) | |
 | 7. Golden set | Done for the student lens: 6 synthetic items (seeded contrast, pre-ticked consent and English-only issues, a clean control, an injection test and a personal-data test). They have automatic checks and a script that compares models (built for the Gemma 4 prototype, `docs/gemma-prototype.md`). Not done: paired bias variants and a live run. Unit tests also cover the schema (no score fields), the prompt rules, the personal-data screen, route validation and contrast | `src/content/evaluator-goldens/`, `scripts/compare-evaluators.ts`, `src/lib/evaluator/test/` |
 
@@ -262,17 +264,11 @@ Also shipped:
 
 The model returns `personalDataNoticed` in every review.
 
-Run the tests with:
-
-```bash
-node --experimental-strip-types --no-warnings --import ./src/lib/evaluator/test/register.mjs --test src/lib/evaluator/test/*.test.ts
-```
-
 `npm run test:unit` runs them, together with the feedback-loop tests.
 
 **Where the mentor sees shared questions.** Apprentices share questions, never answers or screenshots, into the demo collection `mentor-conversation-starters` (type `ConversationStarter` in `src/lib/evaluator/store.ts`). Since PR #6, `MentorConversationStarters` (`src/components/reflection/shared-lists.tsx`) shows them on the mentor's Growth conversations page, `/mentor/conversations`.
 
-Not verified: a live model call. No API key was available while this was built. The off state, the error path and the review panel (fed a mocked structured reply) were checked in the browser.
+Not verified: a live model call. No API key has been available. The off state, the error path and the review panel (fed a mocked structured reply) were checked in the browser, and offline contract tests (`src/lib/evaluator/test/providers.test.ts`) check each Gemma provider's request and reply handling. To run the goldens through the real route once there's a key, use `scripts/compare-evaluators.ts --live` against a production build ([how](gemma-prototype.md#status-and-setup)).
 
 **Phase 1: mentor support**
 - Mentor critique-prep lens on `/mentor/conversations`, only for submissions the student chose to share.
