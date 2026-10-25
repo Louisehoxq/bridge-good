@@ -214,7 +214,7 @@ upload / brief
        anonymised disagreement counts → BRIDGEGOOD rubric review → rubric vN+1
 ```
 
-> **As built (student lens only):** the plan below was for one `/api/evaluate` endpoint. What exists is `POST /api/reflect` (`src/routes/api.reflect.ts`), the student lens, streaming `studentReviewSchema` with `streamText` and `Output.object`. The personal-data pre-screen is a regex (`src/lib/evaluator/privacy.ts`), not Haiku. The model is Claude Sonnet 5.5 by default, or Gemma 4 through the AI Gateway (`src/lib/evaluator/model.server.ts`). The other lenses, URL audits with axe-core and the Opus and Haiku roles aren't built.
+> **As built (student lens only):** the plan below was for one `/api/evaluate` endpoint. What exists is `POST /api/reflect` (`src/routes/api.reflect.ts`), the student lens, streaming `studentReviewSchema` with `streamText` and `Output.object`. The personal-data pre-screen is a regex (`src/lib/evaluator/privacy.ts`), not Haiku. The model is switchable in `src/lib/evaluator/model.server.ts`: Gemma 4 on a local server, on Google AI Studio's free tier or on OpenRouter (free tiers only with `EVALUATOR_FREE_TIER=synthetic-only`), or Claude Sonnet 5.5 by default. The demo aims for Gemma first, with Claude as the fallback ([gemma-prototype.md](gemma-prototype.md#status-and-setup)). The other lenses, URL audits with axe-core and the Opus and Haiku roles aren't built.
 
 - **Endpoint (planned):** `POST /api/evaluate` with `{ lens, artifact: { images?, text?, url? }, context: { activity, stage, focusPillars? } }`, using the same key and AI Gateway fallback as `src/routes/api.scope.ts`. The student lens shipped as `POST /api/reflect` instead; other lenses can join it or a shared route later.
 - **Partner lens:** extend the existing route rather than adding a new chat. Add a `reviewBrief` tool whose input is the lens extras, called when the brief has a problem, community and goals. It then writes `framingNotes` and `openQuestions` into the live brief.
@@ -268,7 +268,7 @@ The model returns `personalDataNoticed` in every review.
 
 **Where the mentor sees shared questions.** Apprentices share questions, never answers or screenshots, into the demo collection `mentor-conversation-starters` (type `ConversationStarter` in `src/lib/evaluator/store.ts`). Since PR #6, `MentorConversationStarters` (`src/components/reflection/shared-lists.tsx`) shows them on the mentor's Growth conversations page, `/mentor/conversations`.
 
-Not verified: a live model call. No API key has been available. The off state, the error path and the review panel (fed a mocked structured reply) were checked in the browser. To run the goldens through the real route once there's a key, use `scripts/compare-evaluators.ts --live` against a production build ([how](gemma-prototype.md#status-and-setup)).
+Not verified: a live model call. No API key has been available. The off state, the error path and the review panel (fed a mocked structured reply) were checked in the browser, and offline contract tests (`src/lib/evaluator/test/providers.test.ts`) check each Gemma provider's request and reply handling. To run the goldens through the real route once there's a key, use `scripts/compare-evaluators.ts --live` against a production build ([how](gemma-prototype.md#status-and-setup)).
 
 **Phase 1: mentor support**
 - Mentor critique-prep lens on `/mentor/conversations`, only for submissions the student chose to share.

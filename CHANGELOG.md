@@ -10,20 +10,25 @@ The roles are: **apprentice** (BRIDGEGOOD's word for a student), **mentor**, **a
 
 ## Unreleased
 
-### Reflection Companion: switchable free and low-cost models
+### Reflection Companion: Gemma first, on free and local providers
 
-**For students and staff:** nothing changes on screen except that "How this was made" names the model and host that wrote the review.
+The companion can now run on Gemma 4, Google's open-weights model, on your own machine or on a free tier, with Claude as the fallback. Nothing has run against a live model yet.
 
-**Technical:** `EVALUATOR_PROVIDER` now accepts `gemma-google` (Google AI Studio free tier), `gemma-openrouter` (free `:free` model, or paid via `EVALUATOR_MODEL`), `gemma-gateway` and `gemma-local` (Ollama or vLLM), as well as `claude`. Switching when a free limit or budget runs out is an environment change and a redeploy. Adds `@ai-sdk/google` and `@ai-sdk/openai-compatible`. Not run against a live model. `npm run keys` (`scripts/env-keys.mjs`) sets, reads, lists and removes keys in `.env.local` with hidden input, masks them on read, writes the file with mode 600, and switches the provider.
+**Apprentices**
+- "How this was made" names the model and the host that wrote the review, and says when a free tier wrote it. Only a Gemma model is credited to Google.
+- When a free tier runs the companion, the form says so before you send anything: use synthetic examples only.
 
-### Reflection Companion docs and a live golden run
+**For the team**
+- `EVALUATOR_PROVIDER` accepts `gemma-local` (Ollama, LM Studio, llama.cpp or vLLM: no key, and data stays on your machine), `gemma-google` (Google AI Studio free tier), `gemma-openrouter`, `gemma-gateway` and `claude`. Switching is an environment change, not a code change.
+- Free tiers may use inputs to improve the host's products, so they stay off until whoever deploys sets `EVALUATOR_FREE_TIER=synthetic-only`.
+- `npm run keys` sets, reads and checks keys in `.env.local` with hidden input and masked output, writes the file owner-only, and asks before turning on a free tier.
+- `docs/gemma-prototype.md` opens with **Status and setup**: every provider with what it needs, its cost and where the data goes, how to run Gemma locally on a 16 GB Mac (including Ollama's context window), and how to check each host. `docs/ai-evaluator.md` now matches the code (`/api/reflect`, the regex personal-data screen, the files as built). `.env.example` documents every variable.
 
-No change in the app for any role. Docs and tooling for whoever runs or checks the AI.
-
-- `docs/gemma-prototype.md` opens with **Status and setup**: a table of the companion's providers (`claude`, `gemma-gateway`, and `gemma-local`, which is designed but not built), each with its environment variables, whether it needs a key, and where screenshots and notes go. It says plainly that Gemma through the Vercel AI Gateway is hosted, not local, and that nothing has run against a live model yet.
-- `docs/ai-evaluator.md` matches the code: `/api/reflect` instead of the planned `/api/evaluate`, the regex personal-data screen instead of Haiku, and the files as built.
-- `.env.example` documents `EVALUATOR_PROVIDER` and `EVALUATOR_MODEL`, and says the keys serve the companion as well as partner scoping.
-- `scripts/compare-evaluators.ts --live <baseUrl>` logs in as the demo apprentice, posts each synthetic golden to a running server's `/api/reflect`, and scores the streamed replies with `scoreReply`, with time to first token for each run. It tests the whole route, not just the model.
+**Technical**
+- Offline contract tests (`src/lib/evaluator/test/providers.test.ts`, in `npm run test:unit`) run the companion's real pipeline against a fake host for each Gemma provider: request shape, reply parsing, host errors, and no personal details sent. `evaluatorModel()` takes an optional `fetch` for this.
+- `readReview()` finds the JSON inside a ```json fence or a sentence around it, which open models often add; the schema check is unchanged.
+- `scripts/compare-evaluators.ts --live <baseUrl>` logs in as the demo apprentice, posts each synthetic golden to a running server's `/api/reflect`, and scores the replies with time to first token, testing the whole route.
+- Adds `@ai-sdk/google` and `@ai-sdk/openai-compatible`.
 
 ### A real chapter map
 

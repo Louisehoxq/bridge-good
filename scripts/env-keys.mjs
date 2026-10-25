@@ -15,13 +15,19 @@
 import { chmodSync, existsSync, readFileSync, renameSync, writeFileSync } from "node:fs"
 import { resolve } from "node:path"
 
+// freeTier: the host may use inputs to improve its products, so the companion also needs EVALUATOR_FREE_TIER=synthetic-only.
 const PROVIDERS = {
-  claude: { needs: ["ANTHROPIC_API_KEY"], help: "Direct Anthropic key, console.anthropic.com" },
-  "gemma-google": { needs: ["GOOGLE_GENERATIVE_AI_API_KEY"], help: "Free key: aistudio.google.com/apikey" },
-  "gemma-openrouter": { needs: ["OPENROUTER_API_KEY"], help: "Free key: openrouter.ai/settings/keys" },
-  "gemma-gateway": { needs: ["AI_GATEWAY_API_KEY"], help: "Vercel AI Gateway (billed): vercel.com, AI Gateway, API keys" },
-  "gemma-local": { needs: ["EVALUATOR_BASE_URL"], help: "e.g. http://localhost:11434/v1 for Ollama", visible: true },
+  "gemma-local": {
+    needs: ["EVALUATOR_BASE_URL"],
+    help: "Your own server's OpenAI-compatible URL: http://localhost:11434/v1 (Ollama), http://localhost:1234/v1 (LM Studio). No key needed.",
+  },
+  "gemma-google": { needs: ["GOOGLE_GENERATIVE_AI_API_KEY"], freeTier: true, help: "Free key: aistudio.google.com/apikey" },
+  "gemma-openrouter": { needs: ["OPENROUTER_API_KEY"], freeTier: true, help: "Free key: openrouter.ai/settings/keys (the default model is a :free one)" },
+  claude: { needs: ["ANTHROPIC_API_KEY"], help: "Direct Anthropic key, console.anthropic.com (the fallback)" },
+  "gemma-gateway": { needs: ["AI_GATEWAY_API_KEY"], help: "Vercel AI Gateway (billed; not pursued for now)" },
 }
+const FREE_TIER = ["EVALUATOR_FREE_TIER", "synthetic-only"]
+const NAME = /^[A-Z0-9_]+$/
 const SECRET = /KEY|TOKEN|SECRET|PASSWORD/i
 
 const args = process.argv.slice(2)
@@ -106,14 +112,16 @@ function die(message, code = 1) {
   process.exit(code)
 }
 
-const ready = (name, env) => PROVIDERS[name].needs.every((k) => env[k] || process.env[k])
+const needsOf = (name) => [...PROVIDERS[name].needs, ...(PROVIDERS[name].freeTier ? [FREE_TIER[0]] : [])]
+const ready = (name, env) =>
+  needsOf(name).every((k) => (k === FREE_TIER[0] ? (env[k] || process.env[k]) === FREE_TIER[1] : env[k] || process.env[k]))
 
 switch (cmd) {
   case "status": {
     const env = parse(read())
     console.log(`File: ${file}${existsSync(file) ? "" : " (not created yet)"}`)
     console.log(`Active provider: ${env.EVALUATOR_PROVIDER || "claude (default)"}\n`)
-    for (const [name, p] of Object.entries(PROVIDERS)) console.log(`${ready(name, env) ? "ready  " : "missing"}  ${name.padEnd(17)} needs ${p.needs.join(", ")}`)
+    for (const [name, p] of Object.entries(PROVIDERS)) console.log(`${ready(name, env) ? "ready  " : "missing"}  ${name.padEnd(17)} needs ${needsOf(name).join(", ")}${p.freeTier ? "=synthetic-only" : ""}`)
     break
   }
   case "list": {
@@ -132,7 +140,7 @@ switch (cmd) {
   }
   case "set": {
     const [name] = rest
-    if (!name || !/^[A-Z0-9_]+$/.test(name)) die("Usage: set NAME  (upper-case name; value is prompted, or piped in)")
+    if (!name || !NAME.test(name)) die("Usage: set NAME  (upper-case name; value is prompted, or piped in)")
     const value = await ask(`${name}: `, { visible: !SECRET.test(name) })
     if (!value) die("No value given, nothing changed.")
     setVar(name, value)
@@ -141,7 +149,8 @@ switch (cmd) {
   }
   case "unset": {
     const [name] = rest
-    console.log(name && unsetVar(name) ? `Removed ${name}.` : `${name ?? "NAME"} wasn't set.`)
+    if (!name || !NAME.test(name)) die("Usage: unset NAME  (upper-case name)")
+    console.log(unsetVar(name) ? `Removed ${name}.` : `${name} wasn't set.`)
     break
   }
   case "use":
@@ -154,14 +163,21 @@ switch (cmd) {
       for (const k of p.needs) {
         const have = parse(read())[k]
         if (have && (await ask(`${k} is already set (${mask(k, have)}). Replace it? [y/N] `, { visible: true })).toLowerCase() !== "y") continue
-        const v = await ask(`${k}: `, { visible: Boolean(p.visible) })
+        const v = await ask(`${k}: `, { visible: !SECRET.test(k) })
         if (v) setVar(k, v)
         else console.warn(`No value for ${k}, skipped.`)
       }
+      if (p.freeTier && parse(read())[FREE_TIER[0]] !== FREE_TIER[1]) {
+        console.log("This free tier may use what's sent to improve the host's products.")
+        const yes = await ask("Will every input be synthetic (no real apprentice work or anyone's details)? [y/N] ", { visible: true })
+        if (yes.toLowerCase() === "y") setVar(...FREE_TIER)
+        else console.warn(`Not set. The companion stays off on ${name} until ${FREE_TIER.join("=")}.`)
+      }
     }
     setVar("EVALUATOR_PROVIDER", name)
-    console.log(`EVALUATOR_PROVIDER=${name} in ${file}. ${ready(name, parse(read())) ? "Ready." : "Still missing: " + PROVIDERS[name].needs.filter((k) => !parse(read())[k]).join(", ")}`)
-    console.log("Restart `npm run dev` to pick it up. On Vercel, set the same variables in the project settings and redeploy.")
+    const env = parse(read())
+    console.log(`EVALUATOR_PROVIDER=${name} in ${file}. ${ready(name, env) ? "Ready." : "Still missing: " + needsOf(name).filter((k) => (k === FREE_TIER[0] ? env[k] !== FREE_TIER[1] : !env[k])).join(", ")}`)
+    console.log("Restart `npm run dev` or `npm start` to pick it up. On Vercel, set the same variables in the project settings and redeploy.")
     break
   }
   default:
