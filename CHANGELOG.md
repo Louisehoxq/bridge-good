@@ -10,6 +10,11 @@ The roles are: **apprentice** (BRIDGEGOOD's word for a student), **mentor**, **a
 
 ## Unreleased
 
+### Demo video: recording tooling
+
+- **Everyone:** nothing changes in the app. A 2-minute demo video is planned as seven independent scenes that can each be re-recorded: the script is in [docs/demo/video-script.md](docs/demo/video-script.md) and the plan in [docs/demo/recording-plan.md](docs/demo/recording-plan.md).
+- **Technical:** `scripts/demo/` has a shared Playwright helper (`lib.mjs`: 1920x1080, 30 fps, visible cursor, burned-in captions that also write an `.srt`, a per-scene time budget), `prepare-state.mjs` (seeds the Eastside Tenants Network feedback and the steward's decision into saved browser states), `preflight.mjs` (walks every scene's pages and runs both AI features once) and `assemble.sh` (joins the clips with `ffmpeg`). One agent can record each scene in parallel against its own browser context. Generated state, clips and the final video are git-ignored.
+
 ### The home title keeps cycling
 
 - **For community partners:** "My project and team" now says your chapter lead and community chapter read your feedback, review your briefs and answer your retrospective, instead of BRIDGEGOOD. The scoping studio line says a person at your community chapter reviews every brief.
