@@ -1,5 +1,6 @@
 import { Share2 } from "lucide-react"
 import { useId } from "react"
+import { PinnedNote } from "@/components/studio/pinned-note"
 import { Button } from "@/components/ui/button"
 import { DEMO_MENTOR, DEMO_STUDENT } from "@/content/seed"
 import { pillarName } from "@/lib/evaluator/rubric"
@@ -26,25 +27,25 @@ export function SharedWithMentor() {
   return (
     <section aria-labelledby={`${id}-title`} className="space-y-3 rounded-2xl border bg-card p-5">
       <div className="flex items-start gap-3">
-        <Share2 aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-primary" />
+        <Share2 aria-hidden="true" className="mt-1.5 size-5 shrink-0 text-primary" />
         <div>
-          <h2 id={`${id}-title`} className="text-lg font-bold">
+          <h2 id={`${id}-title`} className="type-title-3">
             Shared with your mentor
           </h2>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground">
             Conversation starters for your next session with {DEMO_MENTOR}. Only the questions are shared, never your answers or
             screenshots.
           </p>
         </div>
       </div>
       {mine.length === 0 ? (
-        <p className="text-sm">Nothing shared yet.</p>
+        <p>Nothing shared yet.</p>
       ) : (
         <ul className="space-y-2">
           {mine.map((s) => (
-            <li key={s.id} className="space-y-1 rounded-lg bg-muted/50 p-3">
+            <li key={s.id} className="space-y-1 rounded-lg bg-muted p-3">
               <p>{s.question}</p>
-              <p className="text-xs text-muted-foreground">
+              <p className="type-small text-muted-foreground">
                 {s.pillar ? `${pillarName(s.pillar)} · ` : ""}
                 {ORIGIN_LABEL[s.origin]} · {s.sharedAt}
               </p>
@@ -52,7 +53,7 @@ export function SharedWithMentor() {
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="-ml-3 min-h-11"
+                className="-ml-3"
                 aria-label={`Stop sharing: ${s.question}`}
                 onClick={() => setStarters((prev) => prev.filter((x) => x.id !== s.id))}
               >
@@ -62,13 +63,12 @@ export function SharedWithMentor() {
           ))}
         </ul>
       )}
-      {/* TODO(routes owner): render <MentorConversationStarters /> on the mentor area. See docs/ai-evaluator.md, "Phase 1 shipped". */}
-      <p className="text-xs text-muted-foreground">Demo: the mentor&apos;s view of these isn&apos;t on the mentor pages yet.</p>
+      <p className="type-small text-muted-foreground">{DEMO_MENTOR} sees these on their Growth conversations page.</p>
     </section>
   )
 }
 
-/** The apprentice's saved reflections, newest first. Private to them. */
+/** The apprentice's saved reflections, newest first, each on a pinned note. Private to them. */
 export function SavedReflections() {
   const id = useId()
   const [reflections, setReflections] = useReflections()
@@ -77,40 +77,43 @@ export function SavedReflections() {
   return (
     <section aria-labelledby={`${id}-title`} className="space-y-3 rounded-2xl border bg-card p-5">
       <div>
-        <h2 id={`${id}-title`} className="text-lg font-bold">
+        <h2 id={`${id}-title`} className="type-title-3">
           Your reflections
         </h2>
-        <p className="text-sm text-muted-foreground">Only you see these. Demo: saved in this browser.</p>
+        <p className="text-muted-foreground">Only you see these. Demo: saved in this browser.</p>
       </div>
       {list.length === 0 ? (
-        <p className="text-sm">Nothing saved yet.</p>
+        <p>Nothing saved yet.</p>
       ) : (
-        <ul className="space-y-2">
-          {list.map((r) => (
+        <ul className="space-y-4">
+          {list.map((r, n) => (
             <li key={r.id}>
-              <details className="rounded-lg bg-muted/50 p-3">
-                <summary className="min-h-11 cursor-pointer py-2 font-semibold">
-                  {r.stage} · {r.savedAt} ({r.questions.length} {r.questions.length === 1 ? "question" : "questions"})
-                </summary>
-                <ul className="mt-2 space-y-3">
-                  {r.questions.map((q, i) => (
-                    <li key={i} className="text-sm">
-                      <p className="font-bold">{q.question}</p>
-                      {q.answer ? <p className="whitespace-pre-wrap">{q.answer}</p> : <p className="text-muted-foreground">No answer yet.</p>}
-                      <p className="text-xs text-muted-foreground">{ORIGIN_LABEL[q.origin]}</p>
-                    </li>
-                  ))}
-                </ul>
+              <PinnedNote title={`${r.stage} · ${r.savedAt}`} tilt={n % 2 ? "right" : "left"}>
+                <details>
+                  <summary className="min-h-12 cursor-pointer py-3 font-semibold">
+                    Your {r.questions.length} {r.questions.length === 1 ? "question" : "questions"} and answers
+                  </summary>
+                  <ul className="mt-2 space-y-3">
+                    {r.questions.map((q, i) => (
+                      <li key={i}>
+                        <p className="font-bold">{q.question}</p>
+                        {q.answer ? <p className="whitespace-pre-wrap">{q.answer}</p> : <p>No answer yet.</p>}
+                        <p className="type-small">{ORIGIN_LABEL[q.origin]}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="mt-2 -ml-3 min-h-11"
+                  className="-ml-3"
+                  aria-label={`Delete this reflection: ${r.stage}, ${r.savedAt}`}
                   onClick={() => setReflections((prev) => prev.filter((x) => x.id !== r.id))}
                 >
                   Delete this reflection
                 </Button>
-              </details>
+              </PinnedNote>
             </li>
           ))}
         </ul>
@@ -120,8 +123,8 @@ export function SavedReflections() {
 }
 
 /**
- * Mentor side, ready for the mentor area (not mounted yet: the mentor pages belong to the routes owner).
- * Shows questions apprentices chose to share, as starters for a conversation, not as work to grade.
+ * Mentor side, on the Growth conversations page. Shows questions apprentices chose to share, as starters
+ * for a conversation, not as work to grade.
  */
 export function MentorConversationStarters() {
   const id = useId()
@@ -131,22 +134,22 @@ export function MentorConversationStarters() {
   return (
     <section aria-labelledby={`${id}-title`} className="space-y-3 rounded-2xl border bg-card p-5">
       <div>
-        <h2 id={`${id}-title`} className="text-lg font-bold">
+        <h2 id={`${id}-title`} className="type-title-3">
           Conversation starters from your apprentices
         </h2>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground">
           Questions an apprentice chose to share after reflecting with the AI companion. Start from their words. These aren&apos;t a grade
           or a to-do list.
         </p>
       </div>
       {list.length === 0 ? (
-        <p className="text-sm">No questions shared yet.</p>
+        <p>No questions shared yet.</p>
       ) : (
         <ul className="space-y-2">
           {list.map((s) => (
-            <li key={s.id} className="rounded-lg bg-muted/50 p-3">
+            <li key={s.id} className="rounded-lg bg-muted p-3">
               <p>{s.question}</p>
-              <p className="text-xs text-muted-foreground">
+              <p className="type-small text-muted-foreground">
                 {s.from} · {s.stage} · {s.pillar ? `${pillarName(s.pillar)} · ` : ""}
                 {MENTOR_ORIGIN_LABEL[s.origin]} · {s.sharedAt}
               </p>

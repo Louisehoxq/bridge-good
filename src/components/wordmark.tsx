@@ -5,7 +5,7 @@
  */
 export function Wordmark() {
   return (
-    <span className="font-heading text-lg font-bold tracking-tight">
+    <span className="font-heading text-xl font-semibold">
       BRIDGEGOOD<span className="text-primary">x</span>
     </span>
   )

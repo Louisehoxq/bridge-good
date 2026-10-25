@@ -36,7 +36,7 @@ export default function TrackPage({ loaderData }: Route.ComponentProps) {
         </p>
         <TrainingTrack audience={track.audience} />
         <section aria-labelledby="related-title" className="mt-14">
-          <h2 id="related-title" className="mb-4 text-2xl font-bold">
+          <h2 id="related-title" className="mb-4 type-title-2">
             Guides for this role
           </h2>
           <ul className="grid gap-4 md:grid-cols-2">

@@ -2,6 +2,8 @@ import { useState } from "react"
 import { Icon } from "@/components/icon"
 import { CHAPTERS, REGIONS } from "@/content/chapters"
 import { SyntheticBadge } from "@/components/synthetic-badge"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
 
 const W = 1000
@@ -21,8 +23,8 @@ export function ChapterFinder() {
 
   return (
     <div className="grid gap-8 xl:grid-cols-[3fr_2fr]">
-      <div className="space-y-4">
-        <figure className="rounded-2xl border bg-card p-4">
+      <div className="min-w-0 space-y-4">
+        <figure className="min-w-0 rounded-2xl border bg-card p-3 sm:p-4">
           <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-labelledby="map-title map-desc">
             <title id="map-title">Illustrative map of BridgeGoodx chapters</title>
             <desc id="map-desc">
@@ -52,26 +54,20 @@ export function ChapterFinder() {
               )
             })}
           </svg>
-          <figcaption className="mt-2 text-sm text-muted-foreground">
+          <figcaption className="mt-2 text-muted-foreground">
             Illustrative map, not to scale. Hover over or focus a chapter in the list to highlight it.
           </figcaption>
         </figure>
       </div>
 
-      <div className="space-y-4">
+      <div className="min-w-0 space-y-4">
         <div className="flex flex-wrap gap-3">
-          <label className="flex flex-1 flex-col gap-1 text-sm font-bold">
-            Search
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="City, country or focus"
-              className="h-11 rounded-lg border border-input bg-background px-3 text-base font-normal"
-            />
-          </label>
-          <fieldset className="flex flex-col gap-1">
-            <legend className="text-sm font-bold">Region</legend>
+          <div className="flex min-w-0 flex-1 basis-56 flex-col gap-1">
+            <Label htmlFor="chapter-search">Search</Label>
+            <Input id="chapter-search" type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="City, country or focus" />
+          </div>
+          <fieldset className="flex min-w-0 flex-col gap-1">
+            <legend className="type-label">Region</legend>
             <div className="flex flex-wrap gap-1">
               {["All", ...REGIONS].map((r) => (
                 <button
@@ -80,10 +76,11 @@ export function ChapterFinder() {
                   aria-pressed={region === r}
                   onClick={() => setRegion(r)}
                   className={cn(
-                    "min-h-12 rounded-lg border border-input px-3 text-sm font-semibold",
+                    "inline-flex min-h-12 items-center gap-1.5 rounded-md border-[1.5px] border-input bg-card px-3 font-semibold",
                     region === r ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted"
                   )}
                 >
+                  {region === r && <Icon name="check" />}
                   {r}
                 </button>
               ))}
@@ -92,7 +89,7 @@ export function ChapterFinder() {
         </div>
 
         <h2 className="sr-only">Chapter list</h2>
-        <p role="status" className="text-sm text-muted-foreground">
+        <p role="status" className="text-muted-foreground">
           {visible.length} {visible.length === 1 ? "chapter" : "chapters"} found
         </p>
 
@@ -108,8 +105,8 @@ export function ChapterFinder() {
               className={cn("rounded-xl border bg-card p-4", active === c.id && "border-primary")}
             >
               <article aria-labelledby={`${c.id}-title`}>
-                <div className="flex items-start justify-between gap-2">
-                  <h3 id={`${c.id}-title`} className="text-lg font-bold">
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <h3 id={`${c.id}-title`} className="type-title-3">
                     {c.city}, {c.country}
                   </h3>
                   {c.synthetic && <SyntheticBadge />}
@@ -117,20 +114,20 @@ export function ChapterFinder() {
                 <p className="mt-1">
                   Ambassador: <span className="font-bold">{c.ambassador}</span>, {c.organisation}
                 </p>
-                <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
-                  <li className="flex items-center gap-2">
-                    <Icon name="calendar_today" className="text-base" /> Meets: {c.meets}
+                <ul className="mt-2 space-y-1 text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <Icon name="calendar_today" className="mt-1 text-base" /> <span>Meets: {c.meets}</span>
                   </li>
-                  <li className="flex items-center gap-2">
-                    <Icon name="location_on" className="text-base" /> Focus: {c.focus}
+                  <li className="flex items-start gap-2">
+                    <Icon name="location_on" className="mt-1 text-base" /> <span>Focus: {c.focus}</span>
                   </li>
                 </ul>
                 <a
                   href={`mailto:${c.email}`}
-                  className="mt-3 inline-flex min-h-12 items-center gap-2 font-semibold text-primary underline underline-offset-4"
+                  className="mt-3 inline-flex min-h-12 max-w-full items-center gap-2 font-semibold text-primary underline underline-offset-4"
                 >
                   <Icon name="mail" className="text-base" />
-                  {c.email}
+                  <span className="min-w-0 [overflow-wrap:anywhere]">{c.email}</span>
                 </a>
               </article>
             </li>

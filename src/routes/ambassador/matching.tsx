@@ -5,10 +5,18 @@ import { MilestoneList } from "@/components/demo/milestones"
 import { SyntheticBadge } from "@/components/synthetic-badge"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
+import { NativeSelect } from "@/components/ui/select"
+import { FieldMessage } from "@/components/notice"
+import { PeopleChip } from "@/components/studio/people-chip"
+import { teamFor, TeamView } from "@/components/team/team-view"
 import { CHAPTER_MENTORS, SPRINT_MILESTONES, type ProjectInterest, type TeamMatch } from "@/content/journey"
 import { PROBLEMS, type Problem } from "@/content/problems"
 import { newId, nowLabel } from "@/lib/demo-store"
 import { useSession } from "@/lib/session"
+import { Icon } from "@/components/icon"
+import { ROLE_INFO } from "@/lib/roles"
+
+const CHAPTER_LEAD = ROLE_INFO.ambassador.demoAccount.name
 import { pageMeta } from "@/lib/meta"
 
 export const meta = () => pageMeta("Matching & milestones")
@@ -28,7 +36,7 @@ export default function MatchingPage() {
 
   return (
     <>
-      <PageHeader eyebrow="Matching & milestones" title="Form teams, then keep them on track">
+      <PageHeader title="Form teams, then keep them on track">
         Read what apprentices wrote about each brief, then talk with them before you decide. Matching uses what people
         told you and your own judgment. This app never scores or ranks apprentices, and it doesn&apos;t ask about their
         identity.
@@ -37,14 +45,14 @@ export default function MatchingPage() {
         {status}
       </p>
       {!canEdit && (
-        <p className="mb-8 rounded-xl bg-archetype-soft p-4">
+        <p className="mb-8 rounded-xl border bg-archetype-soft p-4">
           Chapter leads form the teams and update milestones. As a company host you can follow along here, and help at
           Demo Day.
         </p>
       )}
 
       <section id="matching" aria-labelledby="matching-title" className="scroll-mt-24">
-        <h2 id="matching-title" className="mb-4 text-2xl font-bold">
+        <h2 id="matching-title" className="mb-4 type-title-2">
           Matching
         </h2>
         <ul className="space-y-6">
@@ -65,7 +73,7 @@ export default function MatchingPage() {
       </section>
 
       <section id="milestones" aria-labelledby="milestones-title" className="mt-14 scroll-mt-24">
-        <h2 id="milestones-title" className="mb-1 text-2xl font-bold">
+        <h2 id="milestones-title" className="mb-1 type-title-2">
           Milestones
         </h2>
         <p className="mb-4 text-muted-foreground">Every partner project is a four-week sprint that ends at Demo Day, then a retrospective.</p>
@@ -112,12 +120,12 @@ function MatchCard({
 
   const errorId = `${problem.id}-match-error`
   return (
-    <li className="rounded-2xl border bg-card p-6">
+    <li className="min-w-0 rounded-2xl border bg-card p-4 sm:p-6">
       <div className="flex flex-wrap items-center gap-2">
-        <h3 className="text-xl font-bold">{problem.title}</h3>
+        <h3 className="type-title-3">{problem.title}</h3>
         {problem.synthetic && <SyntheticBadge />}
       </div>
-      <p className="text-sm text-muted-foreground">
+      <p className="type-small text-muted-foreground">
         {problem.organisationType} · {problem.location}
       </p>
 
@@ -127,11 +135,11 @@ function MatchCard({
       ) : (
         <ul className="mt-2 grid gap-3 lg:grid-cols-2">
           {interests.map((i) => (
-            <li key={i.id} className="rounded-xl bg-muted p-4">
-              <p className="flex flex-wrap items-center gap-2 font-bold">
-                {i.apprenticeName}
+            <li key={i.id} className="min-w-0 rounded-xl border bg-muted p-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <PeopleChip name={i.apprenticeName} role="apprentice" />
                 {i.synthetic && <SyntheticBadge />}
-              </p>
+              </div>
               <p className="mt-1">
                 <span className="font-semibold">Why: </span>
                 {i.why}
@@ -142,22 +150,25 @@ function MatchCard({
                   {i.bring}
                 </p>
               )}
-              <p className="mt-1 text-xs text-muted-foreground">{i.at}</p>
+              <p className="mt-1 type-small text-muted-foreground">{i.at}</p>
             </li>
           ))}
         </ul>
       )}
 
       {match ? (
-        <p className="mt-4 rounded-xl bg-archetype-soft p-4">
-          <span className="font-bold">Team formed: </span>
-          {match.apprentices.join(", ")}, with {match.mentorName} as mentor.
-        </p>
+        <div className="mt-4 rounded-xl border bg-archetype-soft p-4">
+          <p className="mb-4 flex items-center gap-2 font-bold">
+            <Icon name="circle-check" />
+            Team formed
+          </p>
+          <TeamView label={`Team for ${problem.title}`} members={teamFor(match, canEdit ? CHAPTER_LEAD : undefined)} />
+        </div>
       ) : (
         canEdit &&
         interests.length > 0 && (
           <form onSubmit={submit} noValidate className="mt-4 space-y-3 border-t pt-4">
-            <fieldset aria-describedby={error ? errorId : undefined}>
+            <fieldset aria-describedby={error ? errorId : undefined} className="min-w-0">
               <legend className="font-bold">Who&apos;s on the team?</legend>
               <div className="mt-2 flex flex-wrap gap-2">
                 {interests.map((i) => (
@@ -165,28 +176,26 @@ function MatchCard({
                     key={i.id}
                     className="flex min-h-12 cursor-pointer items-center gap-2 rounded-lg border px-3 has-checked:border-archetype has-checked:bg-archetype-soft has-checked:font-bold"
                   >
-                    <input type="checkbox" name="apprentice" value={i.apprenticeName} className="size-4 accent-[var(--archetype)]" />
+                    <input type="checkbox" name="apprentice" value={i.apprenticeName} className="size-6 shrink-0 accent-[var(--archetype)]" />
                     {i.apprenticeName}
                   </label>
                 ))}
               </div>
             </fieldset>
             {error && (
-              <p id={errorId} role="alert" className="text-sm font-semibold text-destructive">
-                {error}
-              </p>
+              <div role="alert">
+                <FieldMessage id={errorId}>{error}</FieldMessage>
+              </div>
             )}
             <div className="max-w-md space-y-1">
-              <Label htmlFor={`${problem.id}-mentor`} className="font-bold">
-                Mentor
-              </Label>
-              <select id={`${problem.id}-mentor`} name="mentor" className="min-h-12 w-full rounded-xs border border-input bg-transparent px-4">
+              <Label htmlFor={`${problem.id}-mentor`}>Mentor</Label>
+              <NativeSelect id={`${problem.id}-mentor`} name="mentor">
                 {CHAPTER_MENTORS.map((m) => (
                   <option key={m.name} value={m.name}>
                     {m.name}: {m.note}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </div>
             <Button type="submit" className="bg-archetype text-on-archetype hover:bg-archetype/90">
               Form this team
@@ -202,17 +211,17 @@ function Milestones({ match, onAdvance }: { match: TeamMatch; onAdvance?: () => 
   const problem = PROBLEMS.find((p) => p.id === match.problemId)
   const next = SPRINT_MILESTONES[match.milestone + 1]
   return (
-    <li className="rounded-2xl border bg-card p-6">
+    <li className="min-w-0 rounded-2xl border bg-card p-4 sm:p-6">
       <div className="flex flex-wrap items-center gap-2">
-        <h3 className="text-xl font-bold">{problem?.title ?? match.problemId}</h3>
+        <h3 className="type-title-3">{problem?.title ?? match.problemId}</h3>
         {match.synthetic && <SyntheticBadge />}
       </div>
-      <p className="text-sm text-muted-foreground">
+      <p className="text-muted-foreground">
         {match.apprentices.join(", ")} · mentor {match.mentorName}
       </p>
       <MilestoneList reached={match.milestone} />
       {next && onAdvance && (
-        <Button variant="outline" className="mt-4" onClick={onAdvance}>
+        <Button variant="outline" className="mt-4 h-auto max-w-full py-2 text-left whitespace-normal" onClick={onAdvance}>
           Mark &ldquo;{next.title}&rdquo; as reached
         </Button>
       )}

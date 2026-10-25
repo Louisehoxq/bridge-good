@@ -132,20 +132,10 @@ async function clippedText(page: Page) {
 type LayoutCheck = "at320" | "at200" | "clipped"
 
 /**
- * Layout failures found when these checks were added (October 2026), tracked in docs/design-followups.md.
+ * Known layout failures, tracked in docs/design-followups.md. Empty since milestone 2.5: keep it that way.
  * Any other failure fails the test, and so does a listed one that has gone, so this list can only shrink.
  */
-const KNOWN_LAYOUT: Record<string, LayoutCheck[]> = {
-  // Page content wider than 320px.
-  "/chapters": ["at320"],
-  "/learn/self-check": ["at320"],
-  "/student/submissions": ["at320"],
-  "/ambassador/matching": ["at320"],
-  // Line-clamped and truncated text hides content once WCAG text spacing is applied.
-  "/design": ["clipped"],
-  "/learn": ["clipped"],
-  "/mentor/mentee": ["clipped"],
-}
+const KNOWN_LAYOUT: Record<string, LayoutCheck[]> = {}
 
 for (const path of paths) {
   test(`${path} reflows, zooms and takes text spacing (WCAG 1.4.10, 1.4.4, 1.4.12)`, async ({ page }, testInfo) => {

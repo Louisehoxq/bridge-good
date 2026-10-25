@@ -10,7 +10,7 @@ export const meta = () => pageMeta("Mentor overview")
 export default function MentorHome() {
   return (
     <>
-      <PageHeader eyebrow="Mentor area" title={`Welcome back, ${ROLE_INFO.mentor.demoAccount.name.split(" ")[0]}`}>
+      <PageHeader title={`Welcome back, ${ROLE_INFO.mentor.demoAccount.name.split(" ")[0]}`}>
         You finished the BRIDGEGOOD apprenticeship and came back to mentor (synthetic example). Care, honesty and
         encouragement are what make this work.
       </PageHeader>
@@ -19,7 +19,7 @@ export default function MentorHome() {
         <MentorSnapshot />
       </div>
       <section aria-labelledby="loop-title" className="mt-12">
-        <h2 id="loop-title" className="mb-6 text-2xl font-bold">
+        <h2 id="loop-title" className="mb-6 type-title-2">
           Where you fit
         </h2>
         <ImpactLoop current="mentor" />

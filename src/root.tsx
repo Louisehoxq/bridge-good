@@ -74,8 +74,8 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   return (
     <AppShell>
       <div className="mx-auto max-w-3xl space-y-4 px-4 py-16 sm:px-6 lg:px-8">
-        <h1 className="headline-large font-bold">{notFound ? "We can't find that page" : "Something went wrong"}</h1>
-        <p className="body-large text-muted-foreground">
+        <h1 className="type-title-1">{notFound ? "We can't find that page" : "Something went wrong"}</h1>
+        <p className="type-body-lg text-muted-foreground">
           {notFound
             ? "The link may be out of date. Start again from the welcome page."
             : "Try again in a moment. If you were filling in a form, your demo data is still saved in this browser."}

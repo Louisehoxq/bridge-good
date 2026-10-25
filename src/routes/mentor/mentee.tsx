@@ -4,7 +4,9 @@ import { MentorInbox } from "@/components/demo/conversation"
 import { MentorOfficeHours } from "@/components/demo/office-hours"
 import { useMatches } from "@/components/demo/journey-data"
 import { PathStepper } from "@/components/path/path-stepper"
+import { PinnedNote } from "@/components/studio/pinned-note"
 import { SyntheticBadge } from "@/components/synthetic-badge"
+import { mentoringPair, teamFor, TeamView } from "@/components/team/team-view"
 import { MENTEE_PROFILE } from "@/content/journey"
 import { PROBLEMS } from "@/content/problems"
 import { DEMO_MENTOR } from "@/content/seed"
@@ -20,19 +22,34 @@ export default function MyMentee() {
 
   return (
     <>
-      <PageHeader eyebrow="My mentee" title={MENTEE_PROFILE.name}>
+      <PageHeader title={`Your mentee, ${MENTEE_PROFILE.name}`}>
         Messages, office hours and where {first} is on their path, in one place. Ask how they&apos;re doing before you
         talk about the work.
       </PageHeader>
 
+      <section aria-labelledby="team-title" className="mb-8 rounded-2xl border bg-card p-6">
+        <h2 id="team-title" className="type-title-3">
+          {team && project ? `Your team on ${project.title}` : `You and ${first}`}
+        </h2>
+        <p className="mb-6 text-muted-foreground">
+          {team && project
+            ? "Everyone working on this partner project. Everyone shown is a synthetic example."
+            : `Not on a partner project yet. Their chapter lead forms teams on Matching & milestones. Everyone shown is a synthetic example.`}
+        </p>
+        <TeamView label={team ? "Your project team" : "You, your mentee and their chapter lead"} members={team ? teamFor(team, DEMO_MENTOR) : mentoringPair("mentor")} />
+      </section>
+
       <div className="grid gap-6 xl:grid-cols-[2fr_3fr]">
-        <section aria-labelledby="about-title" className="h-fit space-y-3 rounded-2xl bg-archetype-soft p-6">
-          <div className="flex flex-wrap items-center gap-2">
-            <h2 id="about-title" className="text-xl font-bold">
+        <PinnedNote
+          icon="sprout"
+          title={
+            <span id="about-title" className="flex flex-wrap items-center gap-2">
               In {first}&apos;s own words
-            </h2>
-            {MENTEE_PROFILE.synthetic && <SyntheticBadge />}
-          </div>
+              {MENTEE_PROFILE.synthetic && <SyntheticBadge />}
+            </span>
+          }
+          className="h-fit"
+        >
           <p>
             <span className="block font-bold">What they hope to do</span>
             {MENTEE_PROFILE.hopes}
@@ -41,30 +58,20 @@ export default function MyMentee() {
             <span className="block font-bold">What makes it hard</span>
             {MENTEE_PROFILE.barriers}
           </p>
-          <p className="text-sm text-muted-foreground">{first} chose to share this. Keep it between you, unless they say otherwise.</p>
-          {team && project ? (
-            <p className="border-t pt-3">
-              You&apos;re mentoring the team on <span className="font-bold">{project.title}</span> with {team.apprentices.join(", ")}.
-            </p>
-          ) : (
-            <p className="border-t pt-3 text-sm">
-              Not on a partner project yet. Their chapter lead forms teams on{" "}
-              <span className="font-semibold">Matching &amp; milestones</span>.
-            </p>
-          )}
-        </section>
+          <p className="type-small">{first} chose to share this. Keep it between you, unless they say otherwise.</p>
+        </PinnedNote>
         <PathStepper pathKey="student" variant="compact" title={`${first}'s path`} linkToPath={false} />
       </div>
 
       <section aria-labelledby="inbox-title" className="mt-12">
-        <h2 id="inbox-title" className="mb-4 text-2xl font-bold">
+        <h2 id="inbox-title" className="mb-4 type-title-2">
           Messages
         </h2>
         <MentorInbox headingLevel={3} />
       </section>
 
       <section aria-labelledby="hours-title" className="mt-12">
-        <h2 id="hours-title" className="mb-1 text-2xl font-bold">
+        <h2 id="hours-title" className="mb-1 type-title-2">
           Office hours
         </h2>
         <p className="mb-4 text-muted-foreground">
@@ -73,9 +80,9 @@ export default function MyMentee() {
         <MentorOfficeHours headingLevel={3} />
       </section>
 
-      <p className="mt-10 text-sm text-muted-foreground">
+      <p className="mt-10 text-muted-foreground">
         Growth conversations on {first}&apos;s work are in{" "}
-        <Link to="/mentor/submissions" className="underline underline-offset-4">
+        <Link to="/mentor/conversations" className="underline underline-offset-4">
           Growth conversations
         </Link>
         .

@@ -27,46 +27,52 @@ const MOCK_CASE = {
   ],
 }
 
-export default function ActivitiesPage() {
+export default function PracticePage() {
   return (
     <>
-      <PageHeader eyebrow="Practice" title="Practice, then apply">
+      <PageHeader title="Practice, then apply">
         Build skills in small steps, rehearse on a mock case, then look at example partner projects (synthetic). The
         fundamentals are part of bootcamp, and the mock case is your mini project.
       </PageHeader>
 
-      <nav aria-label="Activity types" className="mb-10 grid gap-4 md:grid-cols-3">
-        {[
-          ["#fundamentals", "1. Basic fundamentals", "Short exercises on core skills, during bootcamp"],
-          ["#mock-case", "2. Mock case", "Your mini project: a full practice project, end to end"],
-          ["#case-studies", "3. Case studies", "Synthetic examples of finished partner projects"],
-        ].map(([href, label, desc]) => (
-          <a key={href} href={href} className="rounded-2xl border bg-card p-5 hover:border-archetype hover:bg-archetype-soft">
-            <span className="block text-lg font-bold">{label}</span>
-            <span className="text-muted-foreground">{desc}</span>
-          </a>
-        ))}
+      <nav aria-label="Kinds of practice" className="mb-10">
+        <ol className="grid gap-4 md:grid-cols-3">
+          {[
+            ["#fundamentals", "Basic fundamentals", "Short exercises on core skills, during bootcamp"],
+            ["#mock-case", "Mock case", "Your mini project: a full practice project, end to end"],
+            ["#case-studies", "Case studies", "Synthetic examples of finished partner projects"],
+          ].map(([href, label, desc], i) => (
+            <li key={href}>
+              <a href={href} className="flex h-full flex-col rounded-2xl border bg-card p-5 hover:border-archetype hover:bg-archetype-soft">
+                <span className="type-label">
+                  {i + 1}. {label}
+                </span>
+                <span className="text-muted-foreground">{desc}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
       </nav>
 
       <section id="fundamentals" aria-labelledby="fundamentals-title" className="mb-14 scroll-mt-24">
-        <h2 id="fundamentals-title" className="mb-4 text-2xl font-bold">
+        <h2 id="fundamentals-title" className="mb-4 type-title-2">
           Basic fundamentals
         </h2>
         <ul className="grid gap-4 lg:grid-cols-2 2xl:grid-cols-3">
           {FUNDAMENTALS.map((f) => (
             <li key={f.title} className="rounded-xl border bg-card p-5">
-              <p className="text-sm text-muted-foreground">{f.time}</p>
-              <h3 className="text-lg font-bold">{f.title}</h3>
-              <p className="mt-1">{f.task}</p>
+              <h3 className="type-title-3">{f.title}</h3>
+              <p className="type-small text-muted-foreground">About {f.time}</p>
+              <p className="mt-2">{f.task}</p>
             </li>
           ))}
         </ul>
       </section>
 
-      <section id="mock-case" aria-labelledby="mock-title" className="mb-14 grid scroll-mt-24 gap-6 rounded-2xl bg-archetype-soft p-6 xl:grid-cols-[2fr_3fr]">
+      <section id="mock-case" aria-labelledby="mock-title" className="mb-14 grid scroll-mt-24 gap-6 rounded-2xl border bg-archetype-soft p-4 sm:p-6 xl:grid-cols-[2fr_3fr]">
         <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <h2 id="mock-title" className="text-2xl font-bold">
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 id="mock-title" className="type-title-2">
               Mock case
             </h2>
             <SyntheticBadge />
@@ -79,7 +85,7 @@ export default function ActivitiesPage() {
         </div>
         <ol className="space-y-3">
           {MOCK_CASE.steps.map((s, i) => (
-            <li key={s} className="flex gap-3 rounded-xl bg-card p-4">
+            <li key={s} className="flex gap-3 rounded-xl border bg-card p-4">
               <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-archetype font-bold text-on-archetype" aria-hidden="true">
                 {i + 1}
               </span>
@@ -90,7 +96,7 @@ export default function ActivitiesPage() {
       </section>
 
       <section id="case-studies" aria-labelledby="cases-title" className="scroll-mt-24">
-        <h2 id="cases-title" className="mb-4 text-2xl font-bold">
+        <h2 id="cases-title" className="mb-4 type-title-2">
           Case studies
         </h2>
         <ProblemBoard status={["completed"]} />

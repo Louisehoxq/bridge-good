@@ -4,6 +4,8 @@ import { accountFor, ROLE_INFO } from "@/lib/roles"
 import { useSession } from "@/lib/session"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { NavLink } from "@/components/nav-link"
+import { PeopleChip } from "@/components/studio/people-chip"
+import { RoleBadge, studioRoleFor } from "@/components/studio/role-badge"
 
 export function DashboardLink() {
   const session = useSession()
@@ -31,18 +33,12 @@ export function AccountMenu() {
   }
 
   const account = accountFor(session)
+  const role = studioRoleFor(session)
   return (
     <div data-archetype={session.role} className="hidden items-center gap-3 md:flex">
-      <p className="hidden text-right text-sm leading-tight lg:block">
-        <span className="block font-bold">{account.name}</span>
-        <span className="text-muted-foreground">Signed in as {account.label.toLowerCase()} (demo)</span>
-      </p>
-      <span
-        className="flex size-10 items-center justify-center rounded-full bg-archetype font-bold text-on-archetype"
-        aria-hidden="true"
-      >
-        {account.name.charAt(0)}
-      </span>
+      <span className="sr-only">Signed in as</span>
+      <PeopleChip name={account.name} role={role} detail="demo" className="hidden max-w-64 lg:flex" />
+      <RoleBadge role={role} className="lg:hidden" />
       <span className="hidden xl:inline-flex">
         <Link to="/login" className={buttonVariants({ variant: "ghost", size: "sm" })}>
           Switch role
@@ -70,15 +66,13 @@ export function SheetAccount() {
   }
   const account = accountFor(session)
   return (
-    <div data-archetype={session.role} className="space-y-3 rounded-xl bg-archetype-soft p-4">
-      <p className="leading-tight">
-        <span className="block font-bold">{account.name}</span>
-        <span className="text-sm text-muted-foreground">Signed in as {account.label.toLowerCase()} (demo)</span>
-      </p>
+    <div data-archetype={session.role} className="space-y-3 rounded-xl border bg-archetype-soft p-4">
+      <span className="sr-only">Signed in as</span>
+      <PeopleChip name={account.name} role={studioRoleFor(session)} detail="demo" />
       <Link to={ROLE_INFO[session.role].home} className={buttonVariants({ size: "sm", className: "w-full bg-archetype text-on-archetype hover:bg-archetype/90" })}>
         My area
       </Link>
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         <Link to="/login" className={buttonVariants({ variant: "outline", size: "sm" })}>
           Switch role
         </Link>

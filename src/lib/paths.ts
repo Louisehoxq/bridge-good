@@ -23,20 +23,20 @@ const pillarLinks = PILLARS.map((p) => ({ label: p.name, href: `/learn/pillars/$
 export const PATHS: Record<PathKey, { title: string; home: string; stages: PathStage[] }> = {
   student: {
     title: "Your apprentice path",
-    home: "/student/path",
+    home: "/student",
     stages: [
       {
         id: "bootcamp",
         title: "Bootcamp",
         summary: "Learn the five pillars and practice the basic skills behind each one.",
-        href: "/student/activities#fundamentals",
+        href: "/student/practice#fundamentals",
         learn: [{ label: "Apprentice track", href: "/learn/tracks/apprentices" }, ...pillarLinks],
       },
       {
         id: "mini-project",
         title: "Mini project",
         summary: "Run a mock case end to end, with peers playing community members, and submit it for a growth conversation.",
-        href: "/student/activities#mock-case",
+        href: "/student/practice#mock-case",
         learn: [{ label: "The 12 reflection prompts", href: "/learn/prompts" }],
       },
       {
@@ -57,7 +57,7 @@ export const PATHS: Record<PathKey, { title: string; home: string; stages: PathS
         id: "alumni",
         title: "Alumni",
         summary: "Two portfolio pieces with evidence behind them. Many alumni come back as mentors or start a chapter.",
-        href: "/student/path#alumni",
+        href: "/student#alumni",
         learn: [
           { label: "Mentor track", href: "/learn/tracks/mentors" },
           { label: "What mentoring asks of you", href: "/learn/guides/mentor-commitment" },
@@ -91,7 +91,7 @@ export const PATHS: Record<PathKey, { title: string; home: string; stages: PathS
         id: "mock-case",
         title: "Support a mock case",
         summary: "Play a community member once, then hold a growth conversation on their mini project.",
-        href: "/mentor/submissions",
+        href: "/mentor/conversations",
         learn: [{ label: "How to run a mock case", href: "/learn/guides/mock-case" }],
       },
       {
@@ -108,7 +108,7 @@ export const PATHS: Record<PathKey, { title: string; home: string; stages: PathS
         id: "final",
         title: "Final conversation",
         summary: "Join the retrospective, write growth feedback from each apprentice's self-assessment, and tell your chapter lead what you learned.",
-        href: "/mentor/submissions",
+        href: "/mentor/conversations",
         learn: [{ label: "The 12 reflection prompts", href: "/learn/prompts" }],
       },
     ],

@@ -299,7 +299,7 @@ export default function DesignPage() {
                 {ICON_NAMES.map((name) => (
                   <li key={name} className="flex items-center gap-2 type-small">
                     <Icon name={name} />
-                    <code className="truncate">{name}</code>
+                    <code className="min-w-0 [overflow-wrap:anywhere]">{name}</code>
                   </li>
                 ))}
               </ul>

@@ -16,7 +16,7 @@ export function loader() {
 export default function ReflectionPage({ loaderData }: Route.ComponentProps) {
   return (
     <>
-      <PageHeader eyebrow="AI Reflection Companion" title="Reflect on your work with questions, not grades">
+      <PageHeader title="Reflection companion (AI): questions about your work, not grades">
         Describe a mini project or capstone sprint. The companion is AI: it asks questions tied to BRIDGEGOOD&apos;s Design for Social Good
         pillars, and it never scores your work. You decide what to keep and what to share with your mentor.
       </PageHeader>

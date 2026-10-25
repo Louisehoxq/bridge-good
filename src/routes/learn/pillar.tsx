@@ -32,24 +32,24 @@ export default function PillarPage({ loaderData }: Route.ComponentProps) {
       <div className="grid gap-10 lg:grid-cols-[3fr_2fr]">
         <div className="space-y-10">
           <section aria-labelledby="meaning-title">
-            <h2 id="meaning-title" className="mb-3 text-2xl font-bold">
+            <h2 id="meaning-title" className="mb-3 type-title-2">
               What it means
             </h2>
-            <p className="text-lg">{pillar.meaning}</p>
+            <p className="type-body-lg">{pillar.meaning}</p>
           </section>
 
           <section aria-labelledby="example-title" className="rounded-2xl bg-muted p-6">
             <div className="mb-3 flex flex-wrap items-center gap-2">
-              <h2 id="example-title" className="text-2xl font-bold">
+              <h2 id="example-title" className="type-title-2">
                 What it looks like in a project
               </h2>
               <SyntheticBadge />
             </div>
-            <p className="text-lg">{pillar.inPractice}</p>
+            <p className="type-body-lg">{pillar.inPractice}</p>
           </section>
 
           <section aria-labelledby="prompts-title">
-            <h2 id="prompts-title" className="mb-2 text-2xl font-bold">
+            <h2 id="prompts-title" className="mb-2 type-title-2">
               Questions to ask yourself
             </h2>
             <p className="mb-4 text-muted-foreground">
@@ -65,15 +65,15 @@ export default function PillarPage({ loaderData }: Route.ComponentProps) {
 
         <aside className="space-y-6">
           <section aria-labelledby="outcome-title" className="rounded-2xl border-2 border-primary p-6">
-            <h2 id="outcome-title" className="text-xl font-bold">
+            <h2 id="outcome-title" className="type-title-3">
               Learning outcome
             </h2>
-            <p className="mt-2 text-lg">{pillar.learningOutcome}</p>
+            <p className="mt-2 type-body-lg">{pillar.learningOutcome}</p>
           </section>
 
           {modules.length > 0 && (
             <section aria-labelledby="modules-title" className="rounded-2xl border bg-card p-6">
-              <h2 id="modules-title" className="text-xl font-bold">
+              <h2 id="modules-title" className="type-title-3">
                 Where it&apos;s taught
               </h2>
               <ul className="mt-3 space-y-2">
@@ -82,7 +82,7 @@ export default function PillarPage({ loaderData }: Route.ComponentProps) {
                     <Link to={`/learn/tracks/${m.track.slug}`} className="underline underline-offset-4">
                       {m.title}
                     </Link>
-                    <span className="block text-sm text-muted-foreground">
+                    <span className="block text-muted-foreground">
                       {m.track.title} · {m.format}
                     </span>
                   </li>
@@ -93,7 +93,7 @@ export default function PillarPage({ loaderData }: Route.ComponentProps) {
 
           {rubricRows.length > 0 && (
             <section aria-labelledby="growth-title" className="rounded-2xl border bg-card p-6">
-              <h2 id="growth-title" className="text-xl font-bold">
+              <h2 id="growth-title" className="type-title-3">
                 In growth conversations
               </h2>
               <p className="mt-2 text-muted-foreground">Mentors use these questions when they talk with an apprentice about their work:</p>

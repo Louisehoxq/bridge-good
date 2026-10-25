@@ -6,8 +6,8 @@ import { useGrowthFeedback, useSubmissions } from "@/components/demo/journey-dat
 function Stat({ label, value, href, cta }: { label: string; value: string | number; href: string; cta: string }) {
   return (
     <div className="flex flex-col gap-1 rounded-2xl border bg-card p-5">
-      <p className="text-sm font-bold text-muted-foreground">{label}</p>
-      <p className="font-heading text-3xl font-bold">{value}</p>
+      <p className="font-semibold text-muted-foreground">{label}</p>
+      <p className="type-title-2">{value}</p>
       <Link to={href} className="mt-auto inline-flex min-h-12 items-center font-semibold text-archetype underline underline-offset-4">
         {cta}
       </Link>
@@ -46,7 +46,7 @@ export function MentorSnapshot() {
 
   return (
     <div className="grid gap-4 md:grid-cols-3">
-      <Stat label="Waiting for your reply" value={waiting} href="/mentor/submissions" cta="Open growth conversations" />
+      <Stat label="Waiting for your reply" value={waiting} href="/mentor/conversations" cta="Open growth conversations" />
       <Stat label="Office hours booked" value={booked} href="/mentor/mentee" cta="Manage slots" />
       <Stat label="Apprentice conversations" value={threads} href="/mentor/mentee" cta="Open messages" />
     </div>

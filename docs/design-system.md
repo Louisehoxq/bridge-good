@@ -9,12 +9,14 @@ BridgeGoodx uses **Bridge Studio**, specified in [`DESIGN.md`](../DESIGN.md): wa
 | What | File | Notes |
 | --- | --- | --- |
 | Color tokens | `src/app.css` (`:root` and the `prefers-color-scheme: dark` block) | The Bridge Studio tokens (`--paper`, `--surface`, `--ink`, `--action`, `--line-strong`, `--marker`, `--draft`…), exactly as in `DESIGN.md` §2. |
-| Semantic names | the same file | The shadcn names components already use are mapped onto Bridge Studio: `bg-background` → paper, `bg-card` → surface, `bg-muted` → surface-sunken, `text-muted-foreground` → ink-muted, `bg-primary`/`text-primary` → action, `border` → line, `border-input` → line-strong, `ring` → action, `destructive` → error. The old Material 3 names (`surface-container`, `on-surface-variant`, `outline`…) still resolve, but use the Bridge Studio names for new work. |
+| Semantic names | the same file | The shadcn names components already use are mapped onto Bridge Studio: `bg-background` → paper, `bg-card` → surface, `bg-muted` → surface-sunken, `text-muted-foreground` → ink-muted, `bg-primary`/`text-primary` → action, `border` → line, `border-input` → line-strong, `ring` → action, `destructive` → error. The old Material 3 names (`surface-container`, `on-surface-variant`, `outline`…) were removed in milestone 2.5, so they no longer resolve. |
 | Role accents | the same file | `--apprentice`, `--mentor`, `--ambassador`, `--partner`, each with a `-soft` tint. Set `data-archetype` to `student`/`apprentice`, `mentor`, `ambassador`/`chapter-lead`/`company-host`, `partner`/`community-partner` or `steward`, then use `text-archetype`, `bg-archetype-soft`, `border-archetype`, or `bg-archetype` with `text-on-archetype`. |
-| Type | `src/root.tsx` loads Atkinson Hyperlegible Next, Bricolage Grotesque and Atkinson Hyperlegible Mono from Google Fonts; `src/app.css` defines the scale | `type-display`, `type-title-1`, `type-title-2`, `type-title-3`, `type-body-lg`, `type-body`, `type-label`, `type-small`. `h1`–`h3` use Bricolage at 600. The older names (`headline-large`, `display-small`, `body-large`…) are remapped onto the new scale so existing pages pick it up. |
+| Type | `src/root.tsx` loads Atkinson Hyperlegible Next, Bricolage Grotesque and Atkinson Hyperlegible Mono from Google Fonts; `src/app.css` defines the scale | `type-display`, `type-title-1`, `type-title-2`, `type-title-3`, `type-body-lg`, `type-body`, `type-label`, `type-small`. `h1`–`h3` use Bricolage at 600. Page `h1` is `type-title-1`, section `h2` is `type-title-2`, card `h3` is `type-title-3`, and `type-display` is for the welcome hero only. The Material 3 scale names were removed. |
 | Icons | `src/components/icon.tsx` | Lucide outline icons at 1.75px stroke, sized at 1.25em of the text around them (20px beside body text; a text-size class on the icon changes it). The old Material Symbols names (`arrow_forward`, `description`…) map to Lucide icons, so call sites didn't change. Bridge Studio's own names (`sprout`, `sparkles`, `circle-alert`…) are there too. Add a name to `ICONS` before using it. |
 | UI primitives | `src/components/ui/*` (shadcn/ui on Base UI) | Button, input, textarea, label and sheet, restyled to `DESIGN.md` §7. |
-| Signature elements | `src/components/studio/*` | `Path`, `TeamPath`, `JourneyStepper`, `PeopleChip`, `RoleBadge`, `Highlight`, `PinnedNote`, `DraftFrame`, `DraftTextarea`, `FieldNote`. |
+| Signature elements | `src/components/studio/*` | `Path`, `TeamPath`, `JourneyStepper`, `PeopleChip`, `RoleBadge`, `Highlight`, `PinnedNote`, `DraftFrame`, `DraftTextarea`, `DraftFieldFrame`, `FieldNote`. |
+| Team views | `src/components/team/team-view.tsx` | `TeamView`, `teamFor` and `mentoringPair`: people chips joined by the gold path, used on the apprentice home, My mentee, My project and team, and Matching. |
+| Notices and form errors | `src/components/notice.tsx` | `Notice` (tint, icon and words), `ErrorSummary` (takes focus, links to fields) and `FieldMessage` (alert icon under a field). |
 | Dev page | `src/routes/design.tsx` (`/design`, `noindex`) | Every token, type size, primitive and signature element. All people on it are labelled synthetic. |
 | Logo | `src/components/wordmark.tsx` (text placeholder) | Use the official SVGs from bridgegood.com/design in `public/brand/`. Don't redraw, recolor or add effects. |
 
@@ -45,6 +47,8 @@ BridgeGoodx uses **Bridge Studio**, specified in [`DESIGN.md`](../DESIGN.md): wa
 | `FieldNote` | A pinned note with `map-pin` and "Local adaptation from …". Place it beneath BRIDGEGOOD's official wording. |
 | `DraftFrame` | A 1.5px dashed violet frame labelled "AI draft · you decide" with `sparkles`. Pass `edited` once a person edits or accepts it, and it turns solid with "Edited by you". |
 | `DraftTextarea` | A labelled textarea holding an AI draft. It turns solid on its own once the text differs from the draft, and the status is linked with `aria-describedby`. |
+| `DraftFieldFrame` | The draft frame for a field whose value lives elsewhere (the scoping brief, the companion's questions). Status `ai`, `edited` ("Edited by you") or `accepted` ("Accepted by you"). Link the field to `statusId`. |
+| `NativeSelect` | `src/components/ui/select.tsx`: a native `<select>` styled like the text field. |
 
 ## Layout: desktop-first
 

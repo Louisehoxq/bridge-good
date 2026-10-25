@@ -19,7 +19,7 @@ export default function AmbassadorHome() {
 
   return (
     <>
-      <PageHeader eyebrow={`${account.label} area`} title={`Welcome back, ${account.name.split(" ")[0]}`}>
+      <PageHeader title={`Welcome back, ${account.name.split(" ")[0]}`}>
         {account.detail}.{" "}
         {kind === "chapter-lead"
           ? "Here's your partner pipeline, who wants to work on what, and where each project is."
@@ -30,7 +30,7 @@ export default function AmbassadorHome() {
         {kind === "chapter-lead" ? <ChapterLeadOverview /> : <CompanyHostOverview />}
       </div>
       <section aria-labelledby="loop-title" className="mt-12">
-        <h2 id="loop-title" className="mb-6 text-2xl font-bold">
+        <h2 id="loop-title" className="mb-6 type-title-2">
           Where you fit
         </h2>
         <ImpactLoop current="ambassador" />
@@ -53,7 +53,7 @@ function ChapterLeadOverview() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-archetype-soft p-5">
-        <p className="text-lg">
+        <p className="type-body-lg">
           <span className="font-bold">{unmatched}</span> {unmatched === 1 ? "note" : "notes"} from apprentices about briefs they&apos;d like
           to work on.
         </p>
@@ -65,13 +65,13 @@ function ChapterLeadOverview() {
         {stats.map((s) => (
           <li key={s.label}>
             <Link to={s.href} className="flex flex-col gap-1 rounded-2xl border bg-card p-5 hover:border-archetype hover:bg-archetype-soft">
-              <span className="text-sm font-bold text-muted-foreground">{s.label}</span>
-              <span className="font-heading text-3xl font-bold">{s.value}</span>
+              <span className="type-small font-semibold text-muted-foreground">{s.label}</span>
+              <span className="type-title-2">{s.value}</span>
             </Link>
           </li>
         ))}
       </ul>
-      <p className="text-sm text-muted-foreground">Counts come from synthetic example projects.</p>
+      <p className="text-muted-foreground">Counts come from synthetic example projects.</p>
     </div>
   )
 }
@@ -81,7 +81,7 @@ function CompanyHostOverview() {
     <div className="space-y-8">
       <div className="grid gap-4 lg:grid-cols-2">
         <section aria-labelledby="give-title" className="rounded-2xl border bg-card p-5">
-          <h2 id="give-title" className="text-xl font-bold">
+          <h2 id="give-title" className="type-title-3">
             What your company gives
           </h2>
           <ul className="mt-3 list-disc space-y-1 pl-5">
@@ -91,7 +91,7 @@ function CompanyHostOverview() {
           </ul>
         </section>
         <section aria-labelledby="line-title" className="rounded-2xl border-2 border-archetype p-5">
-          <h2 id="line-title" className="text-xl font-bold">
+          <h2 id="line-title" className="type-title-3">
             Where the line is
           </h2>
           <p className="mt-2">
@@ -104,7 +104,7 @@ function CompanyHostOverview() {
         </section>
       </div>
       <section aria-labelledby="sponsor-title">
-        <h2 id="sponsor-title" className="mb-1 text-2xl font-bold">
+        <h2 id="sponsor-title" className="mb-1 type-title-2">
           Projects that need a sponsor
         </h2>
         <p className="mb-4 text-muted-foreground">Chapters have already taken these on. Sponsoring one covers costs; it doesn&apos;t change the brief.</p>

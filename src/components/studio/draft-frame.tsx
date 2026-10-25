@@ -1,5 +1,5 @@
 import { useId, useState, type ComponentProps, type ReactNode } from "react"
-import { Icon } from "@/components/icon"
+import { Icon, type IconName } from "@/components/icon"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
@@ -7,10 +7,22 @@ import { cn } from "@/lib/utils"
 const frame = (edited: boolean) =>
   cn("rounded-[0.75rem] border-[1.5px] bg-card", edited ? "border-solid border-input" : "border-dashed border-draft")
 
-function DraftLabel({ edited, label, editedLabel, id }: { edited: boolean; label: ReactNode; editedLabel: ReactNode; id?: string }) {
+function DraftLabel({
+  edited,
+  label,
+  editedLabel,
+  editedIcon = "pencil",
+  id,
+}: {
+  edited: boolean
+  label: ReactNode
+  editedLabel: ReactNode
+  editedIcon?: IconName
+  id?: string
+}) {
   return (
     <p id={id} className={cn("inline-flex items-center gap-1.5 type-small font-semibold", edited ? "text-muted-foreground" : "text-draft")}>
-      <Icon name={edited ? "pencil" : "sparkles"} className="text-base" />
+      <Icon name={edited ? editedIcon : "sparkles"} className="text-base" />
       {edited ? editedLabel : label}
     </p>
   )
@@ -77,5 +89,30 @@ export function DraftTextarea({
       </div>
       <DraftLabel id={`${fieldId}-draft`} edited={edited} label="AI draft · edit anything" editedLabel="Edited by you" />
     </div>
+  )
+}
+
+/** Where a controlled field's text came from: the AI, or a person who edited or accepted the AI's text. */
+export type DraftStatus = "ai" | "edited" | "accepted"
+
+/**
+ * The draft frame for a field whose value lives outside it (for example, a brief the AI keeps updating while you
+ * chat). Put the field inside, with no border of its own, and point its aria-describedby at `statusId`.
+ */
+export function DraftFieldFrame({ status, statusId, children }: { status: DraftStatus; statusId: string; children: ReactNode }) {
+  const edited = status !== "ai"
+  return (
+    <>
+      <div data-draft={edited ? "edited" : "ai"} className={cn(frame(edited), "[&_[data-slot]]:border-0 [&_[data-slot]]:bg-transparent")}>
+        {children}
+      </div>
+      <DraftLabel
+        id={statusId}
+        edited={edited}
+        label="AI draft · edit or accept it"
+        editedLabel={status === "accepted" ? "Accepted by you" : "Edited by you"}
+        editedIcon={status === "accepted" ? "check" : "pencil"}
+      />
+    </>
   )
 }

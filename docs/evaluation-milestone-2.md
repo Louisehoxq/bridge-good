@@ -24,7 +24,7 @@ This reviews `main` at `05b55a0` (PR #4): after the React Router migration, the 
 | `CLAUDE.md` line 12 | Says tokens are "BRIDGEGOOD Design System (Material 3)" and icons are "Material Symbols". Both were replaced by Bridge Studio and Lucide. Agents read this file first. |
 | `README.md` lines 73 and 87 | Same Material 3, Google Sans and Material Symbols wording. |
 | `DESIGN.md` status line | Says "chosen direction, not yet built". It's built. |
-| `docs/page-copy-changes.md` | Paths still point at `src/app/...` (Next.js). Check whether the restructure applied every item. |
+| `docs/page-copy-changes.md` | Paths still point at `src/app/...` (Next.js). Check whether the restructure applied every item. (Milestone 2.5: every item confirmed applied, and the file deleted.) |
 | `docs/ai-evaluator.md` | Mixes `src/app/` paths with a note that they map to `src/routes/`. |
 
 ## 2. Does the app follow the design system?

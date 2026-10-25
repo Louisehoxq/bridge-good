@@ -29,11 +29,11 @@ function ColorField({ id, label, value, onChange }: { id: string; label: string;
           // The color input only takes #rrggbb, so expand a 3-digit hex first.
           value={rgb ? `#${rgb.map((v) => v.toString(16).padStart(2, "0")).join("")}` : "#000000"}
           onChange={(e) => onChange(e.target.value)}
-          className="size-12 shrink-0 cursor-pointer rounded-xs border border-input bg-transparent p-1"
+          className="size-12 shrink-0 cursor-pointer rounded-md border-[1.5px] border-input bg-card p-1"
         />
       </div>
       {!valid && (
-        <p id={`${id}-error`} className="text-sm font-semibold text-destructive">
+        <p id={`${id}-error`} className="font-semibold text-destructive">
           Use a hex color like #1A2B3C.
         </p>
       )}
@@ -59,10 +59,10 @@ export function ContrastChecker() {
       <div className="flex items-start gap-3">
         <Contrast aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-primary" />
         <div>
-          <h2 id={`${id}-title`} className="text-lg font-bold">
+          <h2 id={`${id}-title`} className="type-title-3">
             Contrast checker
           </h2>
-          <p className="text-sm text-muted-foreground">Automated check, not AI. Enter the real colors from your design file.</p>
+          <p className="text-muted-foreground">Automated check, not AI. Enter the real colors from your design file.</p>
         </div>
       </div>
       <div className="grid gap-3">
@@ -71,10 +71,10 @@ export function ContrastChecker() {
       </div>
       {result && fgRgb && bgRgb && (
         <div className="space-y-3">
-          <p className="rounded-lg border p-3 text-lg font-bold" style={{ color: swatch(fgRgb), backgroundColor: swatch(bgRgb) }}>
+          <p className="rounded-lg border p-3 type-body-lg font-bold" style={{ color: swatch(fgRgb), backgroundColor: swatch(bgRgb) }}>
             Sample text, {formatRatio(result.ratio)}
           </p>
-          <ul className="space-y-1 text-sm">
+          <ul className="space-y-1">
             {result.checks.map((c) => (
               <li key={c.label} className="flex items-start gap-2">
                 {c.passes ? (
@@ -91,7 +91,7 @@ export function ContrastChecker() {
           </ul>
         </div>
       )}
-      <p className="text-sm text-muted-foreground">
+      <p className="text-muted-foreground">
         Automated checks find only some accessibility problems. Test with a keyboard, a screen reader and zoom, and with disabled
         people.
       </p>

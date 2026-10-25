@@ -14,7 +14,7 @@ export default function AmbassadorPlaybook() {
 
   return (
     <>
-      <PageHeader eyebrow="Playbook" title={`Your ${label} playbook`}>
+      <PageHeader title={`Your ${label} playbook`}>
         The stages of carrying the philosophy forward as a {label}. The guides and tracks live in the public library, so
         partners and mentors can read the same pages. This is part of the proposed chapter model (concept).
       </PageHeader>
@@ -22,7 +22,7 @@ export default function AmbassadorPlaybook() {
         <PathStepper pathKey={kind} />
         <aside className="h-fit space-y-4">
           <section aria-labelledby="keep-title" className="rounded-2xl border-2 border-archetype p-5">
-            <h2 id="keep-title" className="text-lg font-bold">
+            <h2 id="keep-title" className="type-title-3">
               Adapt, don&apos;t copy
             </h2>
             <p className="mt-1">
@@ -34,7 +34,7 @@ export default function AmbassadorPlaybook() {
             </Link>
           </section>
           <section aria-labelledby="track-title" className="rounded-2xl border bg-card p-5">
-            <h2 id="track-title" className="text-lg font-bold">
+            <h2 id="track-title" className="type-title-3">
               Your track in the library
             </h2>
             <Link
@@ -47,7 +47,7 @@ export default function AmbassadorPlaybook() {
         </aside>
       </div>
       <section aria-labelledby="principles-title" className="mt-14">
-        <h2 id="principles-title" className="mb-6 text-2xl font-bold">
+        <h2 id="principles-title" className="mb-6 type-title-2">
           How BRIDGEGOOD works with ambassadors
         </h2>
         <PrinciplesInPractice role="ambassador" />

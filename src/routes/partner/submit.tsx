@@ -13,7 +13,7 @@ export function loader() {
 export default function SubmitPage({ loaderData }: Route.ComponentProps) {
   return (
     <>
-      <PageHeader eyebrow="Submit a problem" title="Shape your problem into a project brief">
+      <PageHeader title="Shape your problem into a project brief">
         Describe what isn&apos;t working, in plain language. The assistant asks questions and drafts the brief. You stay in
         control of every word.
       </PageHeader>

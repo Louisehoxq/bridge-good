@@ -8,12 +8,12 @@ export const meta = () => pageMeta("Outreach & partner toolkits")
 export default function AmbassadorToolkits() {
   return (
     <>
-      <PageHeader eyebrow="Outreach & partner toolkits" title="Tools to grow your chapter">
+      <PageHeader title="Tools to grow your chapter">
         Templates and guides for working with problem owners and partner organizations. Downloads are placeholders for
         now.
       </PageHeader>
       <section aria-labelledby="po-title" className="mb-14">
-        <h2 id="po-title" className="text-2xl font-bold">
+        <h2 id="po-title" className="type-title-2">
           Problem owner toolkit
         </h2>
         <p className="mt-1 mb-6 text-muted-foreground">
@@ -22,7 +22,7 @@ export default function AmbassadorToolkits() {
         <ToolkitList sections={PROBLEM_OWNER_TOOLKIT} />
       </section>
       <section aria-labelledby="org-title">
-        <h2 id="org-title" className="text-2xl font-bold">
+        <h2 id="org-title" className="type-title-2">
           Organization toolkit
         </h2>
         <p className="mt-1 mb-6 text-muted-foreground">

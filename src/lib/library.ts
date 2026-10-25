@@ -70,6 +70,12 @@ export const LIBRARY: LibraryEntry[] = [
     section: "framework",
     summary: "Questions to ask at the moments decisions get made. Answered in your own words, never scored.",
   },
+  {
+    href: "/learn/terms",
+    title: "Terms of reference",
+    section: "framework",
+    summary: "What words like inclusion, access and social good mean here, and how this approach differs from others.",
+  },
   ...TRACKS.map((t) => ({ href: `/learn/tracks/${t.slug}`, title: t.title, section: "tracks" as const, summary: TRAINING[t.audience].tagline })),
   ...GUIDE_SLUGS.map((g) => ({ href: `/learn/guides/${g}`, title: GUIDE_TITLES[g].title, section: "guides" as const, summary: GUIDE_TITLES[g].summary })),
   { href: "/learn/self-check", title: SELF_CHECK.title, section: "joining", summary: SELF_CHECK.intro },

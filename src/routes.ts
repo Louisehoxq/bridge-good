@@ -22,15 +22,16 @@ export default [
     index("routes/learn/index.tsx"),
     route("pillars/:pillarId", "routes/learn/pillar.tsx"),
     route("prompts", "routes/learn/prompts.tsx"),
+    route("terms", "routes/learn/terms.tsx"),
     route("tracks/:slug", "routes/learn/track.tsx"),
     route("guides/:slug", "routes/learn/guide.tsx"),
     route("self-check", "routes/learn/self-check.tsx"),
   ]),
 
-  area("student", ["path", "activities", "projects", "submissions", "reflection", "mentor", "community"]),
-  area("mentor", ["prepare", "mentee", "submissions"]),
+  area("student", ["practice", "projects", "submissions", "reflection", "mentor", "community"]),
+  area("mentor", ["prepare", "mentee", "conversations"]),
   area("ambassador", ["playbook", "matching", "projects", "toolkits"]),
-  area("partner", ["submit", "project", "gallery", "toolkit", "legal"]),
+  area("partner", ["submit", "project", "gallery", "toolkit"]),
 
   // Old URLs: v1 role pages, /training/*, and role pages merged into others.
   ...REDIRECT_PATHS.map((path) => route(path, "routes/legacy-redirect.ts", { id: `redirect-${path.replace(/[^a-z]+/g, "-")}` })),

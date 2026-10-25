@@ -42,14 +42,14 @@ function Limits({ getHelp, limits }: { getHelp?: string; limits: string }) {
     <div className="mt-10 grid gap-4 lg:grid-cols-2">
       {getHelp && (
         <section aria-labelledby="help-title" className="rounded-2xl border-2 border-primary p-5">
-          <h2 id="help-title" className="text-lg font-bold">
+          <h2 id="help-title" className="type-title-3">
             When to bring in BRIDGEGOOD staff
           </h2>
           <p className="mt-1">{getHelp}</p>
         </section>
       )}
       <section aria-labelledby="limits-title" className="rounded-2xl bg-muted p-5">
-        <h2 id="limits-title" className="text-lg font-bold">
+        <h2 id="limits-title" className="type-title-3">
           What this guide can&apos;t do
         </h2>
         <p className="mt-1">{limits}</p>
@@ -69,7 +69,7 @@ function HowTo({ guide }: { guide: HowToGuide }) {
               {i + 1}
             </span>
             <div className="min-w-0 space-y-3">
-              <h2 className="text-xl font-bold">{step.title}</h2>
+              <h2 className="type-title-3">{step.title}</h2>
               <div className="grid gap-4 lg:grid-cols-2">
                 <p>
                   <span className="block font-bold">What to do</span>
@@ -82,7 +82,7 @@ function HowTo({ guide }: { guide: HowToGuide }) {
               </div>
               {step.promptIds && (
                 <div>
-                  <p className="mb-2 text-sm font-bold">Questions to bring in</p>
+                  <p className="mb-2 font-bold">Questions to bring in</p>
                   <PromptList prompts={step.promptIds} />
                 </div>
               )}
@@ -104,7 +104,7 @@ function AiGuide() {
         {g.audience}
       </p>
       <section aria-labelledby="rules-title" className="mb-10 rounded-2xl border-2 border-primary p-5">
-        <h2 id="rules-title" className="text-xl font-bold">
+        <h2 id="rules-title" className="type-title-3">
           Three ground rules
         </h2>
         <ul className="mt-2 list-disc space-y-1 pl-5">
@@ -116,8 +116,8 @@ function AiGuide() {
       <ol className="space-y-4">
         {g.sections.map((s, i) => (
           <li key={s.title} className="rounded-2xl border bg-card p-5">
-            <p className="text-sm font-bold text-muted-foreground">Session {i + 1}</p>
-            <h2 className="text-xl font-bold">{s.title}</h2>
+            <p className="type-small font-semibold text-muted-foreground">Session {i + 1}</p>
+            <h2 className="type-title-3">{s.title}</h2>
             <div className="mt-3 grid gap-4 lg:grid-cols-2">
               <p>
                 <span className="block font-bold">Talk about</span>
@@ -161,7 +161,7 @@ function Commitment() {
         ))}
       </ul>
       <section aria-labelledby="offers-title" className="mt-10 rounded-2xl border-2 border-primary p-5">
-        <h2 id="offers-title" className="text-lg font-bold">
+        <h2 id="offers-title" className="type-title-3">
           What BRIDGEGOOD offers mentors
         </h2>
         <p className="mt-1">{c.bridgegoodOffers}</p>
@@ -177,13 +177,13 @@ function Vetting() {
       <dl className="grid gap-4 lg:grid-cols-2">
         {v.criteria.map((c) => (
           <div key={c.name} className="rounded-2xl border bg-card p-5">
-            <dt className="text-lg font-bold">{c.name}</dt>
+            <dt className="type-body-lg font-semibold">{c.name}</dt>
             <dd className="mt-1">{c.lookFor}</dd>
           </div>
         ))}
       </dl>
       <section aria-labelledby="never-title" className="mt-10 rounded-2xl border-2 border-primary p-5">
-        <h2 id="never-title" className="text-lg font-bold">
+        <h2 id="never-title" className="type-title-3">
           What vetting never asks
         </h2>
         <p className="mt-1">{v.neverAsked}</p>
@@ -198,7 +198,7 @@ function Adapt() {
       <div className="grid gap-4 lg:grid-cols-2">
         {[ADAPTATION.core, ADAPTATION.local].map((block, i) => (
           <section key={block.title} aria-labelledby={`adapt-${i}`} className={i === 0 ? "rounded-2xl border-2 border-primary p-5" : "rounded-2xl border bg-card p-5"}>
-            <h2 id={`adapt-${i}`} className="text-xl font-bold">
+            <h2 id={`adapt-${i}`} className="type-title-3">
               {block.title}
             </h2>
             <p className="mt-1 text-muted-foreground">{block.intro}</p>
@@ -211,14 +211,14 @@ function Adapt() {
         ))}
       </div>
       <section aria-labelledby="loop-title" className="mt-10">
-        <h2 id="loop-title" className="mb-4 text-2xl font-bold">
+        <h2 id="loop-title" className="mb-4 type-title-2">
           {ADAPTATION.loop.title}
         </h2>
         <ol className="grid gap-4 lg:grid-cols-3">
           {ADAPTATION.loop.steps.map((s, i) => (
             <li key={s.title} className="rounded-2xl border bg-card p-5">
-              <p className="text-sm font-bold text-muted-foreground">Step {i + 1}</p>
-              <h3 className="text-lg font-bold">{s.title}</h3>
+              <p className="type-small font-semibold text-muted-foreground">Step {i + 1}</p>
+              <h3 className="type-title-3">{s.title}</h3>
               <p className="mt-1">{s.body}</p>
             </li>
           ))}
@@ -246,17 +246,17 @@ function Language() {
         ))}
       </dl>
       <section aria-labelledby="disability-title" className="mt-10 rounded-2xl border-2 border-primary p-5">
-        <h2 id="disability-title" className="text-xl font-bold">
+        <h2 id="disability-title" className="type-title-3">
           Disability language
         </h2>
         <p className="mt-1">{DISABILITY_CONVENTION.note}</p>
-        <p className="mt-2 text-sm">
+        <p className="mt-2">
           <span className="font-bold">For example: </span>
           {DISABILITY_CONVENTION.examples.join(", ")}
         </p>
       </section>
       <section aria-labelledby="terms-title" className="mt-10">
-        <h2 id="terms-title" className="mb-4 text-2xl font-bold">
+        <h2 id="terms-title" className="mb-4 type-title-2">
           Words to avoid, and what to say instead
         </h2>
         <div className="overflow-x-auto rounded-xl border" role="region" aria-label="Table: words to avoid and what to say instead" tabIndex={0}>
