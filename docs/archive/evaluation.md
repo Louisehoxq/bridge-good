@@ -1,8 +1,46 @@
 # Evaluation: where BridgeGoodx stands (2026-10-24)
 
-> **Superseded in part:** this reviewed the app before milestone 2. See [evaluation-milestone-2.md](evaluation-milestone-2.md) for the current state. The team also decided on **desktop-first** layouts for every role (design work happens on a laptop), so the phone-first notes below are kept as a check (phone widths must still work), not a layout target.
+> **Archived (October 2026).** This reviewed the app after PR #1, before milestone 2. It's kept for its reasoning. What shipped is in [CHANGELOG.md](../../CHANGELOG.md), and what's open is in [BACKLOG.md](../BACKLOG.md). The later review is [evaluation-milestone-2.md](evaluation-milestone-2.md). The team decided on **desktop-first** layouts for every role (design work happens on a laptop), so the phone-first notes below stay as a check (phone widths must still reflow, tested since #5), not a layout target.
 
-Five read-only reviews of the app at `434deaf`, plus two companion docs: [social-good.md](social-good.md) (what the terms mean in practice) and [ai-evaluator.md](ai-evaluator.md) (one evaluator, four uses).
+## Status of the recommendations
+
+| Recommendation | Section | Status |
+|---|---|---|
+| Put the team's framework (pillars, prompts, outcomes) in the app as the spine | Headline 1, §1 | Implemented (PR #3) |
+| Reflection prompts at decision points | Headline 2, pivot 1 | Implemented (PR #3 content, PR #4 in the flows) |
+| Steward queue, adaptations, versioned framework, public changelog | Headline 3, pivot 2 | Implemented (PR #7) |
+| Pages for missing journey stages: choose a project, my mentee, matching, milestones, my project | §1 | Implemented (PR #4) |
+| Certification and portfolio stage | §1 | Portfolio in backlog ([resilience kit slice](../BACKLOG.md#next)); certification waits on BRIDGEGOOD ([open questions](../BACKLOG.md#needs-bridgegood)) |
+| One public training layer; role areas show progress | §1 | Implemented (PR #4, the `/learn` library) |
+| Welcome page routes by role; terms move to the library | §1 | Implemented (PR #6) |
+| Sidebars grouped into "Your path" and "Your people"; merge messages and office hours into "My mentor" | §1 | Implemented (PR #4) |
+| Wayfinding: stepper, "what's next", breadcrumbs | §1 | Implemented (PR #4) |
+| Links between related records (submission ↔ brief ↔ mentor) | §1 | In backlog ([Later 10](../BACKLOG.md#later)) |
+| Eligibility as goals in the student's own words, no demographic fields | §2 | Implemented (PR #3, the self-check stores nothing) |
+| Phone-first student and partner flows | §2 | Decided against: desktop-first, with reflow checked on every page (PR #5, PR #6) |
+| Office hours beyond one time zone; cost and language | §2 | In backlog ([Later 6](../BACKLOG.md#later)) |
+| Split the ambassador into chapter lead and company host | §2 | Implemented (PR #4) |
+| Mentor review as a growth conversation; mentor seeded as an alum | §2 | Implemented (PR #4) |
+| Show the student → alum → mentor path | §2 | In backlog ([Later 9](../BACKLOG.md#later)) |
+| Rename to "Community partner"; add "Your path"; a BRIDGEGOOD review view | §2 | Implemented (PR #4; review view PR #7) |
+| Community members in the partner flow (consent and feedback) | §2 | In backlog ([Later 2](../BACKLOG.md#later)) |
+| Practice moments instead of course tracks | Pivot 3 | In backlog ([Next 4](../BACKLOG.md#next)) |
+| "Carry it forward" kit | Pivot 4 | In backlog ([Next 5](../BACKLOG.md#next)) |
+| Minimal AI Reflection Companion | Pivot 5 | Implemented (PR #4) |
+| Web app issues: brief list fields, `/api/scope` validation and caps, image size, focus outline, live regions, focus management, "Start another brief", AI on/off at request time, bad demo data, security headers, checked links | §4 | Implemented (PR #3) |
+| Rate limiting on the AI routes | §4 | In backlog ([Later 8](../BACKLOG.md#later)) |
+| Mobile breakages (overflow, sideways scrolling) | §4 | Implemented (PR #5 and PR #6: every page passes 320px reflow) |
+| US spelling, real program facts, slogans cut, inclusive language, synthetic labels, missing guides | §5 | Implemented (PR #3) |
+| Jargon above grade 8 | §5 | In backlog ([Later 5](../BACKLOG.md#later)) |
+| Placeholder mission statement | §5 | Waits on BRIDGEGOOD ([framework wording](../BACKLOG.md#needs-bridgegood)) |
+| Ambassador adaptation feedback form | §5 | Implemented (PR #7) |
+| Align the stack with BRIDGEGOOD's (React Router, Vite, TanStack Query) | §6 | Implemented (PR #3) |
+| 48px targets, dark mode | §6 | Implemented (PR #3 dark mode, PR #4 targets) |
+| BridgeGoodx's own visual style | §6 | Built (PR #4); approval waits on BRIDGEGOOD ([visual style](../BACKLOG.md#needs-bridgegood)) |
+
+---
+
+Five read-only reviews of the app at `434deaf`, plus two companion docs: [social-good.md](../social-good.md) (what the terms mean in practice) and [ai-evaluator.md](../ai-evaluator.md) (one evaluator, four uses).
 
 ## The headline
 
@@ -85,7 +123,7 @@ Each role is clearly defined by its *job in the app*, but thinly defined as *peo
 2. **Philosophy commons:** canonical wording with a version, a "why we believe this" for each principle, synthetic chapter field notes, and "propose a change / share an adaptation" → steward queue → public changelog.
 3. **Practice moments instead of course tracks:** short synthetic scenarios from the brief's hard topics (a critique gets heated, a partner wants to skip interviews), each with BRIDGEGOOD's reasoning shown.
 4. **"Carry it forward" kit** for outside teachers and community leaders: run one critique session with the prompts, attribution built in, and one click to tell BRIDGEGOOD what you changed.
-5. **A minimal AI Reflection Companion:** it asks the prompts about *your* submission, never scores, and passes conversation starters to the mentor. See [ai-evaluator.md](ai-evaluator.md).
+5. **A minimal AI Reflection Companion:** it asks the prompts about *your* submission, never scores, and passes conversation starters to the mentor. See [ai-evaluator.md](../ai-evaluator.md).
 
 ## 4. Web application issues
 

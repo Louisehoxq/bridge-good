@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bridge Studio examples</title>
-<meta name="description" content="Example UI for Bridge Studio, the BridgeGoodx design system. All people and projects are synthetic examples.">
+<title>Bridge Studio showcase</title>
+<meta name="description" content="Static showcase of Bridge Studio, the BridgeGoodx design system, as built in the app. All people and projects are synthetic examples.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600&display=swap">
@@ -160,7 +160,7 @@ textarea.input { min-height: 96px; resize: vertical; }
 
 .shell { display: grid; grid-template-columns: 16rem 1fr; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--paper); }
 .side { background: var(--surface-sunken); padding: 24px 16px; }
-.side h3 { font-family: var(--font-body); font-size: .875rem; color: var(--ink-muted); margin: 16px 12px 6px; }
+.side .side-h { font-family: var(--font-body); font-size: .875rem; color: var(--ink-muted); margin: 16px 12px 6px; }
 .side a { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 12px; border-radius: 10px; border-left: 4px solid transparent; color: var(--ink); text-decoration: none; }
 .side a[aria-current="page"] { border-left-color: var(--role, var(--action)); background: var(--surface); font-weight: 700; }
 .main { padding: 32px; min-width: 0; }
@@ -188,6 +188,38 @@ textarea.input { min-height: 96px; resize: vertical; }
   .two { grid-template-columns: 1fr !important; }
 }
 @media (prefers-reduced-motion: reduce) { .note, .note.right { transform: none; } * { transition: none !important; } }
+.card-h { font-family: var(--font-head); font-weight: 600; font-size: 1.375rem; line-height: 1.875rem; margin: 0; }
+.side .side-h { font-weight: 600; margin: 16px 12px 6px; }
+
+/* Added for the refreshed showcase (steward, feedback loop, type scale). */
+.a-steward { background: var(--ink); color: var(--paper) !important; }
+.t-new { background: var(--surface-sunken); color: var(--ink); }
+.t-talk { background: var(--marker); color: var(--ink); }
+.t-local { background: var(--ambassador-soft); color: var(--ambassador); }
+code { font-family: "Atkinson Hyperlegible Mono", ui-monospace, Menlo, monospace; font-size: .9375em; }
+.swatch code { display: block; font-size: .875rem; }
+table.scale { width: 100%; border-collapse: collapse; }
+table.scale th, table.scale td { text-align: left; padding: 12px; border-bottom: 1px solid var(--line); vertical-align: baseline; }
+table.scale th { background: var(--surface-sunken); font-weight: 600; }
+table.scale td:first-child { white-space: nowrap; }
+.scale-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); }
+.field-note .note-head .icon { color: var(--ambassador); }
+.official { border-left: 4px solid var(--gold); padding: 4px 0 4px 16px; }
+fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+legend { font-weight: 600; padding: 0; margin-bottom: 8px; }
+.choice { display: flex; gap: 12px; align-items: flex-start; min-height: 48px; padding: 12px; border: 1.5px solid var(--line-strong); border-radius: 10px; background: var(--surface); }
+.choice + .choice { margin-top: 8px; }
+.choice input { width: 24px; height: 24px; margin: 0; accent-color: var(--action); flex-shrink: 0; }
+.choice .hint { display: block; color: var(--ink-muted); }
+.err-summary { background: var(--error-soft); border-radius: 12px; padding: 16px; }
+.err-summary h4 { margin: 0 0 6px; display: flex; gap: 8px; align-items: center; color: var(--error); font-size: 1rem; }
+.err-summary ul { margin: 0; padding-left: 1.25rem; }
+.people { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 16px 24px; }
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.filters .btn { min-height: 40px; }
+.filters .btn[aria-pressed="true"] { background: var(--surface-sunken); border-color: var(--action); }
+@media (max-width: 640px) { .compare { grid-template-columns: 1fr; } .team { grid-template-columns: 1fr; } .team svg.path { display: none; } .queue li { grid-template-columns: 1fr; } .main { padding: 20px; } }
 </style>
 </head>
 <body>
@@ -196,7 +228,7 @@ textarea.input { min-height: 96px; resize: vertical; }
 <header class="topbar">
   <div class="wrap">
     <a class="logo" href="#main">BRIDGEGOOD<span aria-hidden="true">x</span><span class="sr-only"> BridgeGoodx</span></a>
-    <span class="tag t-synthetic">Design examples · all people are synthetic</span>
+    <span class="tag t-synthetic">Design showcase · all people are synthetic</span>
     <nav aria-label="Theme">
       <button class="btn btn-quiet" type="button" data-set-theme="light" aria-pressed="false">Light</button>
       <button class="btn btn-quiet" type="button" data-set-theme="dark" aria-pressed="false">Dark</button>
@@ -211,49 +243,65 @@ textarea.input { min-height: 96px; resize: vertical; }
   <div class="stack">
     <p class="tag t-steward"><i data-lucide="scroll-text" class="icon" aria-hidden="true"></i>Bridge Studio</p>
     <h1 id="intro-title" style="font-size:3rem;line-height:3.5rem">Design that shows who&rsquo;s connected and what&rsquo;s still a draft</h1>
-    <p class="lead muted">Example UI for the BridgeGoodx design system. The spec is in <code>DESIGN.md</code>. Body text meets AAA contrast, every role carries an icon and a label, and AI output always looks like a draft.</p>
+    <p class="lead muted">A static showcase of Bridge Studio, the BridgeGoodx design system, as it&rsquo;s built in the app. It opens straight from the repository, with no server or login. The spec is <code>DESIGN.md</code>, and the running app&rsquo;s <code>/design</code> page shows the real components.</p>
+    <p class="lead muted">Body text meets AAA contrast. Every role carries an icon and a label. AI output always looks like a draft until a person edits or accepts it. The Design for Social Good philosophy belongs to BRIDGEGOOD, and a BRIDGEGOOD steward decides what changes in it.</p>
   </div>
 </section>
 
 <section class="section" aria-labelledby="color-title">
   <div class="section-head">
     <h2 id="color-title">Color</h2>
-    <p class="muted">Ratios are for the light theme on paper. Switch themes at the top to see the dark values.</p>
+    <p class="muted">Token names as in <code>src/app.css</code>. Ratios are for the light theme on paper; switch themes at the top to see the dark values.</p>
   </div>
   <div class="swatches">
-    <div class="swatch"><div style="background:var(--paper);border-bottom:1px solid var(--line)"></div><p><b>Paper</b><br>Page background</p></div>
-    <div class="swatch"><div style="background:var(--ink)"></div><p><b>Ink</b><br>Body text · 13.2:1</p></div>
-    <div class="swatch"><div style="background:var(--ink-muted)"></div><p><b>Ink muted</b><br>Secondary · 8.6:1</p></div>
-    <div class="swatch"><div style="background:var(--action)"></div><p><b>Action</b><br>Buttons, links · 10.4:1</p></div>
-    <div class="swatch"><div style="background:var(--line-strong)"></div><p><b>Line strong</b><br>Control borders · 4.6:1</p></div>
-    <div class="swatch"><div style="background:var(--marker)"></div><p><b>Marker</b><br>Highlighter only · ink 10:1</p></div>
-    <div class="swatch"><div style="background:var(--gold)"></div><p><b>Gold</b><br>Paths and rules only</p></div>
-    <div class="swatch"><div style="background:var(--draft)"></div><p><b>Draft</b><br>AI output · 6.7:1</p></div>
-    <div class="swatch"><div style="background:var(--apprentice)"></div><p><b>Apprentice</b><br>7.4:1</p></div>
-    <div class="swatch"><div style="background:var(--mentor)"></div><p><b>Mentor</b><br>5.8:1</p></div>
-    <div class="swatch"><div style="background:var(--ambassador)"></div><p><b>Ambassador</b><br>7.3:1</p></div>
-    <div class="swatch"><div style="background:var(--partner)"></div><p><b>Community partner</b><br>6.3:1</p></div>
+    <div class="swatch"><div style="background:var(--paper);border-bottom:1px solid var(--line)"></div><p><b>Paper</b><code>--paper</code>Page background</p></div>
+    <div class="swatch"><div style="background:var(--surface-sunken);border-bottom:1px solid var(--line)"></div><p><b>Surface sunken</b><code>--surface-sunken</code>Wells, sidebar</p></div>
+    <div class="swatch"><div style="background:var(--ink)"></div><p><b>Ink</b><code>--ink</code>Body text · 13.2:1</p></div>
+    <div class="swatch"><div style="background:var(--ink-muted)"></div><p><b>Ink muted</b><code>--ink-muted</code>Secondary · 8.6:1</p></div>
+    <div class="swatch"><div style="background:var(--action)"></div><p><b>Action</b><code>--action</code>Buttons, links, focus · 10.4:1</p></div>
+    <div class="swatch"><div style="background:var(--line-strong)"></div><p><b>Line strong</b><code>--line-strong</code>Control borders · 4.6:1</p></div>
+    <div class="swatch"><div style="background:var(--marker)"></div><p><b>Marker</b><code>--marker</code>Highlighter only · ink 10:1</p></div>
+    <div class="swatch"><div style="background:var(--note)"></div><p><b>Note</b><code>--note</code>Pinned notes · ink 12.6:1</p></div>
+    <div class="swatch"><div style="background:var(--gold)"></div><p><b>Gold</b><code>--gold</code>Paths and rules only, never text</p></div>
+    <div class="swatch"><div style="background:var(--draft)"></div><p><b>Draft</b><code>--draft</code>AI output · 6.7:1</p></div>
+    <div class="swatch"><div style="background:var(--success)"></div><p><b>Success</b><code>--success</code>With a check icon</p></div>
+    <div class="swatch"><div style="background:var(--error)"></div><p><b>Error</b><code>--error</code>With an alert icon</p></div>
+    <div class="swatch"><div style="background:var(--apprentice)"></div><p><b>Apprentice</b><code>--apprentice</code>7.4:1</p></div>
+    <div class="swatch"><div style="background:var(--mentor)"></div><p><b>Mentor</b><code>--mentor</code>5.8:1</p></div>
+    <div class="swatch"><div style="background:var(--ambassador)"></div><p><b>Chapter lead and company host</b><code>--ambassador</code>7.3:1</p></div>
+    <div class="swatch"><div style="background:var(--partner)"></div><p><b>Community partner</b><code>--partner</code>6.3:1</p></div>
+    <div class="swatch"><div style="background:var(--ink)"></div><p><b>BRIDGEGOOD steward</b><code>--ink</code>Ink on sunken · 12.2:1</p></div>
   </div>
 </section>
 
 <section class="section" aria-labelledby="type-title">
-  <div class="section-head"><h2 id="type-title">Type</h2></div>
-  <div class="grid two" style="grid-template-columns:1fr 1fr">
-    <div class="card stack">
-      <p class="small muted">Bricolage Grotesque · headings, 20px and up</p>
-      <p style="font:600 2.25rem/2.75rem var(--font-head)">Shape your problem into a project brief</p>
-      <p style="font:600 1.375rem/1.875rem var(--font-head)">Who might be left out?</p>
-    </div>
-    <div class="card stack">
-      <p class="small muted">Atkinson Hyperlegible Next · body and interface</p>
-      <p class="lead">Describe what isn&rsquo;t working, in plain language. A person at BRIDGEGOOD reads every brief.</p>
-      <p>Il1 O0 rn m — letters that stay distinct for readers with low vision.</p>
-    </div>
+  <div class="section-head">
+    <h2 id="type-title">Type</h2>
+    <p class="muted">Bricolage Grotesque for headings at 20px and up, Atkinson Hyperlegible Next for everything else. In the app, use the <code>type-*</code> utilities.</p>
+  </div>
+  <div class="scale-wrap" tabindex="0" role="region" aria-label="Type scale table">
+    <table class="scale">
+      <caption class="sr-only">Bridge Studio type scale</caption>
+      <thead><tr><th scope="col">Utility</th><th scope="col">Size / line height</th><th scope="col">Use</th><th scope="col">Sample</th></tr></thead>
+      <tbody>
+        <tr><td><code>type-display</code></td><td>48 / 56</td><td>Welcome hero only</td><td><span style="font:600 2rem/2.5rem var(--font-head)">Start where you are</span></td></tr>
+        <tr><td><code>type-title-1</code></td><td>36 / 44</td><td>Page <code>h1</code></td><td><span style="font:600 1.75rem/2.25rem var(--font-head)">Your path</span></td></tr>
+        <tr><td><code>type-title-2</code></td><td>28 / 36</td><td>Section <code>h2</code></td><td><span style="font:600 1.5rem/2rem var(--font-head)">Your people</span></td></tr>
+        <tr><td><code>type-title-3</code></td><td>22 / 30</td><td>Card <code>h3</code></td><td><span style="font:600 1.375rem/1.875rem var(--font-head)">Who might be left out?</span></td></tr>
+        <tr><td><code>type-body-lg</code></td><td>18 / 30</td><td>Library and guides</td><td><span style="font-size:1.125rem;line-height:1.875rem">A person at BRIDGEGOOD reads every brief.</span></td></tr>
+        <tr><td><code>type-body</code></td><td>16 / 26</td><td>Default</td><td>Il1 O0 rn m stay distinct for readers with low vision.</td></tr>
+        <tr><td><code>type-label</code></td><td>16 / 24, 600</td><td>Labels, buttons</td><td><b>How will the people you serve shape this?</b></td></tr>
+        <tr><td><code>type-small</code></td><td>14 / 22</td><td>Metadata only</td><td class="small muted">Step 3 of 5 · updated Tuesday</td></tr>
+      </tbody>
+    </table>
   </div>
 </section>
 
 <section class="section" aria-labelledby="comp-title">
-  <div class="section-head"><h2 id="comp-title">Components</h2></div>
+  <div class="section-head">
+    <h2 id="comp-title">Components</h2>
+    <p class="muted">Primitives live in <code>src/components/ui/</code>, notices in <code>notice.tsx</code>, and the signature elements in <code>src/components/studio/</code>.</p>
+  </div>
   <div class="grid two" style="grid-template-columns:1fr 1fr">
     <div class="card stack">
       <h3>Buttons and fields</h3>
@@ -264,7 +312,7 @@ textarea.input { min-height: 96px; resize: vertical; }
       </div>
       <div class="field">
         <label for="ex-title">Project title</label>
-        <input class="input" id="ex-title" value="Food pantry sign-up in two languages">
+        <input class="input" id="ex-title" value="Repair requests in two languages">
       </div>
       <div class="field">
         <label for="ex-community">Community affected</label>
@@ -272,9 +320,23 @@ textarea.input { min-height: 96px; resize: vertical; }
         <textarea class="input" id="ex-community" aria-invalid="true" aria-describedby="ex-community-hint ex-community-err"></textarea>
         <span class="err" id="ex-community-err"><i data-lucide="circle-alert" class="icon" aria-hidden="true"></i>Describe the community affected</span>
       </div>
+      <div class="field">
+        <label for="ex-note">Anything else? (optional)</label>
+        <input class="input" id="ex-note">
+      </div>
     </div>
     <div class="card stack">
-      <h3>Roles and status</h3>
+      <h3>Error summary and notices</h3>
+      <div class="err-summary" tabindex="-1">
+        <h4><i data-lucide="circle-alert" class="icon" aria-hidden="true"></i>There is 1 problem with this form</h4>
+        <ul><li><a href="#ex-community">Describe the community affected</a></li></ul>
+      </div>
+      <div class="notice n-success"><i data-lucide="circle-check" class="icon" aria-hidden="true"></i><p><strong>Brief sent for review</strong>A person at BRIDGEGOOD will reply within 3 working days.</p></div>
+      <div class="notice n-warning"><i data-lucide="triangle-alert" class="icon" aria-hidden="true"></i><p><strong>2 fields are still AI drafts</strong>Edit or accept them before you send.</p></div>
+      <div class="notice n-info"><i data-lucide="info" class="icon" aria-hidden="true"></i><p><strong>Step 3 of your path</strong>Choose a project from the open briefs.</p></div>
+    </div>
+    <div class="card stack">
+      <h3>Role badges and people chips</h3>
       <div class="row">
         <span class="tag t-apprentice"><i data-lucide="sprout" class="icon" aria-hidden="true"></i>Apprentice</span>
         <span class="tag t-mentor"><i data-lucide="message-circle-heart" class="icon" aria-hidden="true"></i>Mentor</span>
@@ -283,27 +345,47 @@ textarea.input { min-height: 96px; resize: vertical; }
         <span class="tag t-partner"><i data-lucide="heart-handshake" class="icon" aria-hidden="true"></i>Community partner</span>
         <span class="tag t-steward"><i data-lucide="scroll-text" class="icon" aria-hidden="true"></i>BRIDGEGOOD steward</span>
       </div>
-      <div class="notice n-success" role="status"><i data-lucide="circle-check" class="icon" aria-hidden="true"></i><p><strong>Brief sent for review</strong>A person at BRIDGEGOOD will reply within 3 working days.</p></div>
-      <div class="notice n-warning"><i data-lucide="triangle-alert" class="icon" aria-hidden="true"></i><p><strong>No community voice yet</strong>Add how the people you serve will shape this before sending.</p></div>
-      <div class="notice n-info"><i data-lucide="info" class="icon" aria-hidden="true"></i><p><strong>Step 3 of your path</strong>Choose a project from the open briefs.</p></div>
+      <ul class="people" aria-label="Example people (synthetic)">
+        <li class="person"><span class="avatar a-apprentice" aria-hidden="true">AS</span><div><b>Ari Santos</b><span class="small muted">Apprentice</span></div></li>
+        <li class="person"><span class="avatar a-mentor" aria-hidden="true">JL</span><div><b>Jordan Lee</b><span class="small muted">Mentor, alum</span></div></li>
+        <li class="person"><span class="avatar a-steward" aria-hidden="true">ME</span><div><b>Morgan Ellis</b><span class="small muted">BRIDGEGOOD steward</span></div></li>
+      </ul>
+      <p class="small muted">Initials only, never photos. Status tags pair a color with an icon and a word:</p>
+      <div class="row">
+        <span class="tag t-new"><i data-lucide="inbox" class="icon" aria-hidden="true"></i>New</span>
+        <span class="tag t-talk"><i data-lucide="reply" class="icon" aria-hidden="true"></i>In conversation</span>
+        <span class="tag t-success"><i data-lucide="circle-check" class="icon" aria-hidden="true"></i>Accepted</span>
+      </div>
     </div>
     <div class="card stack">
       <h3>Studio marks</h3>
-      <p class="lead">Before you submit: who might be <span class="mark">left out</span> of this sign-up flow?</p>
+      <p class="lead">Before you submit: who might be <span class="mark">left out</span> of this repair-request flow?</p>
       <div class="note">
         <p class="note-head"><i data-lucide="sticky-note" class="icon" aria-hidden="true"></i>Note from Jordan, your mentor</p>
         <p>Try the form with a screen reader before Thursday. The date picker might be the barrier.</p>
       </div>
-    </div>
-    <div class="card stack">
-      <h3>AI draft frame</h3>
-      <div class="draft">
-        <p class="draft-label"><i data-lucide="sparkles" class="icon" aria-hidden="true"></i>AI draft · you decide</p>
-        <p style="margin-top:6px">Suggested scope: redesign the sign-up form and confirmation text in English and Spanish, tested with five families.</p>
+      <div class="note right field-note">
+        <p class="note-head"><i data-lucide="map-pin" class="icon" aria-hidden="true"></i>Local adaptation from the Chicago chapter</p>
+        <p>Here, access includes language access: every brief says which languages its community speaks.</p>
       </div>
-      <div class="draft edited">
-        <p class="draft-label" style="color:var(--ink-muted)"><i data-lucide="pencil" class="icon" aria-hidden="true"></i>Edited by you</p>
-        <p style="margin-top:6px">Redesign the sign-up form in English and Spanish, and test it with families at Saturday distribution.</p>
+      <p class="small muted">One highlight per screen. A field note always sits beneath BRIDGEGOOD&rsquo;s official wording.</p>
+    </div>
+    <div class="card stack" style="grid-column:1/-1">
+      <h3>AI draft frame</h3>
+      <p class="muted">Every piece of AI output starts dashed and violet. It turns solid once a person edits or accepts it.</p>
+      <div class="grid two" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="draft">
+          <p class="draft-label"><i data-lucide="sparkles" class="icon" aria-hidden="true"></i>AI draft · you decide</p>
+          <p style="margin-top:6px">Suggested scope: redesign the repair-request form in English and Spanish, tested with five tenants.</p>
+        </div>
+        <div class="draft edited">
+          <p class="draft-label" style="color:var(--ink-muted)"><i data-lucide="pencil" class="icon" aria-hidden="true"></i>Edited by you</p>
+          <p style="margin-top:6px">Redesign the repair-request form in English and Spanish, and test it at the monthly tenant meeting.</p>
+        </div>
+        <div class="draft edited">
+          <p class="draft-label" style="color:var(--ink-muted)"><i data-lucide="check" class="icon" aria-hidden="true"></i>Accepted by you</p>
+          <p style="margin-top:6px">Tenants who prefer Spanish can request a repair without help from staff.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -312,23 +394,25 @@ textarea.input { min-height: 96px; resize: vertical; }
 <section class="section" aria-labelledby="screens-title">
   <div class="section-head">
     <h2 id="screens-title">Example screens</h2>
-    <p class="muted">Synthetic examples. These show the system, not final content.</p>
+    <p class="muted">Synthetic examples, simplified from the app. They show the system, not final content.</p>
   </div>
 
   <div class="screen-label"><h3>Apprentice · Your path</h3><span class="tag t-synthetic">Synthetic example</span></div>
   <div class="shell" style="--role:var(--apprentice)">
-    <nav class="side" aria-label="Apprentice area">
+    <nav class="side" aria-label="Apprentice area (example)">
       <span class="tag t-apprentice"><i data-lucide="sprout" class="icon" aria-hidden="true"></i>Apprentice</span>
-      <h3>Your path</h3>
-      <a href="#screens-title" aria-current="page"><i data-lucide="route" class="icon" aria-hidden="true"></i>Overview</a>
-      <a href="#screens-title"><i data-lucide="book-open" class="icon" aria-hidden="true"></i>Library</a>
-      <a href="#screens-title"><i data-lucide="sticky-note" class="icon" aria-hidden="true"></i>Reflect</a>
-      <h3>Your people</h3>
+      <h4 class="side-h">Your path</h4>
+      <a href="#screens-title" aria-current="page"><i data-lucide="route" class="icon" aria-hidden="true"></i>Your path</a>
+      <a href="#screens-title"><i data-lucide="circle-play" class="icon" aria-hidden="true"></i>Practice</a>
+      <a href="#screens-title"><i data-lucide="folder-open" class="icon" aria-hidden="true"></i>Choose a project</a>
+      <a href="#screens-title"><i data-lucide="file-text" class="icon" aria-hidden="true"></i>Submissions &amp; feedback</a>
+      <a href="#screens-title"><i data-lucide="sparkles" class="icon" aria-hidden="true"></i>Reflection companion</a>
+      <h4 class="side-h">Your people</h4>
       <a href="#screens-title"><i data-lucide="message-circle-heart" class="icon" aria-hidden="true"></i>My mentor</a>
       <a href="#screens-title"><i data-lucide="users" class="icon" aria-hidden="true"></i>Community of practice</a>
     </nav>
     <div class="main stack">
-      <h3 style="font-size:2rem;line-height:2.5rem">Welcome back, Ari</h3>
+      <p style="font:600 2rem/2.5rem var(--font-head)">Your path</p>
       <ol class="stepper" aria-label="Your apprenticeship path">
         <li class="done"><span class="dot"><i data-lucide="check" class="icon" aria-hidden="true"></i></span><span class="step-name">Bootcamp<span class="sr-only">, done</span></span></li>
         <li class="done"><span class="dot"><i data-lucide="check" class="icon" aria-hidden="true"></i></span><span class="step-name">Mini project<span class="sr-only">, done</span></span></li>
@@ -338,102 +422,163 @@ textarea.input { min-height: 96px; resize: vertical; }
       </ol>
       <div class="grid two" style="grid-template-columns:3fr 2fr;align-items:start">
         <div class="card stack">
-          <h3>Your team</h3>
+          <h4 class="card-h">Your people</h4>
           <div class="team">
             <svg class="path" viewBox="0 0 300 60" preserveAspectRatio="none" aria-hidden="true"><path d="M50 30 C 100 0, 120 60, 150 30 S 220 0, 250 30" fill="none" stroke="var(--gold)" stroke-width="2.5" vector-effect="non-scaling-stroke"/></svg>
             <ul>
-              <li><span class="avatar a-apprentice">A</span><b>Ari</b><span class="small muted">Apprentice (you)</span></li>
-              <li><span class="avatar a-mentor">J</span><b>Jordan</b><span class="small muted">Mentor, alum</span></li>
-              <li><span class="avatar a-partner">E</span><b>Eastside Food Pantry</b><span class="small muted">Community partner</span></li>
+              <li><span class="avatar a-apprentice" aria-hidden="true">AS</span><b>Ari Santos</b><span class="small muted">Apprentice (you)</span></li>
+              <li><span class="avatar a-mentor" aria-hidden="true">JL</span><b>Jordan Lee</b><span class="small muted">Your mentor</span></li>
+              <li><span class="avatar a-ambassador" aria-hidden="true">PR</span><b>Priya Raman</b><span class="small muted">Your chapter lead</span></li>
             </ul>
           </div>
-          <div class="row"><a class="btn btn-primary" href="#screens-title">Choose a project<i data-lucide="arrow-right" class="icon" aria-hidden="true"></i></a><a class="btn btn-secondary" href="#screens-title">Message your team</a></div>
+          <div class="row"><a class="btn btn-primary" href="#screens-title">Choose a project<i data-lucide="arrow-right" class="icon" aria-hidden="true"></i></a><a class="btn btn-secondary" href="#screens-title">Message your mentor</a></div>
         </div>
         <div class="note right">
           <p class="note-head"><i data-lucide="sticky-note" class="icon" aria-hidden="true"></i>Your last reflection</p>
-          <p>I assumed families would sign up online. Most of them come in person on Saturdays.</p>
+          <p>I assumed tenants would report repairs online. Most of them tell the front desk in person.</p>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="screen-label"><h3>Community partner · Shape a project brief</h3><span class="tag t-synthetic">Synthetic example</span></div>
+  <div class="screen-label"><h3>Community partner · Submit a problem</h3><span class="tag t-synthetic">Synthetic example</span></div>
   <div class="grid two" style="grid-template-columns:5fr 6fr;align-items:start">
-    <section class="card stack" aria-label="Scoping assistant conversation">
+    <section class="card stack" aria-label="Scoping assistant conversation (example)">
       <div class="person"><span class="avatar" style="background:var(--draft)"><i data-lucide="bot" class="icon" aria-hidden="true"></i></span><div><b>Scoping assistant <span class="tag t-draft">AI</span></b><span class="small muted">Drafts your brief. A person at BRIDGEGOOD reviews it.</span></div></div>
-      <div class="chat">
-        <p class="bubble you">Most families we serve speak Spanish, but our sign-up form is only in English.</p>
+      <div class="chat" role="log" aria-label="Conversation">
+        <p class="bubble you">Most tenants we serve speak Spanish, but our repair-request form is only in English.</p>
         <div class="draft">
           <p class="draft-label"><i data-lucide="sparkles" class="icon" aria-hidden="true"></i>Assistant (AI)</p>
-          <p style="margin-top:6px">Thanks. <span class="mark">How could families help shape the new form?</span> For example, could the team test it at Saturday distribution?</p>
+          <p style="margin-top:6px">Thanks. <span class="mark">How could tenants help shape the new form?</span> For example, could the team test it at your monthly meeting?</p>
         </div>
       </div>
-      <div class="field"><label for="msg">Your reply</label><textarea class="input" id="msg"></textarea></div>
+      <div class="field"><label for="msg">Your reply</label><span class="hint" id="msg-hint">Enter to send, Shift+Enter for a new line. No names or contact details.</span><textarea class="input" id="msg" aria-describedby="msg-hint"></textarea></div>
       <div class="row"><button class="btn btn-secondary" type="button"><i data-lucide="image-plus" class="icon" aria-hidden="true"></i>Add screenshot</button><button class="btn btn-primary" type="button" style="margin-left:auto"><i data-lucide="send" class="icon" aria-hidden="true"></i>Send</button></div>
     </section>
     <section class="card stack" aria-labelledby="brief-h">
-      <div class="row" style="justify-content:space-between"><h3 id="brief-h">Project brief</h3><span class="tag t-steward">Reviewed by BRIDGEGOOD</span></div>
+      <div class="row" style="justify-content:space-between"><h4 class="card-h" id="brief-h">Project brief</h4><span class="tag t-steward"><i data-lucide="scroll-text" class="icon" aria-hidden="true"></i>Reviewed by BRIDGEGOOD</span></div>
       <div class="field"><label for="b1">Problem</label>
-        <div class="draft" style="padding:0;border-width:1.5px"><textarea class="input" id="b1" style="border:0;background:transparent" aria-describedby="b1-ai">The sign-up form is English-only, so Spanish-speaking families sign up on paper or not at all.</textarea></div>
-        <span class="draft-label" id="b1-ai"><i data-lucide="sparkles" class="icon" aria-hidden="true"></i>AI draft · edit anything</span>
+        <div class="draft stack" style="padding:12px">
+          <textarea class="input" id="b1" aria-describedby="b1-ai">The repair-request form is English-only, so Spanish-speaking tenants ask staff for help or don't report repairs at all.</textarea>
+          <div class="row" style="justify-content:space-between"><span class="draft-label" id="b1-ai"><i data-lucide="sparkles" class="icon" aria-hidden="true"></i>AI draft · edit or accept it</span><button class="btn btn-secondary" type="button">Accept as written</button></div>
+        </div>
       </div>
       <div class="field"><label for="b2">How will the people you serve shape this?</label>
-        <textarea class="input" id="b2">Families test drafts at Saturday distribution, with a volunteer interpreter.</textarea>
-        <span class="small muted">Written by you</span>
+        <textarea class="input" id="b2" aria-describedby="b2-by">Tenants test drafts at the monthly meeting, with a volunteer interpreter, and are paid for their time.</textarea>
+        <span class="small muted" id="b2-by">Written by you</span>
       </div>
       <button class="btn btn-primary" type="button">Send brief to BRIDGEGOOD</button>
     </section>
   </div>
 
-  <div class="screen-label"><h3>Mentor · Growth conversation</h3><span class="tag t-synthetic">Synthetic example</span></div>
+  <div class="screen-label"><h3>Mentor · Growth conversations</h3><span class="tag t-synthetic">Synthetic example</span></div>
   <div class="card stack">
     <div class="row" style="justify-content:space-between">
-      <div class="person"><span class="avatar a-apprentice">A</span><div><b>Ari&rsquo;s mini project</b><span class="small muted">Bilingual sign-up form · submitted Tuesday</span></div></div>
+      <div class="person"><span class="avatar a-apprentice" aria-hidden="true">AS</span><div><b>Ari&rsquo;s mini project</b><span class="small muted">Bilingual repair-request form · submitted Tuesday</span></div></div>
       <span class="tag t-mentor"><i data-lucide="message-circle-heart" class="icon" aria-hidden="true"></i>You&rsquo;re the mentor</span>
     </div>
     <div class="grid two" style="grid-template-columns:1fr 1fr">
-      <div class="sunken stack">
-        <h3 style="font-size:1.125rem;font-family:var(--font-body)">Ari&rsquo;s self-assessment · Accessibility and inclusion</h3>
-        <p>&ldquo;I checked contrast, but I didn&rsquo;t test with a screen reader yet.&rdquo;</p>
+      <div class="stack">
+        <div class="note">
+          <p class="note-head"><i data-lucide="sticky-note" class="icon" aria-hidden="true"></i>Ari&rsquo;s self-assessment · Accessibility &amp; Inclusion</p>
+          <p>&ldquo;I checked contrast, but I didn&rsquo;t test with a screen reader yet.&rdquo;</p>
+        </div>
+        <div class="sunken stack">
+          <p><b>Questions Ari shared from the Reflection Companion</b></p>
+          <p>&ldquo;Whose voice is still missing from my testing?&rdquo;</p>
+          <p class="small muted">Ari chose to share these. Start from their words. They aren&rsquo;t a grade or a to-do list.</p>
+        </div>
       </div>
       <div class="stack">
-        <div class="field"><label for="g1">What&rsquo;s working</label><textarea class="input" id="g1">Clear labels in both languages, and you tested with real families.</textarea></div>
+        <div class="field"><label for="g1">What&rsquo;s working</label><textarea class="input" id="g1">Clear labels in both languages, and you tested with real tenants.</textarea></div>
         <div class="field"><label for="g2">One next step</label><textarea class="input" id="g2">Run the form with VoiceOver and note where it gets stuck.</textarea></div>
       </div>
-    </div>
-    <div class="draft">
-      <p class="draft-label"><i data-lucide="sparkles" class="icon" aria-hidden="true"></i>AI conversation starters · for you, not for Ari</p>
-      <p style="margin-top:6px">Ask: &ldquo;Whose voice is still missing from your testing?&rdquo; The AI can&rsquo;t judge lived experience, so you decide what matters here.</p>
     </div>
     <div class="row"><button class="btn btn-primary" type="button">Send to Ari</button><span class="small muted">No scores. Ari sees your words, not a grade.</span></div>
   </div>
 
-  <div class="screen-label"><h3>BRIDGEGOOD steward · Philosophy inbox</h3><span class="tag t-synthetic">Synthetic example · milestone 3</span></div>
+  <div class="screen-label"><h3>Everyone · A pillar in the library</h3><span class="tag t-synthetic">Synthetic example</span></div>
   <div class="card stack">
-    <ul class="queue">
-      <li class="sunken">
-        <div class="stack" style="--gap:8px">
-          <div class="row"><span class="tag t-ambassador"><i data-lucide="map-pin" class="icon" aria-hidden="true"></i>Chapter lead · Chicago</span><span class="tag t-steward">Accessibility and inclusion</span></div>
-          <p><b>Local adaptation:</b> &ldquo;In our chapter, access includes language access. We ask every brief which languages its community speaks.&rdquo;</p>
-        </div>
-        <div class="row"><button class="btn btn-primary" type="button">Accept</button><button class="btn btn-secondary" type="button">Reply</button></div>
-      </li>
-      <li class="sunken">
-        <div class="stack">
-          <div class="row"><span class="tag t-mentor"><i data-lucide="message-circle-heart" class="icon" aria-hidden="true"></i>Mentor</span><span class="tag t-draft"><i data-lucide="sparkles" class="icon" aria-hidden="true"></i>Disagreed with AI</span></div>
-          <p>The AI flagged &ldquo;low contrast&rdquo; on a decorative image. The mentor marked it as not an issue.</p>
-        </div>
-        <div class="row"><button class="btn btn-secondary" type="button">Update rubric</button><button class="btn btn-quiet" type="button">Dismiss</button></div>
-      </li>
-    </ul>
-    <p class="small muted">Accepted changes appear in the public changelog, credited only with consent.</p>
+    <p style="font:600 1.75rem/2.25rem var(--font-head)">Accessibility &amp; Inclusion</p>
+    <div class="official stack">
+      <p class="small muted">BRIDGEGOOD&rsquo;s official wording, version 0.2</p>
+      <p class="lead">Design so more people can use the work, take part in making it, and decide whether it worked for them.</p>
+    </div>
+    <div class="note right field-note">
+      <p class="note-head"><i data-lucide="map-pin" class="icon" aria-hidden="true"></i>Local adaptation from the Chicago chapter</p>
+      <p>Here, access includes language access: every brief says which languages its community speaks.</p>
+    </div>
+    <div class="row"><button class="btn btn-secondary" type="button"><i data-lucide="flag" class="icon" aria-hidden="true"></i>This didn&rsquo;t fit</button><span class="small muted">A BRIDGEGOOD steward reads every flag and decides what changes.</span></div>
   </div>
+
+  <div class="screen-label"><h3>BRIDGEGOOD steward · Inbox</h3><span class="tag t-synthetic">Synthetic example</span></div>
+  <div class="shell" style="--role:var(--ink)">
+    <nav class="side" aria-label="Steward area (example)">
+      <span class="tag t-steward"><i data-lucide="scroll-text" class="icon" aria-hidden="true"></i>BRIDGEGOOD steward</span>
+      <a href="#screens-title" aria-current="page" style="margin-top:16px"><i data-lucide="inbox" class="icon" aria-hidden="true"></i>Inbox</a>
+      <h4 class="side-h">The framework</h4>
+      <a href="#screens-title"><i data-lucide="history" class="icon" aria-hidden="true"></i>Versions and wording</a>
+      <a href="#screens-title"><i data-lucide="book-open" class="icon" aria-hidden="true"></i>Public changelog</a>
+    </nav>
+    <div class="main stack">
+      <p style="font:600 2rem/2.5rem var(--font-head)">Inbox</p>
+      <div class="filters" role="group" aria-label="Filter by pillar">
+        <button class="btn btn-secondary" type="button" aria-pressed="false">All pillars</button>
+        <button class="btn btn-secondary" type="button" aria-pressed="true">Accessibility &amp; Inclusion</button>
+        <button class="btn btn-secondary" type="button" aria-pressed="false">Responsible AI</button>
+      </div>
+      <ul class="queue">
+        <li class="sunken">
+          <div class="stack">
+            <div class="row"><span class="tag t-ambassador"><i data-lucide="map-pin" class="icon" aria-hidden="true"></i>Local adaptation · Chicago</span><span class="tag t-new"><i data-lucide="inbox" class="icon" aria-hidden="true"></i>New</span></div>
+            <p>&ldquo;In our chapter, access includes language access. We ask every brief which languages its community speaks.&rdquo; Credit the chapter: yes.</p>
+          </div>
+          <a class="btn btn-secondary" href="#decision-h">Open</a>
+        </li>
+        <li class="sunken">
+          <div class="stack">
+            <div class="row"><span class="tag t-draft"><i data-lucide="sparkles" class="icon" aria-hidden="true"></i>AI disagreement</span><span class="tag t-talk"><i data-lucide="reply" class="icon" aria-hidden="true"></i>In conversation</span></div>
+            <p>4 apprentices marked a companion question &ldquo;Not right&rdquo; on this pillar this month. Counts only: no work, names or AI text.</p>
+          </div>
+          <a class="btn btn-secondary" href="#decision-h">Open</a>
+        </li>
+      </ul>
+      <form class="card stack" aria-labelledby="decision-h" onsubmit="return false">
+        <h4 class="card-h" id="decision-h">Decide on the Chicago adaptation</h4>
+        <p class="muted">Every decision needs a reason. The chapter lead sees it, and it appears in the public changelog.</p>
+        <fieldset>
+          <legend>Decision</legend>
+          <label class="choice"><input type="radio" name="outcome" checked><span>Accept</span></label>
+          <label class="choice"><input type="radio" name="outcome"><span>Decline</span></label>
+          <label class="choice"><input type="radio" name="outcome"><span>Reply first<span class="hint">Ask a question. It stays open.</span></span></label>
+        </fieldset>
+        <fieldset>
+          <legend>What changes?</legend>
+          <label class="choice"><input type="radio" name="effect" checked><span>Show it as a field note<span class="hint">Shown beneath BRIDGEGOOD&rsquo;s official wording. The wording doesn&rsquo;t change.</span></span></label>
+          <label class="choice"><input type="radio" name="effect"><span>Change BRIDGEGOOD&rsquo;s official wording<span class="hint">Publishes a new version, with old and new wording in the changelog.</span></span></label>
+          <label class="choice"><input type="radio" name="effect"><span>Take it into the next review<span class="hint">A public note saying what BRIDGEGOOD will change.</span></span></label>
+        </fieldset>
+        <div class="field"><label for="reason">Your reason</label><span class="hint" id="reason-hint">Plain words. Say what you weighed.</span><textarea class="input" id="reason" aria-describedby="reason-hint">Language access is part of access for many chapters. We&rsquo;ll show it as Chicago&rsquo;s practice before changing the core wording.</textarea></div>
+        <button class="btn btn-primary" type="submit">Record decision</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="screen-label"><h3>Everyone · Public changelog</h3><span class="tag t-synthetic">Synthetic example</span></div>
+  <article class="card stack" aria-labelledby="cl-h">
+    <div class="row" style="justify-content:space-between"><h4 class="card-h" id="cl-h">Version 0.2 · Accessibility &amp; Inclusion</h4><span class="tag t-steward"><i data-lucide="scroll-text" class="icon" aria-hidden="true"></i>Decided by BRIDGEGOOD</span></div>
+    <div class="compare">
+      <div class="sunken stack"><p class="small muted">Before (0.1)</p><p>Design so more people can use the work.</p></div>
+      <div class="sunken stack"><p class="small muted">Now (0.2)</p><p>Design so more people can use the work, take part in making it, and decide whether it worked for them.</p></div>
+    </div>
+    <p><b>Why:</b> apprentices flagged that the old wording left out who takes part. <b>Came from:</b> &ldquo;This didn&rsquo;t fit&rdquo; flags. Credited only with consent.</p>
+  </article>
 </section>
 
 </main>
 
 <footer class="wrap" style="padding:32px 24px 48px">
-  <p class="small muted">The Design for Social Good philosophy is authored and stewarded by BRIDGEGOOD. All people, organizations and projects on this page are synthetic examples.</p>
+  <p class="small muted">The Design for Social Good philosophy is authored and stewarded by BRIDGEGOOD. The framework wording here is a draft for BRIDGEGOOD&rsquo;s review. All people, organizations and projects on this page are synthetic examples.</p>
 </footer>
 
 <script src="https://unpkg.com/lucide@1.54.0/dist/umd/lucide.min.js"></script>
@@ -448,6 +593,9 @@ textarea.input { min-height: 96px; resize: vertical; }
     try { localStorage.setItem("bgx-theme", mode) } catch {}
   }
   buttons.forEach((b) => b.addEventListener("click", () => setTheme(b.dataset.setTheme)))
+  document.querySelectorAll(".filters [aria-pressed]").forEach((b) => b.addEventListener("click", () => {
+    b.parentElement.querySelectorAll("[aria-pressed]").forEach((o) => o.setAttribute("aria-pressed", String(o === b)))
+  }))
   try { const saved = localStorage.getItem("bgx-theme"); if (saved) setTheme(saved) } catch {}
 </script>
 </body>

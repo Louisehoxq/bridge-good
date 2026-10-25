@@ -1,6 +1,8 @@
 # Bridge Studio: the BridgeGoodx design system
 
-> **Status:** implemented in the app (October 2026). Tokens, type, icons, primitives and signature components are built. See [`docs/design-system.md`](docs/design-system.md) for implementation notes, the `/design` page for every component, and [`docs/design-followups.md`](docs/design-followups.md) for page-level work still open. The original example UI is in [`docs/design/examples.html`](docs/design/examples.html).
+> **Status:** implemented on every page (October 2026). This is the single design spec. Where things live in the code is in [section 10, Implementation](#10-implementation).
+>
+> **See it:** the live `/design` page in the running app shows every token and component as built. [`docs/design/examples.html`](docs/design/examples.html) is a static showcase you can open straight from the repository, with no server or login, to share with BRIDGEGOOD or judges. Open design work is in [`docs/BACKLOG.md`](docs/BACKLOG.md).
 
 Bridge Studio combines two ideas:
 
@@ -192,6 +194,15 @@ Focus is a 3px `--action` outline with a 2px offset on every interactive element
 | 2.3.3 / reduced motion | No motion unless the user allows it |
 | Forced colors | Borders and focus use real borders and outlines, so Windows high-contrast mode keeps them |
 
+**Patterns the pages follow**
+
+- A skip link, labelled landmarks, one `h1` per page, and headings in order. `scroll-padding-top` keeps focused elements clear of the sticky header.
+- Forms: every input has a visible label; hints and errors are linked with `aria-describedby`, and invalid fields get `aria-invalid`; an error summary takes focus and links to each field; optional fields say "(optional)" instead of marking required ones with an asterisk.
+- When an action removes the focused element (book, cancel, remove, send), move focus to the relevant heading and say what happened in a `role="status"` region that is always present.
+- Streaming or changing content isn't wrapped in `aria-live`. Chat transcripts use `role="log"`, and an AI reply is announced once, when it finishes.
+- Expandable content uses native `<details>`, so it works without JavaScript.
+- The current page in a nav has `aria-current="page"`; the selected item in a master–detail list has `aria-current="true"`.
+
 **Tools**
 
 | What | Tools |
@@ -202,11 +213,10 @@ Focus is a 3px `--action` outline with a 2px offset on every interactive element
 | Pages | axe DevTools and axe-core, WAVE, Lighthouse |
 | Text | Text Spacing bookmarklet, 200% zoom, a 320px viewport, forced-colors emulation, a reading-level check (Hemingway, readable.com or `textstat`) aiming for grade 8 or lower |
 
-**Run in CI** (built by the design-system workstream):
+**Run in CI** on every PR (how they work is in [section 10](#checks)):
 
 1. `npm run check:contrast` tests every token pair listed in section 2 against its required ratio.
-2. Playwright plus `@axe-core/playwright` runs on every route, in light and dark.
-3. A text-spacing and 200% zoom screenshot pass runs on key pages.
+2. `npm run test:a11y` runs axe on every route in light and dark, plus reflow at 320px, 200% zoom and text-spacing checks on every page.
 
 ---
 
@@ -221,17 +231,49 @@ These follow BRIDGEGOOD's tone guide (bridgegood.com/design): supportive, direct
 
 ---
 
-## 10. Migrating from the Material 3 tokens
+## 10. Implementation
 
-All seven steps are done (milestone 2.5): pages use the `type-*` scale and the signature components, and the Material 3 compatibility aliases are gone from `src/app.css`. What's left is in `docs/design-followups.md`.
+### Where things live
 
-1. In `src/app.css`, replace the Material 3 role values with the tokens above, and keep the semantic names components already use (`bg-card` → `--surface`, `text-muted-foreground` → `--ink-muted`, `border-input` → `--line-strong`, and so on).
-2. Swap the fonts in `src/root.tsx` (Google Sans → Atkinson Hyperlegible Next and Bricolage Grotesque).
-3. Replace `src/components/icon.tsx` (Material Symbols) with `lucide-react`, which is already a dependency.
-4. Restyle `src/components/ui/button.tsx`, `input.tsx` and `textarea.tsx` (pill → 10px, outlined M3 field → 1.5px border).
-5. Add the signature elements as components: `Path`, `PeopleChip`, `Highlight`, `PinnedNote`, `DraftFrame`, `FieldNote`.
-6. Remove the uppercase eyebrow labels.
-7. Add the contrast and axe checks.
+| What | File |
+|---|---|
+| Color tokens, light and dark | `src/app.css`: `:root` and the `prefers-color-scheme: dark` block, exactly as in section 2 |
+| Type scale | `src/app.css` (`type-*` utilities); fonts load from Google Fonts in `src/root.tsx` |
+| Icons | `src/components/icon.tsx` (`<Icon name="…">`) |
+| Primitives | `src/components/ui/` (shadcn/ui on Base UI): button, input, textarea, label, sheet, `NativeSelect` |
+| Notices and form errors | `src/components/notice.tsx`: `Notice`, `ErrorSummary` (takes focus, links to fields), `FieldMessage` |
+| Signature elements | `src/components/studio/`: `Path`, `TeamPath`, `JourneyStepper`, `PeopleChip`, `RoleBadge` (`STUDIO_ROLE_FOR` maps demo roles), `Highlight`, `PinnedNote`, `FieldNote`, `DraftFrame`, `DraftTextarea`, `DraftFieldFrame` |
+| Team views | `src/components/team/team-view.tsx`: people chips joined by the gold path |
+| Live reference | `src/routes/design.tsx` (`/design`, `noindex`) |
+| Static showcase | `docs/design/examples.html`. It copies the tokens by hand, so update it when section 2 changes |
+| Logo | `src/components/wordmark.tsx` is a text placeholder. Use BRIDGEGOOD's official SVGs in `public/brand/`; don't redraw, recolor or add effects |
+
+### Tokens in Tailwind
+
+- Bridge Studio names work directly: `bg-paper`, `bg-surface`, `bg-surface-sunken`, `text-ink`, `text-ink-muted`, `text-action`, `border-line`, `border-line-strong`, `bg-marker`, `bg-note`, `border-draft`, `bg-success-soft`, `bg-error-soft`, and so on.
+- The shadcn names components use map onto them: `bg-background` → paper, `bg-card` → surface, `bg-muted` → surface-sunken, `text-muted-foreground` → ink-muted, `bg-primary` / `text-primary` → action, `border` → line, `border-input` → line-strong, `ring` → action, `destructive` → error. The Material 3 names (`surface-container`, `on-surface-variant`, `headline-large`…) were removed and no longer resolve.
+- **Role color:** set `data-archetype` on a container (`apprentice` or `student`, `mentor`, `ambassador`, `chapter-lead` or `company-host`, `partner` or `community-partner`, `steward`), then use `text-archetype`, `bg-archetype-soft`, `border-archetype`, or `bg-archetype` with `text-on-archetype`.
+- **Headings:** page `h1` is `type-title-1`, section `h2` is `type-title-2`, card `h3` is `type-title-3`, and `type-display` is for the welcome hero only. Metadata uses `type-small` with `text-muted-foreground`.
+- **Radius:** controls `rounded-md` (10px), cards `rounded-xl` (16px), tags and avatars `rounded-full`, notes `rounded-xs` (2px).
+- **Shadows:** `shadow-sm`, `shadow-md` and `shadow-lg` resolve to nothing. `shadow-note` is the only one.
+- In dark mode a `bg-card` panel always needs `border border-border`, because cards sit only 1.1:1 from the page.
+
+### Adding an icon
+
+1. Import the icon from `lucide-react` in `src/components/icon.tsx`.
+2. Add it to `ICONS` under a kebab-case name that matches Lucide's (`"circle-alert": CircleAlert`).
+3. Use `<Icon name="circle-alert" />`. It's `aria-hidden`, drawn at a 1.75px stroke and 1.25em of the text beside it. An icon-only button needs an `aria-label`.
+
+Keep one meaning per icon (section 5). Role and status icons are fixed.
+
+### Checks
+
+| Command | What it does |
+|---|---|
+| `npm run check:contrast` | `scripts/check-contrast.mjs` reads the color tables in section 2 of this file and the tokens in `src/app.css`, fails if they disagree, then tests every pair the spec relies on (7:1, 4.5:1 or 3:1) in light and dark. When a new combination appears, add it to `PAIRS`. Keep the section 2 tables in their current shape: the script parses them. |
+| `npm run test:a11y` | `tests/a11y.spec.ts` builds and serves the production app, logs in through the demo login, and runs axe (WCAG 2.0–2.2 A/AA plus best practices) on every page route in `src/routes.ts`, in light and dark. It also checks 320px reflow, 200% zoom and text spacing on every page. Fill new dynamic segments in `PARAMS` or `PATH_PARAMS`. `KNOWN` and `KNOWN_LAYOUT` are empty: keep them that way. Run `npx playwright install chromium` once first. |
+
+Both run in CI on every PR. Still check by hand when a page changes a lot: forced colors, keyboard only, the grayscale test, and a screen reader.
 
 ## 11. Open questions for BRIDGEGOOD
 

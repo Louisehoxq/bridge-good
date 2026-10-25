@@ -1,6 +1,6 @@
 # Resilience kit: staying valuable as AI takes on production work
 
-> **Status: concept for the team, written 2026-10-24.** BRIDGEGOOD authors and owns the Design for Social Good philosophy, the five pillars and the twelve reflection prompts. This doc proposes features that put them to work for apprentices and alumni. It builds on [social-good.md](social-good.md) (what the terms mean), [ai-evaluator.md](ai-evaluator.md) (the evaluator engine) and [evaluation.md](evaluation.md) (where the app stands). Nothing here is built. Every example person, project and quote below is **synthetic**.
+> **Status: concept for the team, written 2026-10-24. Not built yet; the hackathon slice (section 6) is next in [BACKLOG.md](BACKLOG.md).** BRIDGEGOOD authors and owns the Design for Social Good philosophy, the five pillars and the twelve reflection prompts. This doc proposes features that put them to work for apprentices and alumni. It builds on [social-good.md](social-good.md) (what the terms mean), [ai-evaluator.md](ai-evaluator.md) (the evaluator engine) and [evaluation.md](archive/evaluation.md) (where the app stood before milestone 2). Every example person, project and quote below is **synthetic**.
 
 ## In one paragraph
 
@@ -35,7 +35,7 @@ We are careful here. Nobody knows how fast AI will change design hiring, and we 
 
 ## 2. The seven features at a glance
 
-Journey stages follow the proposed student path in [evaluation.md](evaluation.md): **1 Bootcamp → 2 Mini project → 3 Choose a project → 4 Capstone → 5 Certification & portfolio**, then **Alumni** (and, for some, **Mentor**). Reflection prompts are referenced by number. Their canonical wording lives in the team spec, and the pillar mapping follows [ai-evaluator.md §3](ai-evaluator.md).
+Journey stages follow the proposed student path in [evaluation.md](archive/evaluation.md): **1 Bootcamp → 2 Mini project → 3 Choose a project → 4 Capstone → 5 Certification & portfolio**, then **Alumni** (and, for some, **Mentor**). The apprentice's "Your path" as built (PR #4) has no certification step: it runs bootcamp → mini project → choose a project → capstone → alumni. Reflection prompts are referenced by number. Their canonical wording lives in the team spec, and the pillar mapping follows [ai-evaluator.md §3](ai-evaluator.md).
 
 | # | Feature | Main pillar(s) | Prompts | Stage | The person does | AI may help with | AI never |
 |---|---|---|---|---|---|---|---|
@@ -145,7 +145,7 @@ Each kit ends with a short **"what we changed"** note that the team or chapter c
 - AI may draft a **translation** that is always labeled "AI draft" and must be checked by a fluent speaker, preferably from the community, before use.
 - In v1, AI does **not** read interview notes or recordings. They may contain personal details, and handing synthesis to AI would remove the practice the kit exists for.
 
-**Practice before the real thing.** In the mini project, students rehearse a listening session with peers or alumni playing roles from a synthetic scenario (for example, "a partner wants to skip interviews"), with BRIDGEGOOD's reasoning shown afterwards. This builds on the "practice moments" pivot in [evaluation.md §3](evaluation.md).
+**Practice before the real thing.** In the mini project, students rehearse a listening session with peers or alumni playing roles from a synthetic scenario (for example, "a partner wants to skip interviews"), with BRIDGEGOOD's reasoning shown afterwards. This builds on the "practice moments" pivot in [evaluation.md §3](archive/evaluation.md#3-mission-fit-judges-view).
 
 ### 3.4 Accessibility depth path
 
@@ -229,7 +229,7 @@ Each kit ends with a short **"what we changed"** note that the team or chapter c
 
 **Pillars:** all five. **Stages:** start of bootcamp, end of each project, and once a year as an alum.
 
-**The problem it solves.** People need a way to see their own growth across the pillars and decide what to work on next. The evaluation found mentor review framed as "success or failure", and recommended a growth conversation that **starts from the student's self-assessment** ([evaluation.md §2](evaluation.md)). This is that starting point.
+**The problem it solves.** People need a way to see their own growth across the pillars and decide what to work on next. The evaluation found mentor review framed as "success or failure", and recommended a growth conversation that **starts from the student's self-assessment** ([evaluation.md §2](archive/evaluation.md#2-are-the-users-well-defined); built as the mentor's growth conversation in PR #4). This is that starting point.
 
 **How it works.**
 - For each pillar, BRIDGEGOOD writes a few short "I can…" descriptions of practice, for example "I can run a keyboard and screen reader pass and explain what I found". They describe practice, not levels to pass.
@@ -258,7 +258,7 @@ Community session notes┘          │                                        �
                        (evidence linked, private)  (a person responds)   ("ask an alum")
 ```
 
-And back to BRIDGEGOOD: kit adaptation notes, evaluator disagreement counts, empty-field counts and opt-in support requests go to the steward queue proposed in [evaluation.md](evaluation.md). They're aggregated and anonymous, and they change the kits, rubric and role cards over versions that BRIDGEGOOD publishes.
+And back to BRIDGEGOOD: kit adaptation notes, evaluator disagreement counts, empty-field counts and opt-in support requests go to the steward inbox (`/steward`, built in PR #7). They're aggregated and anonymous, and they change the kits, rubric and role cards over versions that BRIDGEGOOD publishes.
 
 ---
 
