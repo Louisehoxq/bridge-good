@@ -1,5 +1,11 @@
 # BridgeGoodx: working notes for Claude
 
+@AGENTS.md
+
+## Stack
+
+Next.js 16 (App Router, `src/`), Tailwind 4, and shadcn/ui on Base UI (`render` prop, not `asChild`). Use zod 4 for validation. Deploy on Vercel. Archetype views live under `src/app/(archetypes)/`. Brand tokens are in `src/app/globals.css`. See `docs/design-system.md` before changing styles or copy.
+
 Hackathon project for BRIDGEGOOD: codify and scale the Design for Social Good philosophy. The full brief is in `docs/challenge.md`. Read it before proposing concepts or writing content.
 
 ## Non-negotiables (from the brief)
