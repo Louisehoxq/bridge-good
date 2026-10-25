@@ -36,7 +36,7 @@ export default function StewardFeedback({ params }: Route.ComponentProps) {
     return (
       <>
         <PageHeader title="Feedback not found">
-          It may have been decided already, or it was sent from another browser. Demo data lives in this browser only.
+          It may have been decided already, or it was sent from another browser.
         </PageHeader>
         <Link to="/steward" className="inline-flex min-h-12 items-center font-semibold text-primary underline underline-offset-4">
           Back to the inbox

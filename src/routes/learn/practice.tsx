@@ -1,13 +1,13 @@
 import { Link, useSearchParams } from "react-router"
 import { Icon } from "@/components/icon"
-import { DraftNote, LibraryPage } from "@/components/library/library-page"
+import { LibraryPage } from "@/components/library/library-page"
 import { MomentRoles } from "@/components/practice/practice-moment"
 import { STUDIO_ROLES } from "@/components/studio/role-badge"
 import { SyntheticBadge } from "@/components/synthetic-badge"
 import { Label } from "@/components/ui/label"
 import { NativeSelect } from "@/components/ui/select"
 import { getPillar, PILLARS, type PillarId } from "@/content/framework"
-import { PRACTICE_META, PRACTICE_MOMENTS, PRACTICE_ROLES, type PracticeRole } from "@/content/practice"
+import { PRACTICE_MOMENTS, PRACTICE_ROLES, type PracticeRole } from "@/content/practice"
 import { pageMeta } from "@/lib/meta"
 
 export const meta = () => pageMeta("Practice moments")
@@ -105,11 +105,6 @@ export default function PracticeIndex() {
         </ul>
       )}
 
-      <div className="mt-10">
-        <DraftNote>
-          {PRACTICE_META.status}. {PRACTICE_META.note} All scenarios are synthetic.
-        </DraftNote>
-      </div>
     </LibraryPage>
   )
 }

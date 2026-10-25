@@ -39,7 +39,7 @@ export default function EventPage({ params }: Route.ComponentProps) {
           <h1 className="type-title-1">{hydrated ? "Event not found" : "Event"}</h1>
           {hydrated && (
             <p className="mt-3 max-w-3xl type-body-lg text-muted-foreground">
-              It may have been hosted from another browser. Demo data lives in this browser only.
+              It may have been removed, or it was created in another browser.
             </p>
           )}
           <Link to="/events" className="mt-4 inline-flex min-h-12 items-center font-semibold text-primary underline underline-offset-4">

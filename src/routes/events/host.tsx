@@ -66,7 +66,7 @@ export default function HostEvent() {
         </div>
         {!session || !who ? (
           <Gate>
-            <p>Hosting is for chapter leads, company hosts, community partners and mentors, including alumni who mentor. In this prototype, log in with one of those demo accounts.</p>
+            <p>Hosting is for chapter leads, company hosts, community partners and mentors, including alumni who mentor.</p>
             <Link to={`/login?next=${encodeURIComponent(here)}`} className={buttonVariants({ size: "lg" })}>
               <Icon name="log-in" />
               Log in to host
@@ -358,7 +358,7 @@ function HostForm({ defaultChapter }: { defaultChapter: string }) {
           </PinnedNote>
         )}
         <p className="flex flex-wrap items-center gap-2 type-small text-muted-foreground">
-          Hosting as <RoleBadge role={who.role}>{who.name}</RoleBadge> (synthetic demo account)
+          Hosting as <RoleBadge role={who.role}>{who.name}</RoleBadge>
         </p>
       </aside>
     </form>

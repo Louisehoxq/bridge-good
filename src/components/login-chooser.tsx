@@ -3,7 +3,6 @@ import { Icon } from "@/components/icon"
 import { accountFor, AMBASSADOR_KIND_INFO, isRole, ROLE_INFO, type Session } from "@/lib/roles"
 import { useSession } from "@/lib/session"
 import { RoleBadge, studioRoleFor } from "@/components/studio/role-badge"
-import { SyntheticBadge } from "@/components/synthetic-badge"
 
 /** One card per synthetic demo account. Chapter lead and company host both sign in to the ambassador area. */
 const ACCOUNTS: Session[] = [
@@ -54,7 +53,6 @@ export function LoginChooser() {
                 >
                   <span className="flex flex-wrap items-center justify-between gap-2">
                     <RoleBadge role={studioRoleFor(session)}>{session.ambassadorKind ? `${account.label} · ambassador` : undefined}</RoleBadge>
-                    <SyntheticBadge />
                   </span>
                   <span>
                     <span className="block type-title-3">{account.name}</span>

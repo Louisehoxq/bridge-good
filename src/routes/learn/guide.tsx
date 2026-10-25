@@ -1,6 +1,6 @@
 import { data } from "react-router"
 import type { Route } from "./+types/guide"
-import { DraftNote, LibraryPage, PromptList } from "@/components/library/library-page"
+import { LibraryPage, PromptList } from "@/components/library/library-page"
 import { SyntheticBadge } from "@/components/synthetic-badge"
 import { DidntFit, guideTarget } from "@/components/feedback/didnt-fit" // Milestone 3 hook
 import { ADAPTATION } from "@/content/adaptation"
@@ -18,8 +18,6 @@ export function loader({ params }: Route.LoaderArgs) {
 
 export const meta = ({ loaderData }: Route.MetaArgs) => pageMeta(loaderData ? GUIDE_TITLES[loaderData.slug].title : "Guide")
 
-const DRAFT = "Draft wording for BRIDGEGOOD to review and own. BRIDGEGOOD confirms anything marked as our proposal."
-
 export default function GuidePage({ loaderData }: Route.ComponentProps) {
   const { slug } = loaderData
   return (
@@ -34,9 +32,6 @@ export default function GuidePage({ loaderData }: Route.ComponentProps) {
       {/* Milestone 3 hook: "this didn't fit" flag. */}
       <div className="mt-10">
         <DidntFit {...guideTarget(slug)} />
-      </div>
-      <div className="mt-10">
-        <DraftNote>{DRAFT}</DraftNote>
       </div>
     </LibraryPage>
   )

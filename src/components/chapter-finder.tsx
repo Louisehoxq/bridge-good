@@ -124,11 +124,15 @@ export function ChapterFinder() {
         />
 
         <section aria-labelledby={`${id}-list`} className="min-w-0 space-y-3">
-          <h2 id={`${id}-list`} className="type-title-3">
-            Chapter list
-          </h2>
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 id={`${id}-list`} className="type-title-3">
+              Chapter list
+            </h2>
+            <SyntheticBadge />
+          </div>
           <p role="status" className="text-muted-foreground">
-            {plural(visible.length, "chapter")} {filtered ? (visible.length === 1 ? "matches your filters" : "match your filters") : "in the proposed model"}
+            {plural(visible.length, "chapter")}
+            {filtered ? (visible.length === 1 ? " matches your filters" : " match your filters") : ""}
             {selected ? `. Showing ${selected.city} on the map.` : ""}
           </p>
           {visible.length === 0 ? (
@@ -148,7 +152,6 @@ export function ChapterFinder() {
                           <h3 id={`chapter-${c.id}-title`} className="type-title-3">
                             {c.city}, {c.country}
                           </h3>
-                          <SyntheticBadge />
                         </div>
                         <p>
                           Chapter lead: <span className="font-bold">{c.lead}</span>, {c.leadOrg}
@@ -208,7 +211,6 @@ function ChapterPopup({ chapter, next, today }: { chapter: Chapter; next?: Commu
       <p className="font-heading text-lg font-semibold">
         {chapter.city}, {chapter.country}
       </p>
-      <SyntheticBadge />
       <p>Chapter lead: {chapter.lead}</p>
       <p className="text-muted-foreground">{chapter.focus.join(", ")}</p>
       <p className="text-muted-foreground">{next ? `Next: ${formatDay(next, today, true)}, ${next.title}` : "No upcoming events"}</p>

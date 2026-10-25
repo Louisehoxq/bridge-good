@@ -1,6 +1,5 @@
-import { DraftNote, LibraryPage } from "@/components/library/library-page"
+import { LibraryPage } from "@/components/library/library-page"
 import { COMPARISON, GLOSSARY } from "@/content/glossary"
-import { FRAMEWORK_META } from "@/content/framework"
 import { pageMeta } from "@/lib/meta"
 import { cn } from "@/lib/utils"
 
@@ -88,11 +87,6 @@ export default function TermsPage() {
         </dl>
       </section>
 
-      <div className="mt-10">
-        <DraftNote>
-          Draft wording, version {FRAMEWORK_META.version}. {FRAMEWORK_META.note}
-        </DraftNote>
-      </div>
     </LibraryPage>
   )
 }

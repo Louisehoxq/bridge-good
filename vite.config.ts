@@ -34,5 +34,10 @@ export default defineConfig(({ mode }) => {
     server: { host: process.env.HOST ?? "0.0.0.0" },
     // MapLibre's worker is an ES module that imports a shared chunk.
     worker: { format: "es" as const },
+    // Dev only: scan every route module for dependencies before the first page loads. Without entries Vite finds them
+    // one page at a time (MapLibre only when the chapter map's effect imports it), re-bundles, and the page that was
+    // loading ends up with two copies of React ("Invalid hook call"): it never hydrates and the map stays on
+    // "Loading the map…". The scan also follows server imports, so a few server-only packages get pre-bundled unused.
+    optimizeDeps: { entries: ["src/root.tsx", "src/routes/**/*.tsx"] },
   }
 })

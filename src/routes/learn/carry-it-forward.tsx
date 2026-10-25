@@ -4,7 +4,7 @@ import { CopyButton } from "@/components/copy-button"
 import { KitFeedbackForm } from "@/components/feedback/kit-feedback"
 import { FrameworkVersion } from "@/components/feedback/framework-hooks"
 import { Icon, type IconName } from "@/components/icon"
-import { DraftNote, LibraryPage } from "@/components/library/library-page"
+import { LibraryPage } from "@/components/library/library-page"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -150,10 +150,6 @@ export default function CarryItForward() {
 
         <KitFeedbackForm />
 
-        <DraftNote>
-          The Design for Social Good philosophy is authored and stewarded by BRIDGEGOOD. This kit is draft wording for BRIDGEGOOD to
-          review. The group in the example feedback is synthetic.
-        </DraftNote>
       </div>
     </LibraryPage>
   )

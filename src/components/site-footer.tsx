@@ -12,8 +12,7 @@ export function SiteFooter() {
             the students, mentors, ambassadors, partners and communities who practice it.
           </p>
           <p className="text-muted-foreground">
-            Hackathon prototype. Every person, organization, chapter and project shown is a synthetic example, not a
-            real BRIDGEGOOD participant. Demo data stays in this browser.
+            All people, organizations, chapters and projects shown are synthetic examples.
           </p>
         </div>
         <nav aria-label="Footer">

@@ -1,10 +1,10 @@
 import { data, Link } from "react-router"
 import type { Route } from "./+types/pillar"
-import { DraftNote, LibraryPage, PromptList } from "@/components/library/library-page"
+import { LibraryPage, PromptList } from "@/components/library/library-page"
 import { SyntheticBadge } from "@/components/synthetic-badge"
 import { DidntFit, pillarTarget } from "@/components/feedback/didnt-fit" // Milestone 3 hook
 import { FieldNotes, FrameworkVersion, OfficialWording } from "@/components/feedback/framework-hooks" // Milestone 3 hook
-import { FRAMEWORK_META, PILLARS, type PillarId } from "@/content/framework"
+import { PILLARS, type PillarId } from "@/content/framework"
 import { RUBRIC } from "@/content/seed"
 import { TRAINING } from "@/content/training"
 import { TRACKS } from "@/lib/library"
@@ -114,11 +114,9 @@ export default function PillarPage({ loaderData }: Route.ComponentProps) {
           <DidntFit {...pillarTarget(pillar.id)} />
         </aside>
       </div>
-      <div className="mt-10">
-        <DraftNote>
-          Version <FrameworkVersion />, {FRAMEWORK_META.status.toLowerCase()}. {FRAMEWORK_META.note}
-        </DraftNote>
-      </div>
+      <p className="mt-10 text-muted-foreground">
+        Version <FrameworkVersion />
+      </p>
     </LibraryPage>
   )
 }

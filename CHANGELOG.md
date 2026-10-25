@@ -10,6 +10,12 @@ The roles are: **apprentice** (BRIDGEGOOD's word for a student), **mentor**, **a
 
 ## Unreleased
 
+### Less disclaimer copy, and the chapter map renders in dev
+
+- **Everyone:** the nav says "Chapters" instead of "Chapters (concept)". The welcome page loses "Draft wording, for BRIDGEGOOD to review." and the tuition sentence under "Who this philosophy belongs to". `/learn` loses the "Drafted by the hackathon team" note, `/events` its synthetic-events note, and `/chapters` and `/chapters/:id` the "Proposed chapter model (concept)" pill and the made-up-chapters paragraph.
+- **Everyone:** one synthetic label per page instead of several. The footer says "All people, organizations, chapters and projects shown are synthetic examples." without the hackathon line; the "Draft for BRIDGEGOOD review" notes are gone from the pillar, terms, prompts, changelog, guide, practice and carry-it-forward pages; login and home drop the repeated "demo accounts, no password"; `/chapters` is titled "Chapters" with one badge on the list instead of one per card; event pages lose "(synthetic)" on join links and RSVP counts and the "In this prototype" asides.
+- Technical: `optimizeDeps.entries` in `vite.config.ts` scans all route modules up front, so Vite no longer re-bundles mid-load when the chapter map first imports MapLibre (that left two copies of React and a page that never hydrated). Removed the unused `EVENTS_NOTE`, `CHAPTER_MODEL_LABEL` and `CHAPTER_MODEL_NOTE` constants.
+
 ### Dev server reachable on the local network
 
 - Technical: `npm run dev` now listens on `0.0.0.0` (`server.host` in `vite.config.ts`), so other devices on the same Wi-Fi can open `http://<your-ip>:5173`. Set `HOST=127.0.0.1` to keep it local only. For `npm start`, set `HOST=0.0.0.0` (port 3000).

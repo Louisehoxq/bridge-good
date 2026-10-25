@@ -231,12 +231,12 @@ export default function DesignPage() {
                   <PeopleChip name="Eastside Food Pantry" role="community-partner" />
                 </li>
               </ul>
-              <p className="type-small text-muted-foreground">Initials only. Synthetic examples.</p>
+              <p className="type-small text-muted-foreground">Initials only.</p>
             </Card>
 
             <Card title="Path">
               <p className="text-muted-foreground">Only where the relationship is real: a team, a journey, the impact loop.</p>
-              <TeamPath label="Your team (synthetic example)">
+              <TeamPath label="Your team">
                 <li>
                   <PeopleChip stacked name="Ari Santos" role="apprentice" you />
                 </li>
@@ -249,7 +249,7 @@ export default function DesignPage() {
               </TeamPath>
               <div data-archetype="apprentice">
                 <JourneyStepper
-                  label="Your apprenticeship path (synthetic example)"
+                  label="Your apprenticeship path"
                   steps={[
                     { label: "Bootcamp", status: "done" },
                     { label: "Mini project", status: "done" },
@@ -285,12 +285,11 @@ export default function DesignPage() {
               <div className="space-y-1 border-l-4 border-gold pl-4">
                 <p className="font-semibold">{principle.name}</p>
                 <p>{principle.meaning}</p>
-                <p className="type-small text-muted-foreground">BRIDGEGOOD&apos;s wording (draft for BRIDGEGOOD to review)</p>
+                <p className="type-small text-muted-foreground">BRIDGEGOOD&apos;s wording</p>
               </div>
               <FieldNote chapter="the Chicago chapter">
                 <p>In our chapter, lived experience includes language. We ask every brief which languages its community speaks.</p>
               </FieldNote>
-              <p className="type-small text-muted-foreground">Synthetic example.</p>
             </Card>
 
             <Card title="Icons">
