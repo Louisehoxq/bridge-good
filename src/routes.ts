@@ -14,6 +14,7 @@ export default [
   route("logout", "routes/logout.ts"),
   route("chapters", "routes/chapters.tsx"),
   route("api/scope", "routes/api.scope.ts"),
+  route("api/reflect", "routes/api.reflect.ts"),
   route("design", "routes/design.tsx"),
 
   // The public library: one stable URL per page. Role areas link in here.
