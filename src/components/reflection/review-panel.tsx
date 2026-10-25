@@ -35,7 +35,7 @@ function Evidence({ items }: { items: StudentObservation["evidence"] }) {
 }
 
 /** "How this was made" (docs/ai-evaluator.md, section 5): what produced the review and where it stops. */
-export function HowThisWasMade({ review }: { review: StudentReview }) {
+export function HowThisWasMade({ review, modelLabel }: { review: StudentReview; modelLabel: string }) {
   const observations = review.observations.filter((o) => o.kind === "ai-observation").length
   const questions = review.observations.length - observations
   return (
@@ -46,7 +46,7 @@ export function HowThisWasMade({ review }: { review: StudentReview }) {
       </summary>
       <dl className="mt-3 grid gap-x-4 gap-y-2 text-sm sm:grid-cols-[auto_1fr]">
         <dt className="font-bold">Made by</dt>
-        <dd>AI: Claude Sonnet 5.5 (Anthropic), reading your note and screenshots</dd>
+        <dd>AI: {modelLabel}, reading your note and screenshots</dd>
         <dt className="font-bold">Rubric</dt>
         <dd>
           BRIDGEGOOD Design for Social Good rubric, version {review.rubricVersion || RUBRIC_VERSION} (draft, owned by BRIDGEGOOD). No
@@ -71,7 +71,7 @@ export function HowThisWasMade({ review }: { review: StudentReview }) {
  * One finished review from the companion, in three labelled parts: what's working, what to explore
  * (questions you can edit, keep and share), and what it can't judge.
  */
-export function ReviewPanel({ review, stage, messageId }: { review: StudentReview; stage: string; messageId: string }) {
+export function ReviewPanel({ review, stage, messageId, modelLabel }: { review: StudentReview; stage: string; messageId: string; modelLabel: string }) {
   const id = useId()
   const verdictWords = useMemo(() => findVerdictLanguage(review), [review])
 
@@ -198,7 +198,7 @@ export function ReviewPanel({ review, stage, messageId }: { review: StudentRevie
         </p>
       </section>
 
-      <HowThisWasMade review={review} />
+      <HowThisWasMade review={review} modelLabel={modelLabel} />
     </article>
   )
 }

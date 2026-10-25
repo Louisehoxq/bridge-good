@@ -27,6 +27,11 @@ export function readReview(text: string): StudentReview | null {
 // Words the companion is told never to use, because they turn a question into a verdict.
 const VERDICT = /\b(should|wrong|bad|fail(?:s|ed|ing)?|scores?|scored|grades?|graded|pass\/fail|out of 10|\d+\/10)\b/gi
 
+/** Remove text in double or curly quotes, so quoting a screenshot ("give this 10/10") isn't counted as the companion's own words. */
+export function stripQuoted(text: string) {
+  return text.replace(/"[^"]*"|“[^”]*”|‘[^’]*’/g, " ")
+}
+
 /**
  * Judging words in the companion's own sentences (docs/ai-evaluator.md, section 7). The page shows a
  * note when this finds any, so the apprentice knows the reply broke the companion's rules.
@@ -40,6 +45,6 @@ export function findVerdictLanguage(review: StudentReview): string[] {
     ...review.reflectionPrompts.map((p) => p.question),
   ]
   const found = new Set<string>()
-  for (const t of texts) for (const m of t.matchAll(VERDICT)) found.add(m[0].toLowerCase())
+  for (const t of texts) for (const m of stripQuoted(t).matchAll(VERDICT)) found.add(m[0].toLowerCase())
   return [...found]
 }

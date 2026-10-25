@@ -1,6 +1,6 @@
 # Gemma 4 prototype for the Reflection Companion: build instructions
 
-> **Status: plan, not built.** This is the brief for running the student Reflection Companion on Google's Gemma 4 open-weights models instead of Claude, so the two can be compared. BRIDGEGOOD decides which model the real service uses. Read `docs/ai-evaluator.md` first, especially sections 3, 4, 7 and "What shipped: student Reflection Companion".
+> **Status: path A built, not yet run against a live model.** See [Path A: what's built and how to run it](#path-a-whats-built-and-how-to-run-it). This is the brief for running the student Reflection Companion on Google's Gemma 4 open-weights models instead of Claude, so the two can be compared. BRIDGEGOOD decides which model the real service uses. Read `docs/ai-evaluator.md` first, especially sections 3, 4, 7 and "What shipped: student Reflection Companion".
 
 ## Goal
 
@@ -16,6 +16,56 @@ Run the same Reflection Companion on Gemma 4, behind an environment flag, withou
 - Fine-tuning.
 - Changing the rubric, the schema or the UI copy, except for the model name.
 - Making Gemma the default.
+
+## Path A: what's built and how to run it
+
+| Step | Status | Where |
+|---|---|---|
+| 1. Environment flag | Done for `claude` and `gemma-gateway`. `gemma-local` (path B) isn't built. An unknown value logs a warning once and uses Claude | `src/lib/evaluator/model.server.ts` |
+| 2. Model switch | Done: `evaluatorProvider()`, `evaluatorModel()`, `isEvaluatorConfigured()` and `evaluatorLabel()`. Gemma needs the AI Gateway: an Anthropic key alone leaves the companion off. `isAiConfigured()` is unchanged | same file, used by `src/routes/api.reflect.ts` and `src/routes/student/reflection.tsx` |
+| 3. Real model name in the UI | Done. The page loader returns `modelLabel`, and "How this was made" shows it, e.g. "Gemma 4 31B (Google, open weights), through the Vercel AI Gateway" | `review-panel.tsx`, `reflection-companion.tsx` |
+| 4–6. Structured output, images, prompt fit | Not checked yet: these need a live run. The comparison script's "Readable replies" row answers step 4 | |
+| 7. Golden set and comparison script | Done: 6 synthetic items (contrast, pre-ticked consent, English-only for a Spanish-first community, clean control, injection, personal data), automatic checks, and a script | `src/content/evaluator-goldens/`, `src/lib/evaluator/golden-checks.ts`, `scripts/compare-evaluators.ts` |
+
+To try Gemma in the app, add to `.env.local`:
+
+```bash
+AI_GATEWAY_API_KEY=<your Vercel AI Gateway key>
+EVALUATOR_PROVIDER=gemma-gateway
+# Optional: the smaller mixture-of-experts model
+# EVALUATOR_MODEL=google/gemma-4-26b-a4b-it
+```
+
+The comparison script reads `.env.local` and compares both providers whatever `EVALUATOR_PROVIDER` says. Claude runs with `ANTHROPIC_API_KEY` or the Gateway key.
+
+Check the golden set without calling a model:
+
+```bash
+node --experimental-strip-types --no-warnings --import ./src/lib/evaluator/test/register.mjs scripts/compare-evaluators.ts --dry-run
+```
+
+Compare Claude and Gemma, 3 runs per item:
+
+```bash
+node --env-file-if-exists=.env.local --experimental-strip-types --no-warnings --import ./src/lib/evaluator/test/register.mjs scripts/compare-evaluators.ts --runs 3
+```
+
+Options:
+- `--providers gemma-gateway` runs one provider.
+- `--only contrast,injection` runs some items.
+
+The script prints a Markdown table for the Results section below. It saves raw replies to `.evaluator-runs/`, which is git-ignored.
+
+**Verified:**
+- Typecheck, lint, build and 33 unit tests pass. The tests cover the provider switch and each scoring check.
+- The dry run passes. A placeholder Gateway key records an auth error cleanly.
+- In the browser, the page with `EVALUATOR_PROVIDER=gemma-gateway` is switched on and names Gemma 4 in "How this was made". The reply there was mocked.
+
+**Not verified:** any live Gemma or Claude reply. No key was available.
+
+**Still to do:**
+- Add the env lines above to `.env.example`. That file is owned by another workstream.
+- Run the comparison and fill in Results.
 
 ## Why try an open-weights model
 
@@ -181,9 +231,13 @@ Coordinate before touching these:
 - The route checks, the redaction of emails and phone numbers, and the schema with no score fields are model-independent. Don't loosen them for Gemma.
 - If Gemma's replies fail `readReview()` often, fix the prompt or the decoding. Don't relax the schema check the UI relies on.
 
+## Results
+
+Not run yet. Paste the script's table here, with the date, run count and model IDs.
+
 ## Write-up
 
-Add a "Results" section to this file with:
+Fill in the Results section above with:
 - The table from step 7 for both models.
 - The reviewers' notes.
 - A recommendation. For example: "Claude for the student lens. Gemma 4 for a self-hosted chapter pilot once seeded-issue recall reaches the target."

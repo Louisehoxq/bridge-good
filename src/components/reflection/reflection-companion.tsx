@@ -42,7 +42,7 @@ const stageLabel = (id: StageId) => STAGES.find((s) => s.id === id)?.label ?? id
  * The AI Reflection Companion: the apprentice describes their work, the companion answers with
  * questions tied to the pillars and reflection prompts, and the apprentice decides what to keep.
  */
-export function ReflectionCompanion({ aiEnabled }: { aiEnabled: boolean }) {
+export function ReflectionCompanion({ aiEnabled, modelLabel }: { aiEnabled: boolean; modelLabel: string }) {
   const [transport] = useState(() => new DefaultChatTransport({ api: "/api/reflect" }))
   const { messages, sendMessage, regenerate, setMessages, status, error, stop, clearError } = useChat({ transport })
   const [stage, setStage] = useState<StageId>("mini-project")
@@ -152,7 +152,12 @@ export function ReflectionCompanion({ aiEnabled }: { aiEnabled: boolean }) {
               {m.role === "user" ? (
                 <SentNote message={m} />
               ) : (
-                <AssistantTurn message={m} streaming={status === "streaming" && i === messages.length - 1} stage={stageLabel(stage)} />
+                <AssistantTurn
+                  message={m}
+                  streaming={status === "streaming" && i === messages.length - 1}
+                  stage={stageLabel(stage)}
+                  modelLabel={modelLabel}
+                />
               )}
             </li>
           ))}
@@ -359,7 +364,7 @@ function SentNote({ message }: { message: UIMessage }) {
   )
 }
 
-function AssistantTurn({ message, streaming, stage }: { message: UIMessage; streaming: boolean; stage: string }) {
+function AssistantTurn({ message, streaming, stage, modelLabel }: { message: UIMessage; streaming: boolean; stage: string; modelLabel: string }) {
   const text = textOf(message)
   const review = useMemo(() => (streaming ? null : readReview(text)), [streaming, text])
   if (streaming) {
@@ -377,7 +382,7 @@ function AssistantTurn({ message, streaming, stage }: { message: UIMessage; stre
       </p>
     )
   }
-  return <ReviewPanel review={review} stage={stage} messageId={message.id} />
+  return <ReviewPanel review={review} stage={stage} messageId={message.id} modelLabel={modelLabel} />
 }
 
 /** No API key: the page still works, with BRIDGEGOOD's own prompts for this moment. */

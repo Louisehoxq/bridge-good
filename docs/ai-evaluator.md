@@ -252,7 +252,7 @@ This is the student lens from Phase 0 above. The build brief called it "phase 1"
 | 4. Contrast checker (kind A) | Done. It's deterministic and labelled "Automated check, not AI" | `src/lib/evaluator/checks/contrast.ts`, `contrast-checker.tsx` |
 | 5. Feedback controls | Partly done. Useful and Not right (with a reason) are saved to the `evaluator-feedback` collection, without the work itself. Not done: "Something's missing" and the staff "What people told us" counter | `feedback-controls.tsx` |
 | 6. Partner framing flags | Not done (that work is in `api.scope.ts`, owned elsewhere) | |
-| 7. Golden set | Not done. Unit tests cover the schema (no score fields), the prompt rules, the personal-data screen, route validation and contrast | `src/lib/evaluator/test/` |
+| 7. Golden set | Done for the student lens: 6 synthetic items (seeded contrast, pre-ticked consent and English-only issues, a clean control, an injection test and a personal-data test). They have automatic checks and a script that compares models (built for the Gemma 4 prototype, `docs/gemma-prototype.md`). Not done: paired bias variants and a live run. Unit tests also cover the schema (no score fields), the prompt rules, the personal-data screen, route validation and contrast | `src/content/evaluator-goldens/`, `scripts/compare-evaluators.ts`, `src/lib/evaluator/test/` |
 
 Also shipped:
 - A regex personal-data pre-screen that blocks sending, with an error summary.
