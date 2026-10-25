@@ -21,7 +21,7 @@ export default function StewardFramework() {
   return (
     <>
       <PageHeader title="Versions and wording">
-        {FRAMEWORK_META.author} authors the Design for Social Good framework. You&apos;re the only role that can change its official
+        You&apos;re the only role that can change its official
         wording. Each change publishes a new version, with the old and new wording and your reason in the public changelog.
       </PageHeader>
       <p className="mb-8 flex flex-wrap items-center gap-x-4 gap-y-1">
