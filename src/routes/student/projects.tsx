@@ -78,7 +78,7 @@ export default function ChooseProject() {
                   {p.title}
                 </h2>
                 <p className="type-small text-muted-foreground">
-                  {p.organisationType} · {p.location}
+                  {p.organizationType} · {p.location}
                 </p>
                 <p>{p.summary}</p>
                 <dl className="grid gap-2 sm:grid-cols-2">

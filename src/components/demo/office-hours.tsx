@@ -49,7 +49,7 @@ export function StudentOfficeHours({ headingLevel = 2 }: { headingLevel?: 2 | 3 
           {open.map((s) => (
             <li key={s.id} className="flex flex-col gap-3 rounded-xl border bg-card p-5">
               <p className="flex items-center gap-2 font-bold">
-                <Icon name="calendar_clock" className="text-archetype" />
+                <Icon name="calendar-clock" className="text-archetype" />
                 {s.when}
               </p>
               <p>
@@ -151,7 +151,7 @@ export function MentorOfficeHours({ headingLevel = 2 }: { headingLevel?: 2 | 3 }
               ) : (
                 <>
                   <span className="inline-flex items-center gap-1.5 text-muted-foreground">
-                    <Icon name="calendar_today" />
+                    <Icon name="calendar" />
                     Open
                   </span>
                   <Button variant="outline" size="sm" onClick={() => remove(s.id)}>

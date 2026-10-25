@@ -30,7 +30,7 @@ export default function PartnerToolkit() {
         <ul className="divide-y rounded-xl border bg-card">
           {LEGAL_TEMPLATES.map((t) => (
             <li key={t.name} className="flex flex-wrap items-center gap-x-4 gap-y-2 p-4">
-              <Icon name="description" className="shrink-0 text-archetype" />
+              <Icon name="file-text" className="shrink-0 text-archetype" />
               <span className="min-w-0 flex-1 basis-56">
                 <span className="block font-bold">{t.name}</span>
                 <span className="text-muted-foreground">{t.description}</span>

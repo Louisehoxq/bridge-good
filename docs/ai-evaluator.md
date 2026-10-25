@@ -270,12 +270,12 @@ node --experimental-strip-types --no-warnings --import ./src/lib/evaluator/test/
 
 There's no `test` script in `package.json` yet.
 
-**TODO for the routes owner: where the mentor sees shared questions.** Apprentices share questions, never answers or screenshots, into the demo collection `mentor-conversation-starters` (type `ConversationStarter` in `src/lib/evaluator/store.ts`). `MentorConversationStarters` in `src/components/reflection/shared-lists.tsx` is ready to mount on the mentor area, for example `/mentor/submissions` or the mentor overview. Until it's mounted, the student page says the mentor view isn't built yet.
+**TODO for the routes owner: where the mentor sees shared questions.** Apprentices share questions, never answers or screenshots, into the demo collection `mentor-conversation-starters` (type `ConversationStarter` in `src/lib/evaluator/store.ts`). `MentorConversationStarters` in `src/components/reflection/shared-lists.tsx` is ready to mount on the mentor area, for example `/mentor/conversations` or the mentor overview. Until it's mounted, the student page says the mentor view isn't built yet.
 
 Not verified: a live model call. No API key was available while this was built. The off state, the error path and the review panel (fed a mocked structured reply) were checked in the browser.
 
 **Phase 1: mentor support**
-- Mentor critique-prep lens on `/mentor/submissions`, only for submissions the student chose to share.
+- Mentor critique-prep lens on `/mentor/conversations`, only for submissions the student chose to share.
 - **"Review first" by default:** the mentor completes their own rubric pass, then can open the AI notes to compare. This reduces anchoring.
 - Override & note, plus the per-review "shared with mentor" toggle on the student side.
 
@@ -286,7 +286,7 @@ Not verified: a live model call. No API key was available while this was built. 
 - Golden-set run as a script in CI.
 
 **Phase 3: governance**
-- Publish the rubric change log on `/training`.
+- Publish the rubric change log on `/learn`.
 - Hold a regular rubric review with staff and community representatives.
 - Write a bias audit report each cohort.
 

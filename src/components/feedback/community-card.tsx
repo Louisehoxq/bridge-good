@@ -14,7 +14,7 @@ export function CommunityCard({ item, link }: { item: CommunityFeedback; link?: 
       <div className="space-y-1">
         <div className="flex flex-wrap items-center gap-2">
           <h2 id={`${id}-title`} className="flex items-center gap-2 type-title-3">
-            <Icon name="group" />
+            <Icon name="users" />
             Community feedback
           </h2>
           {item.synthetic && <SyntheticBadge />}

@@ -9,9 +9,9 @@ const tag = "inline-flex max-w-full items-center gap-1.5 rounded-full px-3 py-1 
 export const KIND_ICON: Record<FeedbackKind, IconName> = {
   adaptation: "map-pin",
   "didnt-fit": "flag",
-  "ai-disagreement": "smart_toy",
+  "ai-disagreement": "bot",
   retrospective: "heart-handshake",
-  community: "group",
+  community: "users",
 }
 
 const STATUS: Record<FeedbackStatus, { label: string; icon: IconName; className: string }> = {

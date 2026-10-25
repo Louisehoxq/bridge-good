@@ -112,14 +112,14 @@ export function ChapterFinder() {
                   {c.synthetic && <SyntheticBadge />}
                 </div>
                 <p className="mt-1">
-                  Ambassador: <span className="font-bold">{c.ambassador}</span>, {c.organisation}
+                  Ambassador: <span className="font-bold">{c.ambassador}</span>, {c.organization}
                 </p>
                 <ul className="mt-2 space-y-1 text-muted-foreground">
                   <li className="flex items-start gap-2">
-                    <Icon name="calendar_today" className="mt-1 text-base" /> <span>Meets: {c.meets}</span>
+                    <Icon name="calendar" className="mt-1 text-base" /> <span>Meets: {c.meets}</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Icon name="location_on" className="mt-1 text-base" /> <span>Focus: {c.focus}</span>
+                    <Icon name="map-pin" className="mt-1 text-base" /> <span>Focus: {c.focus}</span>
                   </li>
                 </ul>
                 <a

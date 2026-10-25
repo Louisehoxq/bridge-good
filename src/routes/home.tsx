@@ -49,7 +49,7 @@ export default function WelcomePage() {
                     <span>{r.who}</span>
                     <span className="mt-auto inline-flex items-center gap-2 font-bold text-primary">
                       {r.cta}
-                      <Icon name="arrow_forward" className="text-base transition-transform group-hover:translate-x-1" />
+                      <Icon name="arrow-right" className="text-base transition-transform group-hover:translate-x-1" />
                     </span>
                   </Link>
                 </li>
@@ -92,7 +92,7 @@ export default function WelcomePage() {
                   </span>
                   <span className="mt-auto inline-flex items-center gap-2 pt-2 font-bold text-primary">
                     Read about {p.name}, with {p.promptIds.length} reflection {p.promptIds.length === 1 ? "prompt" : "prompts"}
-                    <Icon name="arrow_forward" className="text-base transition-transform group-hover:translate-x-1" />
+                    <Icon name="arrow-right" className="text-base transition-transform group-hover:translate-x-1" />
                   </span>
                 </Link>
               </li>
@@ -106,7 +106,7 @@ export default function WelcomePage() {
                 </span>
                 <span className="mt-auto inline-flex items-center gap-2 pt-2 font-bold text-primary">
                   Terms of reference
-                  <Icon name="arrow_forward" className="text-base transition-transform group-hover:translate-x-1" />
+                  <Icon name="arrow-right" className="text-base transition-transform group-hover:translate-x-1" />
                 </span>
               </Link>
             </li>

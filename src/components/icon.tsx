@@ -50,29 +50,27 @@ import {
 import { cn } from "@/lib/utils"
 
 /**
- * Lucide outline icons (DESIGN.md section 5). The snake_case names are the Material Symbols names the app
- * used before Bridge Studio, kept so call sites don't change. The same icon always means the same thing.
+ * Lucide outline icons (DESIGN.md section 5), named by their kebab-case Lucide names. The same icon always
+ * means the same thing.
  */
 const ICONS = {
-  accessibility_new: Accessibility,
-  add_photo_alternate: ImagePlus,
-  arrow_forward: ArrowRight,
-  auto_awesome: Sparkles,
-  calendar_clock: CalendarClock,
-  calendar_today: Calendar,
+  accessibility: Accessibility,
+  "arrow-right": ArrowRight,
+  bot: Bot,
+  calendar: Calendar,
+  "calendar-clock": CalendarClock,
   check: Check,
-  close: X,
-  description: FileText,
-  group: Users,
-  location_on: MapPin,
-  login: LogIn,
+  clock: Clock,
+  "circle-play": CirclePlay,
+  "external-link": ExternalLink,
+  "file-text": FileText,
+  "image-plus": ImagePlus,
+  "log-in": LogIn,
   mail: Mail,
   menu: Menu,
-  open_in_new: ExternalLink,
-  play_circle: CirclePlay,
-  schedule: Clock,
   send: Send,
-  smart_toy: Bot,
+  users: Users,
+  x: X,
 
   // Bridge Studio meanings: roles, status, AI drafts and studio marks.
   sprout: Sprout,

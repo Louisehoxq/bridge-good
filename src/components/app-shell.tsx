@@ -28,7 +28,7 @@ const SIDEBAR_ICONS: Record<string, IconName> = {
   "/student/submissions": "messages-square",
   "/student/reflection": "sticky-note",
   "/student/mentor": "message-circle-heart",
-  "/student/community": "group",
+  "/student/community": "users",
   "/mentor": "house",
   "/mentor/prepare": "book-open",
   "/mentor/conversations": "messages-square",
@@ -40,7 +40,7 @@ const SIDEBAR_ICONS: Record<string, IconName> = {
   "/ambassador/toolkits": "folder-open",
   "/partner": "house",
   "/partner/submit": "file-plus",
-  "/partner/project": "group",
+  "/partner/project": "users",
   "/partner/gallery": "layout-grid",
   "/partner/toolkit": "folder-open",
   // Milestone 3: the BRIDGEGOOD steward area.

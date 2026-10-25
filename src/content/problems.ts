@@ -8,8 +8,7 @@ export type ProblemStatus = "needs-sponsor" | "open-for-students" | "in-progress
 export type Problem = {
   id: string
   title: string
-  /** Kept as `organisationType` for compatibility. Values use US spelling. */
-  organisationType: string
+  organizationType: string
   location: string
   community: string
   summary: string
@@ -36,7 +35,7 @@ export const PROBLEMS: Problem[] = [
   {
     id: "food-pantry-booking",
     title: "Booking a food pantry visit without a smartphone",
-    organisationType: "Neighborhood food pantry",
+    organizationType: "Neighborhood food pantry",
     location: "Oakland, CA",
     community: "Older adults and families with limited internet access",
     summary:
@@ -49,7 +48,7 @@ export const PROBLEMS: Problem[] = [
   {
     id: "youth-sports-signup",
     title: "Sign-up in three languages for a youth sports league",
-    organisationType: "Volunteer-run youth sports league",
+    organizationType: "Volunteer-run youth sports league",
     location: "Houston, TX",
     community: "Parents who speak Spanish or Vietnamese",
     summary:
@@ -62,7 +61,7 @@ export const PROBLEMS: Problem[] = [
   {
     id: "tenant-rights-site",
     title: "A tenant-rights website people can actually find answers on",
-    organisationType: "Tenant advocacy nonprofit",
+    organizationType: "Tenant advocacy nonprofit",
     location: "Chicago, IL",
     community: "Renters facing eviction",
     summary:
@@ -75,7 +74,7 @@ export const PROBLEMS: Problem[] = [
   {
     id: "deaf-arts-access",
     title: "Making arts events accessible to Deaf audiences",
-    organisationType: "Community arts collective",
+    organizationType: "Community arts collective",
     location: "London, UK",
     community: "Deaf and hard-of-hearing residents",
     summary:
@@ -88,7 +87,7 @@ export const PROBLEMS: Problem[] = [
   {
     id: "clinic-intake",
     title: "A calmer check-in process for a free health clinic",
-    organisationType: "Free community health clinic",
+    organizationType: "Free community health clinic",
     location: "Atlanta, GA",
     community: "Patients without health insurance, many visiting for the first time",
     summary:
@@ -100,7 +99,7 @@ export const PROBLEMS: Problem[] = [
   {
     id: "library-digital-skills",
     title: "Finding free digital skills classes at the library",
-    organisationType: "Public library foundation",
+    organizationType: "Public library foundation",
     location: "Detroit, MI",
     community: "Adults returning to work",
     summary: "Classes were listed in a 20-page PDF. The team designed a simple class finder together with library patrons.",
@@ -115,7 +114,7 @@ export const PROBLEMS: Problem[] = [
   {
     id: "refugee-welcome-kit",
     title: "A welcome guide for newly arrived refugee families",
-    organisationType: "Refugee resettlement nonprofit",
+    organizationType: "Refugee resettlement nonprofit",
     location: "Toronto, Canada",
     community: "Newly arrived families who speak Dari, Arabic or Tigrinya",
     summary:
@@ -131,7 +130,7 @@ export const PROBLEMS: Problem[] = [
   {
     id: "wheelchair-transit-map",
     title: "Step-free routes for a community transit map",
-    organisationType: "Disability rights collective",
+    organizationType: "Disability rights collective",
     location: "Melbourne, Australia",
     community: "Wheelchair users and parents with strollers",
     summary:

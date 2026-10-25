@@ -3,7 +3,7 @@ import { z } from "zod"
 /** Project brief built with the AI scoping assistant. Every field is optional so the AI can fill it in gradually. */
 export const briefSchema = z.object({
   title: z.string().describe("Short, plain-language project title").optional(),
-  organisation: z.string().describe("Type of organization, e.g. 'tenant advocacy nonprofit'. No personal names.").optional(),
+  organization: z.string().describe("Type of organization, e.g. 'tenant advocacy nonprofit'. No personal names.").optional(),
   problem: z.string().describe("What isn't working today and what happens because of it").optional(),
   community: z.string().describe("Who is affected, described as a group. No personal details.").optional(),
   communityShaping: z
@@ -25,7 +25,7 @@ export type Brief = z.infer<typeof briefSchema>
 
 export const BRIEF_FIELDS: { key: keyof Brief; label: string; list?: boolean; long?: boolean; hint?: string }[] = [
   { key: "title", label: "Project title" },
-  { key: "organisation", label: "Organization type" },
+  { key: "organization", label: "Organization type" },
   { key: "problem", label: "Problem", long: true },
   { key: "community", label: "Community affected", long: true },
   {

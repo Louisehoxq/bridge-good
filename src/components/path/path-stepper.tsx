@@ -54,7 +54,7 @@ export function PathStepper({
           {linkToPath && (
             <Link to={path.home} className="inline-flex min-h-12 items-center gap-1 font-semibold text-archetype underline underline-offset-4">
               Open your path
-              <Icon name="arrow_forward" className="text-base" />
+              <Icon name="arrow-right" className="text-base" />
             </Link>
           )}
         </div>
@@ -100,7 +100,7 @@ export function PathStepper({
                 <Link to={s.href} className="inline-flex min-h-12 items-center gap-1 font-semibold text-archetype underline underline-offset-4">
                   {isCurrent ? "Go to this step" : "Open"}
                   <span className="sr-only">: {s.title}</span>
-                  <Icon name="arrow_forward" className="text-base" />
+                  <Icon name="arrow-right" className="text-base" />
                 </Link>
               </div>
               {s.learn.length > 0 && (

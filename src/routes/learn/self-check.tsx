@@ -105,7 +105,7 @@ export default function SelfCheckPage() {
               <p className="mt-2">{SELF_CHECK.officialCriteria.text}</p>
               <a href={SELF_CHECK.officialCriteria.href} className={buttonVariants({ className: "mt-4 h-auto max-w-full py-3 whitespace-normal" })}>
                 Read the Apprenticeship page
-                <Icon name="open_in_new" />
+                <Icon name="external-link" />
               </a>
             </section>
             <section aria-labelledby="provides-title" className="rounded-2xl border bg-card p-6">
