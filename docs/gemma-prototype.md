@@ -1,6 +1,6 @@
 # Gemma 4 prototype for the Reflection Companion: build instructions
 
-> **Status: path A built, not yet run against a live model.** See [Path A: what's built and how to run it](#path-a-whats-built-and-how-to-run-it). This is the brief for running the student Reflection Companion on Google's Gemma 4 open-weights models instead of Claude, so the two can be compared. BRIDGEGOOD decides which model the real service uses. Read `docs/ai-evaluator.md` first, especially sections 3, 4, 7 and "What shipped: student Reflection Companion".
+> **Status (after PR #7): path A built, not yet run against a live model.** Running it is item 2 under "Next" in [BACKLOG.md](BACKLOG.md). See [Path A: what's built and how to run it](#path-a-whats-built-and-how-to-run-it). This is the brief for running the student Reflection Companion on Google's Gemma 4 open-weights models instead of Claude, so the two can be compared. BRIDGEGOOD decides which model the real service uses. Read [ai-evaluator.md](ai-evaluator.md) first, especially sections 3, 4, 7 and "What shipped: student Reflection Companion".
 
 ## Goal
 
@@ -57,7 +57,7 @@ Options:
 The script prints a Markdown table for the Results section below. It saves raw replies to `.evaluator-runs/`, which is git-ignored.
 
 **Verified:**
-- Typecheck, lint, build and 33 unit tests pass. The tests cover the provider switch and each scoring check.
+- Typecheck, lint, build and the evaluator unit tests (`npm run test:unit`) pass. The tests cover the provider switch and each scoring check.
 - The dry run passes. A placeholder Gateway key records an auth error cleanly.
 - In the browser, the page with `EVALUATOR_PROVIDER=gemma-gateway` is switched on and names Gemma 4 in "How this was made". The reply there was mocked.
 
@@ -215,7 +215,7 @@ New files:
 - tests
 
 Coordinate before touching these:
-- `package.json`: path B adds `@ai-sdk/openai-compatible`, and a `test` script would help.
+- `package.json`: path B adds `@ai-sdk/openai-compatible`.
 - `.env.example`
 - `src/lib/ai.server.ts`
 

@@ -1,5 +1,43 @@
 # Evaluation after milestone 2 (2026-10-25)
 
+> **Archived (October 2026).** Kept for its reasoning. What shipped is in [CHANGELOG.md](../../CHANGELOG.md), and what's open is in [BACKLOG.md](../BACKLOG.md). Paths to `docs/design-followups.md` and `docs/page-copy-changes.md` below refer to files that have since been deleted; their contents are in the changelog (PR #6) and the backlog.
+
+## Status of the recommendations
+
+| Recommendation | Section | Status |
+|---|---|---|
+| Sync `CLAUDE.md`, README, `DESIGN.md` and older docs; add `test:unit`, CI and WCAG layout checks; fix the header reflow bug | §1, §4.1 | Implemented (PR #5) |
+| Confirm `docs/page-copy-changes.md` is applied | §1 | Implemented (PR #6, file deleted) |
+| Fix `src/app/` paths in `docs/ai-evaluator.md` | §1 | Implemented (docs housekeeping, unreleased) |
+| No all caps, the `type-*` scale on pages, no `text-xs` or opacity on text, no pill links | §2, §4.2 | Implemented (PR #6) |
+| `DraftFrame` on all AI output | §2, §4.2 | Implemented (PR #6) |
+| `PeopleChip` and `Path` on team views, `PinnedNote`, `Highlight`, `RoleBadge` wherever a role appears | §2, §4.2 | Implemented (PR #6) |
+| Remove the Material 3 aliases from `app.css` | §4.2 | Implemented (PR #6) |
+| Fix the 7 known layout failures | §2b, §4.2 | Implemented (PR #6) |
+| Manual checks: forced colors, keyboard only, reading level | §2b | Implemented (PR #6; reading level scanned, rewording in backlog: [Later 5](../BACKLOG.md#later)) |
+| Screen reader pass (VoiceOver or NVDA) | §2b | In backlog ([Later 3](../BACKLOG.md#later)) |
+| Pillars as the spine of the welcome page; principles as "how BRIDGEGOOD works" | §2c.1 | Implemented (PR #6) |
+| Shorter welcome page, routing by role; terms into `/learn` | §2c.2 | Implemented (PR #6) |
+| Your path as the apprentice home | §2c.3 | Implemented (PR #6) |
+| Legal templates into Toolkit & FAQs | §2c.4 | Implemented (PR #6) |
+| URLs that match their labels | §2c.5 | Implemented (PR #6) |
+| A place for staff | §2c.6 | Implemented (PR #7) |
+| Record the desktop-first decision in `social-good.md` | §3 | Implemented (PR #5) |
+| Feedback loop: steward inbox, adaptations, flags, disagreement records, retrospectives, community card, versioned framework, changelog, field notes | §3, §4.3 | Implemented (PR #7) |
+| Feedback loop follow-ups: a real store and accounts | §4.3 | In backlog ([Later 8](../BACKLOG.md#later)) |
+| Feedback loop follow-ups: mentor-lens feedback controls | §4.3 | In backlog ([Next 1](../BACKLOG.md#next)) |
+| Feedback loop follow-ups: live version on the home page and library index | §4.3 | In backlog ([Later 7](../BACKLOG.md#later)) |
+| Practice moments | §3, §4.5 | In backlog ([Next 4](../BACKLOG.md#next)) |
+| "Carry it forward" kit | §3, §4.5 | In backlog ([Next 5](../BACKLOG.md#next)) |
+| Dual-outcome project view | §3, §4.5 | In backlog ([Later 1](../BACKLOG.md#later)) |
+| Community decision rights | §3, §4.5 | In backlog ([Later 2](../BACKLOG.md#later)) |
+| A named human beside every judgment, and a route to trained staff | §3 | In backlog ([Later 4](../BACKLOG.md#later)) |
+| AI evaluator phases 2–4 | §3 | In backlog ([Next 1](../BACKLOG.md#next)) |
+| Resilience kit | §3 | In backlog ([Next 3](../BACKLOG.md#next)) |
+| Live AI verification, including the Gemma comparison | §3, §4.4 | In backlog ([Next 2](../BACKLOG.md#next)) |
+
+---
+
 This reviews `main` at `05b55a0` (PR #4): after the React Router migration, the Bridge Studio design system, the library and role restructure, and the Reflection Companion. It follows [evaluation.md](evaluation.md), which reviewed the app before milestone 2.
 
 ## 1. Is everything in sync?
