@@ -23,11 +23,11 @@ export function TrainingTrack({ audience, headingLevel = 2 }: { audience: Audien
               <div>
                 <p className="flex flex-wrap items-center gap-3 text-muted-foreground">
                   <span className="inline-flex items-center gap-1 font-semibold text-foreground">
-                    <Icon name="play_circle" className="text-base" />
+                    <Icon name="circle-play" className="text-base" />
                     {m.format}
                   </span>
                   <span className="inline-flex items-center gap-1">
-                    <Icon name="schedule" className="text-base" />
+                    <Icon name="clock" className="text-base" />
                     {m.duration}
                   </span>
                 </p>
@@ -80,7 +80,7 @@ export function TrainingTrack({ audience, headingLevel = 2 }: { audience: Audien
                   <SyntheticBadge />
                 </div>
                 <p className="mt-1 text-muted-foreground">
-                  {c.organisationType} · {c.location}
+                  {c.organizationType} · {c.location}
                 </p>
                 {c.outcome && (
                   <p className="mt-2">

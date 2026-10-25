@@ -63,7 +63,7 @@ export function LoginChooser() {
                   <span className="text-muted-foreground">{summary}</span>
                   <span className="mt-auto inline-flex items-center gap-2 pt-2 font-bold text-archetype">
                     {isCurrent ? "Continue as" : "Log in as"} {lower(account.label)}
-                    <Icon name="arrow_forward" className="text-base transition-transform group-hover:translate-x-1" />
+                    <Icon name="arrow-right" className="text-base transition-transform group-hover:translate-x-1" />
                   </span>
                 </button>
               </Form>

@@ -19,7 +19,9 @@ The roles are: **apprentice** (BRIDGEGOOD's word for a student), **mentor**, **a
 - `docs/design/examples.html` is refreshed as the static design showcase. It opens without a server or a login, and now shows the steward, the feedback loop, field notes and the type scale.
 - `CLAUDE.md` asks every PR to update this changelog, the backlog and `CLAUDE.md` itself.
 
-### Remove backward-compatibility code ([#8](https://github.com/deka108/hack-buildgood/pull/8), open)
+---
+
+## Remove backward-compatibility code ([#8](https://github.com/deka108/hack-buildgood/pull/8), 2026-10-25)
 
 The prototype has no past users, bookmarks or stored data, so the compatibility code added by earlier refactors goes.
 

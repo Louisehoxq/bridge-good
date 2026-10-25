@@ -20,7 +20,7 @@ export default function LibraryIndex() {
         </p>
         <Link to={LIBRARY[0].href} className={buttonVariants({ size: "lg" })}>
           Start with pillar 1
-          <Icon name="arrow_forward" />
+          <Icon name="arrow-right" />
         </Link>
       </header>
 
@@ -48,7 +48,7 @@ export default function LibraryIndex() {
                       <span className="mt-auto inline-flex items-center gap-2 pt-2 font-bold text-primary">
                         Read
                         <span className="sr-only">: {e.title}</span>
-                        <Icon name="arrow_forward" className="text-base transition-transform group-hover:translate-x-1" />
+                        <Icon name="arrow-right" className="text-base transition-transform group-hover:translate-x-1" />
                       </span>
                     </Link>
                   </li>

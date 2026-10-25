@@ -15,7 +15,7 @@ export function ToolkitList({ sections }: { sections: ToolkitSection[] }) {
           <ul className="space-y-3">
             {s.items.map((item) => (
               <li key={item.name} className="flex gap-3">
-                <Icon name="description" className="mt-1 text-base shrink-0 text-archetype" />
+                <Icon name="file-text" className="mt-1 text-base shrink-0 text-archetype" />
                 <div>
                   <p className="font-semibold">
                     {item.name} <span className="type-small font-normal text-muted-foreground">· {item.format}</span>

@@ -64,7 +64,7 @@ export function LibraryPage({ href, title, intro, children }: { href: string; ti
           <span className="type-small text-muted-foreground">Next</span>
           <span className="inline-flex items-center justify-end gap-2 font-bold">
             {next?.title ?? "Back to the library"}
-            <Icon name="arrow_forward" className="text-base transition-transform group-hover:translate-x-1" />
+            <Icon name="arrow-right" className="text-base transition-transform group-hover:translate-x-1" />
           </span>
         </Link>
       </nav>

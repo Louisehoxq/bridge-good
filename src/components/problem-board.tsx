@@ -28,7 +28,7 @@ export function ProblemBoard({ status }: { status?: ProblemStatus[] }) {
             <h3 id={`${p.id}-title`} className="type-title-3">
               {p.title}
             </h3>
-            <p className="text-muted-foreground">{p.organisationType}</p>
+            <p className="text-muted-foreground">{p.organizationType}</p>
             <p>{p.summary}</p>
             {p.outcome && (
               <p className="rounded-lg bg-archetype-soft p-3">
@@ -40,14 +40,14 @@ export function ProblemBoard({ status }: { status?: ProblemStatus[] }) {
             <dl className="mt-auto space-y-1.5">
               <div className="flex gap-2">
                 <dt>
-                  <Icon name="location_on" className="translate-y-0.5" />
+                  <Icon name="map-pin" className="translate-y-0.5" />
                   <span className="sr-only">Location</span>
                 </dt>
                 <dd>{p.location}</dd>
               </div>
               <div className="flex gap-2">
                 <dt>
-                  <Icon name="group" className="translate-y-0.5" />
+                  <Icon name="users" className="translate-y-0.5" />
                   <span className="sr-only">Community</span>
                 </dt>
                 <dd>{p.community}</dd>
@@ -55,7 +55,7 @@ export function ProblemBoard({ status }: { status?: ProblemStatus[] }) {
               {p.accessibilityFocus && (
                 <div className="flex gap-2">
                   <dt>
-                    <Icon name="accessibility_new" className="translate-y-0.5" />
+                    <Icon name="accessibility" className="translate-y-0.5" />
                     <span className="sr-only">Accessibility focus</span>
                   </dt>
                   <dd>{p.accessibilityFocus}</dd>

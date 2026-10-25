@@ -16,8 +16,6 @@ const sessionCookie = createCookie(SESSION_COOKIE, {
 
 export async function getSession(request: Request): Promise<Session | null> {
   const value: unknown = await sessionCookie.parse(request.headers.get("Cookie"))
-  // Older cookies hold just the role string.
-  if (isRole(value)) return { role: value, ambassadorKind: value === "ambassador" ? "chapter-lead" : undefined }
   if (value && typeof value === "object" && "role" in value && isRole(value.role)) {
     const kind = "ambassadorKind" in value && isAmbassadorKind(value.ambassadorKind) ? value.ambassadorKind : "chapter-lead"
     return { role: value.role, ambassadorKind: value.role === "ambassador" ? kind : undefined }

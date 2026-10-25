@@ -244,7 +244,7 @@ export function ScopingStudio({ aiEnabled }: { aiEnabled: boolean }) {
                       onClick={() => setFiles(files.filter((x) => x !== f))}
                       className="flex size-10 shrink-0 items-center justify-center rounded-md hover:bg-background"
                     >
-                      <Icon name="close" className="text-base" />
+                      <Icon name="x" className="text-base" />
                     </button>
                   </li>
                 ))}
@@ -282,7 +282,7 @@ export function ScopingStudio({ aiEnabled }: { aiEnabled: boolean }) {
                   className: "has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring",
                 })}
               >
-                <Icon name="add_photo_alternate" />
+                <Icon name="image-plus" />
                 Add screenshot
                 <input
                   ref={fileRef}
