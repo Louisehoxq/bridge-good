@@ -1,8 +1,10 @@
 import { GROUP_TYPES } from "@/content/carry-forward"
 import { getPillar, getPrompt, PILLARS, type PillarId } from "@/content/framework"
+import { EVENT_TYPE_INFO } from "@/content/events"
 import { getPracticeMoment } from "@/content/practice"
 import { GUIDE_SLUGS, GUIDE_TITLES, type GuideSlug } from "@/lib/library"
 import type { Role } from "@/lib/roles"
+import type { StudioRole } from "@/components/studio/role-badge"
 import type {
   AiDisagreementFeedback,
   ChangelogEntry,
@@ -29,6 +31,7 @@ export const KIND_INFO: Record<FeedbackKind, { label: string; plural: string }> 
   retrospective: { label: "Partner retrospective", plural: "Partner retrospectives" },
   community: { label: "Community feedback", plural: "Community feedback" },
   "outside-community": { label: "Outside community", plural: "Outside communities" },
+  "event-learning": { label: "What we learned (event)", plural: "What we learned (events)" },
 }
 
 export const EFFECT_INFO: Record<Effect, { label: string; hint: string }> = {
@@ -98,6 +101,8 @@ export function targetLabel(target: FeedbackTarget): string {
       return `Practice moment: ${getPracticeMoment(target.id)?.title ?? target.id}`
     case "kit":
       return "The carry-it-forward kit"
+    case "event":
+      return `Event: ${target.title}`
   }
 }
 
@@ -119,9 +124,22 @@ export function targetHref(target: FeedbackTarget): string | undefined {
       return `/learn/practice/${target.id}`
     case "kit":
       return "/learn/carry-it-forward"
+    case "event":
+      return `/events/${target.id}`
     default:
       return undefined
   }
+}
+
+const capitalize = (text: string) => text[0].toUpperCase() + text.slice(1)
+
+const HOST_NOUN: Record<StudioRole, string> = {
+  apprentice: "an apprentice",
+  mentor: "a mentor",
+  "chapter-lead": "a chapter lead",
+  "company-host": "a company host",
+  "community-partner": "a community partner",
+  steward: "a BRIDGEGOOD steward",
 }
 
 const withThe = (group: string) => (/^the /i.test(group) ? group : `the ${group}`)
@@ -141,6 +159,10 @@ export function sourceLabel(item: FeedbackItem): string {
       return `Aggregated community feedback: ${item.source}`
     case "outside-community":
       return `${outsideGroup(item, true)} that ran the carry-it-forward kit`
+    case "event-learning": {
+      const host = item.credit.consent ? item.credit.as : capitalize(item.from.role ? HOST_NOUN[item.from.role] : "a host")
+      return `${host}, who hosted a ${EVENT_TYPE_INFO[item.eventType].label.toLowerCase()} on the ${item.chapter} calendar`
+    }
   }
 }
 
@@ -175,6 +197,8 @@ export function itemTitle(item: FeedbackItem): string {
       return `Community feedback: ${item.source}`
     case "outside-community":
       return `Outside community: ${GROUP_TYPES[item.groupType].label.toLowerCase()}`
+    case "event-learning":
+      return `What we learned: ${item.target.type === "event" ? item.target.title : EVENT_TYPE_INFO[item.eventType].label}`
   }
 }
 
@@ -195,6 +219,8 @@ export function itemSummary(item: FeedbackItem): string {
       return `${item.responses} responses. Top theme: ${item.themes[0]?.theme.toLowerCase() ?? "none yet"}.`
     case "outside-community":
       return item.changed
+    case "event-learning":
+      return item.learned || item.change || item.access
   }
 }
 

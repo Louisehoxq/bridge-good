@@ -36,8 +36,10 @@ export async function requireRole(request: Request, role: Role) {
 
 /** Demo login: no password, just the chosen synthetic account's role (and ambassador kind). */
 export async function loginAs(role: Role, next: string, ambassadorKind?: AmbassadorKind) {
-  // Only follow `next` into the chosen role's own area, so it can't send anyone off-site.
-  const target = next === `/${role}` || next.startsWith(`/${role}/`) ? next : ROLE_INFO[role].home
+  // Only follow `next` into the chosen role's own area, or back to the public events pages, so it can't send anyone off-site.
+  const ownArea = next === `/${role}` || next.startsWith(`/${role}/`)
+  const events = next === "/events" || /^\/events\/[\w-]+$/.test(next)
+  const target = ownArea || events ? next : ROLE_INFO[role].home
   const session: Session = role === "ambassador" ? { role, ambassadorKind: ambassadorKind ?? "chapter-lead" } : { role }
   return redirect(target, { headers: { "Set-Cookie": await sessionCookie.serialize(session) } })
 }

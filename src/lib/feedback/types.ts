@@ -1,13 +1,14 @@
 import type { StudioRole } from "@/components/studio/role-badge"
 import type { GroupType } from "@/content/carry-forward"
 import type { PillarId, ReflectionPromptId } from "@/content/framework"
+import type { EventType } from "@/lib/events/types"
 
 /**
  * The feedback loop (milestone 3): every kind of feedback lands in one BRIDGEGOOD steward inbox.
  * Nothing here holds personal data. Notes are free text the sender writes, screened for email addresses
  * and phone numbers before they're saved, and senders are the synthetic demo accounts.
  */
-export const FEEDBACK_KINDS = ["adaptation", "didnt-fit", "ai-disagreement", "retrospective", "community", "outside-community"] as const
+export const FEEDBACK_KINDS = ["adaptation", "didnt-fit", "ai-disagreement", "retrospective", "community", "outside-community", "event-learning"] as const
 export type FeedbackKind = (typeof FEEDBACK_KINDS)[number]
 
 /** What the feedback is about. It also tags the item in the inbox. */
@@ -19,6 +20,7 @@ export type FeedbackTarget =
   | { type: "framework" }
   | { type: "practice"; id: string }
   | { type: "kit" }
+  | { type: "event"; id: string; title: string }
 
 /** Who sent it. Aggregated items (AI disagreement counts, community cards) have no role or name. */
 export type FeedbackSender = {
@@ -124,7 +126,32 @@ export type OutsideCommunityFeedback = Base & {
   replyCode: string
 }
 
-export type FeedbackItem = AdaptationFeedback | DidntFitFeedback | AiDisagreementFeedback | RetrospectiveFeedback | CommunityFeedback | OutsideCommunityFeedback
+/**
+ * A host's "what we learned" after a community event. About the approach and the session, never about
+ * individual people: no names, and attendance as a rough number only. Credit only with consent.
+ */
+export type EventLearningFeedback = Base & {
+  kind: "event-learning"
+  eventId: string
+  eventType: EventType
+  chapter: string
+  learned: string
+  /** What worked or didn't for access: step-free, captions, languages, childcare. */
+  access: string
+  /** What BRIDGEGOOD should change in the framework, the kit or the template. */
+  change: string
+  /** About how many came. A number, no names. */
+  attended?: number
+}
+
+export type FeedbackItem =
+  | AdaptationFeedback
+  | DidntFitFeedback
+  | AiDisagreementFeedback
+  | RetrospectiveFeedback
+  | CommunityFeedback
+  | OutsideCommunityFeedback
+  | EventLearningFeedback
 
 export type ChangelogType = "published" | "wording" | "field-note" | "noted"
 
