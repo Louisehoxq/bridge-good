@@ -20,6 +20,10 @@ export type Submission = {
   link: string
   summary: string
   reflection: string
+  /** The apprentice's own view of the work, read by the mentor before anything else. */
+  selfAssessment?: { working: string; help: string }
+  /** Answers to the "before you submit" prompts, kept only when the apprentice chose to share them. */
+  promptAnswers?: { promptId: number; answer: string }[]
   submittedAt: string
   synthetic?: boolean
 }
@@ -114,6 +118,10 @@ export const SEED_SUBMISSIONS: Submission[] = [
     link: "https://example.org/demo/maya-synthesis",
     summary: "Interviewed 6 (synthetic) pantry visitors and mapped the booking journey. Proposed a 3-message SMS flow.",
     reflection: "I assumed everyone had smartphones. Listening changed my whole direction.",
+    selfAssessment: {
+      working: "The interview notes changed the plan: the SMS flow came straight from what visitors said.",
+      help: "I'm not sure the three messages are clear for people who don't read much English.",
+    },
     submittedAt: "Mon, Oct 21, 3:10 PM",
     synthetic: true,
   },
@@ -125,6 +133,10 @@ export const SEED_SUBMISSIONS: Submission[] = [
     link: "https://example.org/demo/dev-listings",
     summary: "Paper prototype of event listings that show captioning and interpretation up front.",
     reflection: "I need to test with Deaf people directly rather than guessing what they need.",
+    selfAssessment: {
+      working: "Putting captioning and interpretation at the top of each listing.",
+      help: "How to find Deaf testers without asking a community group for free labor.",
+    },
     submittedAt: "Tue, Oct 22, 10:45 AM",
     synthetic: true,
   },
@@ -136,6 +148,10 @@ export const SEED_SUBMISSIONS: Submission[] = [
     link: "https://example.org/demo/ari-forms",
     summary: "Redesigned a sign-up form with plain language, clear errors and larger tap targets.",
     reflection: "Writing error messages that don't blame people was harder than I expected.",
+    selfAssessment: {
+      working: "The error messages say what went wrong and how to fix it.",
+      help: "I haven't tested it with anyone yet, so I don't know if the questions make sense.",
+    },
     submittedAt: "Wed, Oct 16, 6:20 PM",
     synthetic: true,
   },

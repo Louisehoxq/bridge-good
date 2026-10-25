@@ -3,9 +3,8 @@ import { useState, type ReactNode } from "react"
 import { isRouteErrorResponse, Link, Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router"
 import type { Route } from "./+types/root"
 import { AppShell } from "@/components/app-shell"
-import { ICON_FONT_URL } from "@/components/icon"
 import { buttonVariants } from "@/components/ui/button"
-import { getSessionRole } from "@/lib/session.server"
+import { getSession } from "@/lib/session.server"
 import { pageMeta } from "@/lib/meta"
 import "./app.css"
 
@@ -13,9 +12,11 @@ export const links: Route.LinksFunction = () => [
   { rel: "icon", href: "/favicon.ico" },
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-  // Google Sans, the BRIDGEGOOD Design System typeface.
-  { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&display=swap" },
-  { rel: "stylesheet", href: ICON_FONT_URL },
+  // Bridge Studio type: Atkinson Hyperlegible Next (body), Bricolage Grotesque (headings), Atkinson Hyperlegible Mono (code).
+  {
+    rel: "stylesheet",
+    href: "https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400..700&family=Atkinson+Hyperlegible+Next:wght@400..800&family=Bricolage+Grotesque:opsz,wght@12..96,600..700&display=swap",
+  },
 ]
 
 export const meta = () => pageMeta()
@@ -30,7 +31,7 @@ export const headers: Route.HeadersFunction = () => ({
 })
 
 export async function loader({ request }: Route.LoaderArgs) {
-  return { role: await getSessionRole(request) }
+  return { session: await getSession(request) }
 }
 
 export function Layout({ children }: { children: ReactNode }) {

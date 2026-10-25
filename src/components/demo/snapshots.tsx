@@ -1,17 +1,7 @@
 import { Link } from "react-router"
 import { useCollection } from "@/lib/demo-store"
-import {
-  DEMO_MENTOR,
-  DEMO_STUDENT,
-  SEED_EVALUATIONS,
-  SEED_MESSAGES,
-  SEED_SLOTS,
-  SEED_SUBMISSIONS,
-  type Evaluation,
-  type Message,
-  type Slot,
-  type Submission,
-} from "@/content/seed"
+import { DEMO_MENTOR, DEMO_STUDENT, SEED_MESSAGES, SEED_SLOTS, type Message, type Slot } from "@/content/seed"
+import { useGrowthFeedback, useSubmissions } from "@/components/demo/journey-data"
 
 function Stat({ label, value, href, cta }: { label: string; value: string | number; href: string; cta: string }) {
   return (
@@ -26,8 +16,8 @@ function Stat({ label, value, href, cta }: { label: string; value: string | numb
 }
 
 export function StudentSnapshot() {
-  const [subs] = useCollection<Submission>("submissions", SEED_SUBMISSIONS)
-  const [evals] = useCollection<Evaluation>("evaluations", SEED_EVALUATIONS)
+  const [subs] = useSubmissions()
+  const [evals] = useGrowthFeedback()
   const [slots] = useCollection<Slot>("slots", SEED_SLOTS)
   const [msgs] = useCollection<Message>("messages", SEED_MESSAGES)
   const mine = subs.filter((s) => s.studentName === DEMO_STUDENT)
@@ -38,16 +28,16 @@ export function StudentSnapshot() {
   return (
     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       <Stat label="Submissions" value={mine.length} href="/student/submissions" cta="Submit or view work" />
-      <Stat label="With mentor feedback" value={withFeedback} href="/student/submissions" cta="Read feedback" />
-      <Stat label="Next office hour" value={booking ? booking.when.split(",")[0] : "None"} href="/student/office-hours" cta={booking ? "See booking" : "Book a slot"} />
-      <Stat label={`Latest from ${DEMO_MENTOR.split(" ")[0]}`} value={lastFromMentor ? "1 new" : "—"} href="/student/messages" cta="Open messages" />
+      <Stat label="Mentor replies" value={withFeedback} href="/student/submissions" cta="Read your mentor's words" />
+      <Stat label="Next office hour" value={booking ? booking.when.split(",")[0] : "None"} href="/student/mentor" cta={booking ? "See booking" : "Book a slot"} />
+      <Stat label={`Latest from ${DEMO_MENTOR.split(" ")[0]}`} value={lastFromMentor ? "1 new" : "None"} href="/student/mentor" cta="Open messages" />
     </div>
   )
 }
 
 export function MentorSnapshot() {
-  const [subs] = useCollection<Submission>("submissions", SEED_SUBMISSIONS)
-  const [evals] = useCollection<Evaluation>("evaluations", SEED_EVALUATIONS)
+  const [subs] = useSubmissions()
+  const [evals] = useGrowthFeedback()
   const [slots] = useCollection<Slot>("slots", SEED_SLOTS)
   const [msgs] = useCollection<Message>("messages", SEED_MESSAGES)
   const waiting = subs.filter((s) => !evals.some((e) => e.submissionId === s.id)).length
@@ -56,9 +46,9 @@ export function MentorSnapshot() {
 
   return (
     <div className="grid gap-4 md:grid-cols-3">
-      <Stat label="Awaiting your review" value={waiting} href="/mentor/submissions" cta="Review submissions" />
-      <Stat label="Office hours booked" value={booked} href="/mentor/office-hours" cta="Manage slots" />
-      <Stat label="Student conversations" value={threads} href="/mentor/messages" cta="Open messages" />
+      <Stat label="Waiting for your reply" value={waiting} href="/mentor/submissions" cta="Open growth conversations" />
+      <Stat label="Office hours booked" value={booked} href="/mentor/mentee" cta="Manage slots" />
+      <Stat label="Apprentice conversations" value={threads} href="/mentor/mentee" cta="Open messages" />
     </div>
   )
 }

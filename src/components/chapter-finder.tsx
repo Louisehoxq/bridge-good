@@ -96,7 +96,8 @@ export function ChapterFinder() {
           {visible.length} {visible.length === 1 ? "chapter" : "chapters"} found
         </p>
 
-        <ul className="max-h-[38rem] space-y-3 overflow-y-auto pr-1" role="region" aria-label="Chapter list" tabIndex={0}>
+        <div className="max-h-[38rem] overflow-y-auto pr-1" role="region" aria-label="Chapter list" tabIndex={0}>
+        <ul className="space-y-3">
           {visible.map((c) => (
             <li
               key={c.id}
@@ -111,7 +112,7 @@ export function ChapterFinder() {
                   <h3 id={`${c.id}-title`} className="text-lg font-bold">
                     {c.city}, {c.country}
                   </h3>
-                  <SyntheticBadge />
+                  {c.synthetic && <SyntheticBadge />}
                 </div>
                 <p className="mt-1">
                   Ambassador: <span className="font-bold">{c.ambassador}</span>, {c.organisation}
@@ -135,6 +136,7 @@ export function ChapterFinder() {
             </li>
           ))}
         </ul>
+        </div>
       </div>
     </div>
   )

@@ -57,24 +57,25 @@ export function SiteHeader({ role }: { role?: Role }) {
                   ))}
                 </ul>
               </nav>
-              {role && (
-                <nav aria-label={`${ROLE_INFO[role].label} sections`}>
-                  <h2 className="mb-1 text-sm font-semibold text-muted-foreground">{ROLE_INFO[role].label} area</h2>
-                  <ul className="flex flex-col">
-                    {ROLE_INFO[role].sidebar.map((item) => (
-                      <li key={item.href}>
-                        <SheetClose
-                          nativeButton={false}
-                          render={<Link to={item.href} />}
-                          className="flex min-h-12 w-full items-center rounded-md px-2 font-medium hover:bg-muted"
-                        >
-                          {item.label}
-                        </SheetClose>
-                      </li>
-                    ))}
-                  </ul>
-                </nav>
-              )}
+              {role &&
+                ROLE_INFO[role].sidebar.map((group, i) => (
+                  <nav key={group.label ?? i} aria-label={`${ROLE_INFO[role].label}: ${group.label ?? "overview"}`}>
+                    <h2 className="mb-1 text-sm font-semibold text-muted-foreground">{group.label ?? `${ROLE_INFO[role].label} area`}</h2>
+                    <ul className="flex flex-col">
+                      {group.items.map((item) => (
+                        <li key={item.href}>
+                          <SheetClose
+                            nativeButton={false}
+                            render={<Link to={item.href} />}
+                            className="flex min-h-12 w-full items-center rounded-md px-2 font-medium hover:bg-muted"
+                          >
+                            {item.label}
+                          </SheetClose>
+                        </li>
+                      ))}
+                    </ul>
+                  </nav>
+                ))}
             </SheetContent>
           </Sheet>
         </div>

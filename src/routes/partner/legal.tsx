@@ -9,8 +9,8 @@ export default function LegalPage() {
   return (
     <>
       <PageHeader eyebrow="Funding & legal templates · coming soon" title="Standard documents">
-        Standardised financial documents, contracts and legal templates, planned for a later release. They&apos;ll be
-        reviewed by BRIDGEGOOD&apos;s advisers before publishing.
+        Standard financial documents, contracts and legal templates, planned for a later release. They&apos;ll be
+        reviewed by BRIDGEGOOD&apos;s advisors before publishing.
       </PageHeader>
       <ul className="max-w-4xl divide-y rounded-xl border">
         {LEGAL_TEMPLATES.map((t) => (

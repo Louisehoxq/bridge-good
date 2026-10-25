@@ -1,5 +1,5 @@
 import { Icon } from "@/components/icon"
-import { PROBLEMS, STATUS_LABEL, type ProblemStatus } from "@/content/problems"
+import { OUTCOME_LABEL, PROBLEMS, STATUS_LABEL, type ProblemStatus } from "@/content/problems"
 import { SyntheticBadge } from "@/components/synthetic-badge"
 
 export function ProblemBoard({ status }: { status?: ProblemStatus[] }) {
@@ -14,7 +14,7 @@ export function ProblemBoard({ status }: { status?: ProblemStatus[] }) {
               <span className="rounded-full bg-archetype-soft px-2.5 py-0.5 text-xs font-bold text-archetype">
                 {STATUS_LABEL[p.status]}
               </span>
-              <SyntheticBadge />
+              {p.synthetic && <SyntheticBadge />}
             </div>
             <h3 id={`${p.id}-title`} className="text-lg font-bold">
               {p.title}
@@ -23,7 +23,7 @@ export function ProblemBoard({ status }: { status?: ProblemStatus[] }) {
             <p>{p.summary}</p>
             {p.outcome && (
               <p className="rounded-lg bg-archetype-soft p-3 text-sm">
-                <span className="font-bold">Outcome: </span>
+                <span className="font-bold">{OUTCOME_LABEL}: </span>
                 {p.outcome}
                 {p.team && <span className="mt-1 block text-muted-foreground">Team: {p.team}</span>}
               </p>

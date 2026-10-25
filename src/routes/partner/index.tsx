@@ -1,24 +1,28 @@
 import { Link } from "react-router"
 import { PageHeader } from "@/components/app-shell"
 import { ImpactLoop } from "@/components/impact-loop"
+import { PathStepper } from "@/components/path/path-stepper"
 import { SubmittedBriefs } from "@/components/partner/submitted-briefs"
 import { buttonVariants } from "@/components/ui/button"
 import { ROLE_INFO } from "@/lib/roles"
 import { pageMeta } from "@/lib/meta"
 
-export const meta = () => pageMeta("Partner overview")
+export const meta = () => pageMeta("Community partner overview")
 
 export default function PartnerHome() {
   return (
     <>
-      <PageHeader eyebrow="Partner area" title={`Welcome, ${ROLE_INFO.partner.demoAccount.name}`}>
-        You know your community best. Share a problem, and we&apos;ll help shape it into a capstone that a student team
-        can take on with mentor support.
+      <PageHeader eyebrow="Community partner area" title={`Welcome, ${ROLE_INFO.partner.demoAccount.name}`}>
+        You know your community best. Share a problem, and we&apos;ll help shape it into a four-week partner project. An
+        apprentice team takes it on with mentor support, and it ends at Demo Day.
       </PageHeader>
+      <div className="mb-8">
+        <PathStepper pathKey="partner" variant="compact" />
+      </div>
       <div className="grid gap-6 xl:grid-cols-[2fr_3fr]">
         <div className="space-y-3 rounded-2xl bg-archetype-soft p-6">
           <h2 className="text-xl font-bold">Have a new problem?</h2>
-          <p>Chat with the scoping assistant, add screenshots, and build a capstone brief in minutes.</p>
+          <p>Chat with the scoping assistant, add screenshots, and build a project brief. A person at BRIDGEGOOD reviews it before anything happens.</p>
           <Link to="/partner/submit" className={buttonVariants({ size: "lg", className: "bg-archetype text-on-archetype hover:bg-archetype/90" })}>
             Submit a problem
           </Link>

@@ -3,15 +3,15 @@ import { ProblemBoard } from "@/components/problem-board"
 import { STATUS_LABEL, type ProblemStatus } from "@/content/problems"
 import { pageMeta } from "@/lib/meta"
 
-export const meta = () => pageMeta("Partner projects")
+export const meta = () => pageMeta("Partner pipeline")
 
 const ORDER: ProblemStatus[] = ["needs-sponsor", "open-for-students", "in-progress", "completed"]
 
 export default function AmbassadorProjects() {
   return (
     <>
-      <PageHeader eyebrow="Partner projects" title="Your project pipeline">
-        Problems submitted by partners, from first contact to completed capstone. Sponsor the ones that need support.
+      <PageHeader eyebrow="Partner pipeline" title="Your project pipeline">
+        Problems submitted by community partners, from first contact to Demo Day. Find sponsors for the ones that need support, and form teams on Matching &amp; milestones.
       </PageHeader>
       <div className="space-y-12">
         {ORDER.map((status) => (

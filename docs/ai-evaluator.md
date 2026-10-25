@@ -1,6 +1,6 @@
 # AI evaluator: design
 
-> **Status: draft design for the hackathon.** BRIDGEGOOD owns the rubric, the wording, and every decision the evaluator supports. Nothing here is built yet except the partner scoping assistant (`src/app/api/scope/route.ts`).
+> **Status: draft design for the hackathon.** BRIDGEGOOD owns the rubric, the wording, and every decision the evaluator supports. Built so far: the partner scoping assistant (`src/routes/api.scope.ts`) and the student Reflection Companion (see [What shipped: student Reflection Companion](#what-shipped-student-reflection-companion)). Paths below that start with `src/app/` predate the move to React Router and map to `src/routes/`.
 
 ## In one paragraph
 
@@ -239,6 +239,40 @@ upload / brief
 5. **Feedback controls** saved to the demo store, plus a tiny "What people told us" counter on a staff page to show the loop.
 6. **Partner framing flags:** add a `reviewBrief` tool to `scope/route.ts` and show the flags beside the brief.
 7. Six golden artifacts (synthetic), run by hand before the demo. Also the injection and personal-data tests.
+
+### What shipped: student Reflection Companion
+
+This is the student lens from Phase 0 above. The build brief called it "phase 1".
+
+| Plan item | Status | Where |
+|---|---|---|
+| 1. Rubric and schema, `rubricVersion: "0.1-draft"` | Done. `reviewSchema` is exactly as in section 3. `studentReviewSchema` adds `reflectionPrompts` and narrows `kind` so the student lens can't claim an automated check from a screenshot | `src/lib/evaluator/{rubric,schema}.ts` |
+| 2. Endpoint, student lens, Sonnet 5.5 structured output | Done as `POST /api/reflect` (not `/api/evaluate`; the other lenses can join it later). It uses `streamText` with `Output.object({ schema: studentReviewSchema })`. It requires the student session, validates with `safeValidateUIMessages`, accepts only user and assistant roles and text, file and step-start parts, caps turns (9), text (4,000 user / 16,000 assistant characters), images (4, PNG/JPEG/WebP) and output (3,000 tokens), redacts emails and phone numbers before the model sees them, and reads AI availability at request time (503 without a key, `GET` returns `{ enabled }`) | `src/routes/api.reflect.ts`, `src/lib/evaluator/{validate,privacy,prompts,request,model.server}.ts` |
+| 3. Review panel on `/student/reflection` | Done. It has three labelled parts: What's working, What to explore (AI observation or Question for you, with evidence and confidence) and What I can't judge (lived experience and real users are always listed). It also has the "How this was made" card. Every question is editable. The apprentice ticks what to keep and what to share, and nothing is kept by default. With no key, the page falls back to BRIDGEGOOD's `studentSubmit` prompts | `src/components/reflection/*` |
+| 4. Contrast checker (kind A) | Done. It's deterministic and labelled "Automated check, not AI" | `src/lib/evaluator/checks/contrast.ts`, `contrast-checker.tsx` |
+| 5. Feedback controls | Partly done. Useful and Not right (with a reason) are saved to the `evaluator-feedback` collection, without the work itself. Not done: "Something's missing" and the staff "What people told us" counter | `feedback-controls.tsx` |
+| 6. Partner framing flags | Not done (that work is in `api.scope.ts`, owned elsewhere) | |
+| 7. Golden set | Done for the student lens: 6 synthetic items (seeded contrast, pre-ticked consent and English-only issues, a clean control, an injection test and a personal-data test). They have automatic checks and a script that compares models (built for the Gemma 4 prototype, `docs/gemma-prototype.md`). Not done: paired bias variants and a live run. Unit tests also cover the schema (no score fields), the prompt rules, the personal-data screen, route validation and contrast | `src/content/evaluator-goldens/`, `scripts/compare-evaluators.ts`, `src/lib/evaluator/test/` |
+
+Also shipped:
+- A regex personal-data pre-screen that blocks sending, with an error summary.
+- An optional description field for each screenshot.
+- A note on the review when it uses judging words such as "should" or "score".
+- A **Try again** button after a failed reply.
+
+The model returns `personalDataNoticed` in every review.
+
+Run the tests with:
+
+```bash
+node --experimental-strip-types --no-warnings --import ./src/lib/evaluator/test/register.mjs --test src/lib/evaluator/test/*.test.ts
+```
+
+There's no `test` script in `package.json` yet.
+
+**TODO for the routes owner: where the mentor sees shared questions.** Apprentices share questions, never answers or screenshots, into the demo collection `mentor-conversation-starters` (type `ConversationStarter` in `src/lib/evaluator/store.ts`). `MentorConversationStarters` in `src/components/reflection/shared-lists.tsx` is ready to mount on the mentor area, for example `/mentor/submissions` or the mentor overview. Until it's mounted, the student page says the mentor view isn't built yet.
+
+Not verified: a live model call. No API key was available while this was built. The off state, the error path and the review panel (fed a mocked structured reply) were checked in the browser.
 
 **Phase 1: mentor support**
 - Mentor critique-prep lens on `/mentor/submissions`, only for submissions the student chose to share.
