@@ -7,9 +7,9 @@ export const meta = () => pageMeta("Project gallery")
 export default function GalleryPage() {
   return (
     <>
-      <PageHeader title="Example partner projects (synthetic)">
-        Examples of what a partner project could produce. These are synthetic: the organizations, teams and outcomes are
-        made up. Real projects would only appear with everyone&apos;s explicit permission.
+      <PageHeader title="Example partner projects">
+        Examples of what a partner project could produce. Synthetic examples. Real projects appear only with everyone&apos;s
+        permission.
       </PageHeader>
       <h2 className="sr-only">Example projects</h2>
       <ProblemBoard status={["completed"]} />

@@ -12,7 +12,7 @@ export default function PartnerToolkit() {
   return (
     <>
       <PageHeader title="Resources for organizations with small teams and budgets">
-        Guides and templates for working with an apprentice team. Downloads are placeholders for now.
+        Guides and templates for working with an apprentice team.
       </PageHeader>
       <section aria-labelledby="toolkit-title" className="mb-14">
         <h2 id="toolkit-title" className="mb-6 type-title-2">
@@ -57,7 +57,7 @@ export default function PartnerToolkit() {
           Frequently asked questions
         </h2>
         <ul className="grid gap-4 lg:grid-cols-2">
-          {PARTNER_FAQS.map((f) => (
+          {PARTNER_FAQS.map((f, i) => (
             <li key={f.q} className="rounded-xl border bg-card">
               <details className="group">
                 <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 p-5 font-bold [&::-webkit-details-marker]:hidden">
@@ -66,7 +66,7 @@ export default function PartnerToolkit() {
                 </summary>
                 <div className="space-y-2 border-t px-5 py-4">
                   <p>{f.a}</p>
-                  {f.draft && <p className="font-semibold text-muted-foreground">Draft: BRIDGEGOOD will confirm</p>}
+                  {f.draft && i === PARTNER_FAQS.findIndex((x) => x.draft) && <p className="font-semibold text-muted-foreground">Draft: BRIDGEGOOD will confirm</p>}
                 </div>
               </details>
             </li>

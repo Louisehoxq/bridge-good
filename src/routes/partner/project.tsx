@@ -65,14 +65,14 @@ export default function PartnerProject() {
           </h2>
           {match ? (
             <>
-              <p className="mb-6 text-muted-foreground">The people working on your project with you. Everyone shown is a synthetic example.</p>
+              <p className="mb-6 text-muted-foreground">The people working on your project with you.</p>
               <TeamView label="Your project team" members={teamFor(match, PARTNER_NAME)} />
             </>
           ) : (
             <>
               <p className="mt-2 mb-6">
                 Your chapter lead, {CHAPTER_LEAD}, is talking with apprentices who are interested in your brief. You&apos;ll
-                meet the team at kickoff (synthetic example).
+                meet the team at kickoff.
               </p>
               <TeamView
                 label="Your project so far"
@@ -92,7 +92,7 @@ export default function PartnerProject() {
         </h2>
         <p className="text-muted-foreground">
           About 1 to 2 hours a week from you: a kickoff, weekly check-ins, and help setting up conversations with your
-          community. This is our draft estimate. BRIDGEGOOD will confirm it.
+          community.
         </p>
         <MilestoneList reached={reached} />
       </section>
@@ -157,7 +157,7 @@ function FeedbackForm() {
         <div role="status">
           {sent && (
             <Notice tone="success">
-              <p>Thank you. Saved in this browser (demo). In the real service, BRIDGEGOOD would receive it.</p>
+              <p>Thank you. Saved in this browser.</p>
             </Notice>
           )}
         </div>
