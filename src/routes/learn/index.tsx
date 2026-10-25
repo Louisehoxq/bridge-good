@@ -57,8 +57,7 @@ export default function LibraryIndex() {
               {section.id === "framework" && (
                 <div className="mt-6">
                   <DraftNote>
-                    {FRAMEWORK_META.title}, version {FRAMEWORK_META.version} ({FRAMEWORK_META.status.toLowerCase()}), updated{" "}
-                    {FRAMEWORK_META.updated}. {FRAMEWORK_META.note}
+                    {FRAMEWORK_META.note}
                   </DraftNote>
                 </div>
               )}
